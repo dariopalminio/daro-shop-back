@@ -1,0 +1,9 @@
+{
+    "ERROR":{
+      "INVALID_EMAIL" : "Invalid email!",
+      "EMAIL_COULD_NOT_SENT" : "Emal could not sent!"
+    },
+    "MESSAGE": {
+      "EMAIL_SENT_SUCCESS": "Email sent successful!"
+    }
+  }

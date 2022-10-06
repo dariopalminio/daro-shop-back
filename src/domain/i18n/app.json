@@ -1,0 +1,9 @@
+{
+  "HELLO": "Hello",
+  "HELLO_MESSAGE": "BASE: Hello World from {app} {version}!",
+    "GOODBYE_MESSAGE": "Goodbye ",
+    "REGISTER_START_EMAIL": {
+      "VERIFICATION_LINK": "Verification link:",
+      "THANK": "Thanks, The team of {company}"
+    }
+  }

@@ -1,0 +1,89 @@
+MongoDB Commands: https://mindmajix.com/mongodb-commands
+
+
+//launch db server
+export PATH=/Users/dariopalminio/Applications/mongodb-macos-x86_64-4.4.6/bin:$PATH
+mongod --dbpath /Users/dariopalminio/data/db
+//launch db client
+export PATH=/Users/dariopalminio/Applications/mongodb-macos-x86_64-4.4.6/bin:$PATH
+mongo
+Mongo running in http://127.0.0.1:27017/
+
+> show databases
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use admin;
+switched to db admin
+> db.createUser({user:"admin",pwd:"admin",roles:[{role:"root",db:"admin"}]});
+Successfully added user: {
+	"user" : "admin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
+> show databases
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use bdTest
+switched to db bdTest
+> db.createUser({user:"testadmin",pwd:"testadmin123",roles:[{role:"root",db:"admin"}]});
+Successfully added user: {
+	"user" : "testadmin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
+> 
+> db.auth('testadmin','testadmin123');
+> db.getUsers();
+[
+	{
+		"_id" : "bdTest.testadmin",
+		"userId" : UUID("9565071e-9dc9-4291-a232-aa9b2ab9f713"),
+		"user" : "testadmin",
+		"db" : "bdTest",
+		"roles" : [
+			{
+				"role" : "root",
+				"db" : "admin"
+			}
+		],
+		"mechanisms" : [
+			"SCRAM-SHA-1",
+			"SCRAM-SHA-256"
+		]
+	}
+]
+> db.dbname.save({name:'Test'});
+> show collections;
+dbname
+> db.dbname.find();
+{ "_id" : ObjectId("60d7ca3969457dacc82119d6"), "name" : "Test" }
+> db.createCollection("table");
+> db.table.insert({nombre:"laptop"});
+> db.table.drop();
+> bd.help();
+
+
+db.category.createIndex({ "name": "text" });
+db.product.createIndex( { name: "text"} );
+
+db.user.createIndex( { userName: "text"} );
+
+mydatabase.dropDatabase();
+
+show databases;
+use darodb;
+db.createUser({user:"admin",pwd:"admin",roles:[{role:"root",db:"admin"}]});
+db.auth('admin','admin');
+db.getUsers();
+db.dbname.save({name:'darodb'});
+show collections;

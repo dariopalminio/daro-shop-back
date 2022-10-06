@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+dist
+coverage
+server_err.log
+server_out.log
+logs

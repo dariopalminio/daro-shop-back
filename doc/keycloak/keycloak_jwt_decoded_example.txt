@@ -1,0 +1,63 @@
+
+TOKEN ENCODED:
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI4Tmo4RmZUODZOZXRNZXpoWWZrbDZ5VTJMWW1QOWFrUUltLWlid2ZKejJZIn0.eyJleHAiOjE2NjIxNzQ4NzEsImlhdCI6MTY2MjE3NDU3MSwianRpIjoiY2M2N2ZhNDctOGIxNS00MzNhLTg5N2MtNjI5YjEzNjBlOTg2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiN2M0MmZmN2ItZDI1YS00ODM5LWFkZjYtNDcxMjRjNzkxNDRhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiJhNDI5ZGMxZS0zYTIwLTQ1YjktOGI0Yi1jMDI4NDM3YzQ2MzkiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IlBhbG1pbmlvIERhcmlvIEFuZHJlcyIsInByZWZlcnJlZF91c2VybmFtZSI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6IlBhbG1pbmlvIiwiZmFtaWx5X25hbWUiOiJEYXJpbyBBbmRyZXMiLCJlbWFpbCI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIn0.dkkuZ1gKqDRHv50L5YFLGuYfDwPL2bBiHjzdoxo9bwUbszQvvY7hjJaRFiYi1FTphd78xBxGKvFPvAk222gY9R4JqzQkvsOUIfwYhnNRKmuFripQIrC4L9Udc6DQquaPJt6BrjGL0BDQ5Xb_k_et5VwOIj9bxz3y-FZrfi7g_swUGdEN7Sf3atIEzbqYnDpqZ7VaL6ZjaiAcoa7P0XNHxvjMWy2NbHKXiXjM_gGQRintthIX_Mggvj-XRxgfv0qn8khrV0aR_SYUtJazW5hp1UhKIz90Ncl0aJUsWkUy2o45nKEmvF4IpvxMViDMhYTqidGWMQhfyzuaswVj3ZOu1A
+
+DECODED algorithm RS256:
+
+HEADER:
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "8Nj8FfT86NetMezhYfkl6yU2LYmP9akQIm-ibwfJz2Y"
+}
+PAYLOAD:DATA
+{
+  "exp": 1662174871,
+  "iat": 1662174571,
+  "jti": "cc67fa47-8b15-433a-897c-629b1360e986",
+  "iss": "http://localhost:8080/auth/realms/my-realm-test",
+  "aud": "account",
+  "sub": "7c42ff7b-d25a-4839-adf6-47124c79144a",
+  "typ": "Bearer",
+  "azp": "rest-client-test",
+  "session_state": "a429dc1e-3a20-45b9-8b4b-c028437c4639",
+  "acr": "1",
+  "allowed-origins": [
+    "*"
+  ],
+  "realm_access": {
+    "roles": [
+      "default-roles-my-realm-test",
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "profile email",
+  "email_verified": true,
+  "name": "Palminio Dario Andres",
+  "preferred_username": "dariopalminio@gmail.com",
+  "given_name": "Palminio",
+  "family_name": "Dario Andres",
+  "email": "dariopalminio@gmail.com"
+}
+VERIFY SIGNATURE
+RSASHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  {
+  "e": "AQAB",
+  "kty": "RSA",
+  "n": "6M6mPGEoZ_fzI1VHBA8JQgY2q5aBuSx1ULdIdLAcWU8-6lf_hpbCMFlyi_iIxO_4fQ5alzF1c33bPrURspUabtuSB-qyqLN3_sCWzB7hlC0lYQC7n6-SDUP5-9xywuJlNe3QcYEJHKTpinq7YTCDyANvT-Sqd8qsFA6Be0Hunp-XBBctkVkwgkEHDjLDT_-OzM8otwqWgLBegR9zpz58sUImUmik6vV9TW1L5TnhqIMgiLG6Z1yqVHjlyhniy90YDOjdw58DReAtjXpOGzWCWtLlqp7-k28HoOZE6ucwyzvfw-8wqO3tZ526PNZyheDB5wmn2Qeg60xJbFPOLoBnbw"
+}
+)
+
+To see: https://jwt.io/

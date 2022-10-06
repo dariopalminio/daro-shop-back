@@ -1,0 +1,9 @@
+{
+    "ERROR":{
+      "INVALID_EMAIL" : "La dirección de correo es inválida.",
+      "EMAIL_COULD_NOT_SENT" : "El correo no pudo ser enviado."
+    },
+    "MESSAGE": {
+      "EMAIL_SENT_SUCCESS": "El correo fue enviado de forma exitosa."
+    }
+  }

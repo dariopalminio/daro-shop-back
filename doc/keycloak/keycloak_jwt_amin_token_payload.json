@@ -1,0 +1,45 @@
+{
+    "exp": 1662587721,
+    "iat": 1662587421,
+    "jti": "6e837eb6-b1b1-4c68-8bb3-8fb277648450",
+    "iss": "http://localhost:8080/auth/realms/my-realm-test",
+    "aud": "realm-management",
+    "sub": "19c474b9-a8ee-45e5-9ed9-92d2bf158cf6",
+    "typ": "Bearer",
+    "azp": "rest-client-test",
+    "session_state": "d559d4c6-b469-496f-8c3b-817115b89543",
+    "acr": "1",
+    "allowed-origins": [
+      "*"
+    ],
+    "realm_access": {
+      "roles": [
+        "app-admin",
+        "app-user"
+      ]
+    },
+    "resource_access": {
+      "realm-management": {
+        "roles": [
+          "manage-users",
+          "view-users",
+          "query-groups",
+          "query-users"
+        ]
+      },
+      "rest-client-test": {
+        "roles": [
+          "uma_protection",
+          "admin",
+          "user"
+        ]
+      }
+    },
+    "scope": "openid profile email",
+    "email_verified": true,
+    "name": "Dario Palminio",
+    "preferred_username": "dariopalminio@hotmail.com",
+    "given_name": "Dario",
+    "family_name": "Palminio",
+    "email": "dariopalminio@hotmail.com"
+  }

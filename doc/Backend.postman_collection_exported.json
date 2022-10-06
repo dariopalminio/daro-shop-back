@@ -1,0 +1,985 @@
+{
+	"info": {
+		"_postman_id": "d701a2d9-7abd-4733-b224-2c5319bab7ab",
+		"name": "Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15989306"
+	},
+	"item": [
+		{
+			"name": "Get Hello",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-custom-lang",
+						"value": "es",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "lang",
+						"value": "es",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get health check",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-custom-lang",
+						"value": "es",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "lang",
+						"value": "es",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hello notification",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/notification",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "notification/sendContactEmail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"Test Name\",\n\"email\": \"dachoy@stefanini.com\",\n\"phone\": \"123123123\",\n\"message\": \"1002\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/notification/sendContactEmail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"notification",
+						"sendContactEmail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "notification/sendEmail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"subject\": \"Test Name\",\n\"email\": \"dachoy@stefanini.com\",\n\"content\": \"123123123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/notification/sendEmail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"notification",
+						"sendEmail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Auth Hello",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjI5NDIxMjYsImlhdCI6MTYyMjkyNDEyNiwianRpIjoiYTcwOWI3MWUtMzMyMS00YTUyLWE2ZjktODBlMWI1Y2ZmOTBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiYzlmYTIwNzMtZjk3NC00OTNjLWFhZGYtYzc4M2YxYjgyZTUwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiIxOWM3NWQwYy0xMDUyLTRkMjktYTU1OS1mN2E2OWMzYTkxYzAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwidmlldy1yZWFsbSIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImRhcm8gZGFybyIsInByZWZlcnJlZF91c2VybmFtZSI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImRhcm8iLCJmYW1pbHlfbmFtZSI6ImRhcm8iLCJlbWFpbCI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIn0.TSFqIjbEKZeDuIfnObiMhMzsrfgptUaRmkOzJ9uSeJ2JsVwAyyHzESB_fQbqFywkjjJ4fJTlUWiPvP2EIXWKDgdRqsBiSD-qLp7B2Sa4LEf8JQInDynlXMpCUfbLwcLk9vZMl0fgoiIqIdjMDhlw8RTJ-NmsIQj-6FvEZZif0x6gbekL4_t0OofS1t7DgzzYKQQ_aMv3xIAord_7cRGf-XJVMI6_8VOUovbysWMhSVE0kSq3vw6o_irjCjcTbPfggnNucrXWDA7-Or9CmUIFd-GLVls35lHLUeoWpbZYxCVzqQL-4CBm12HN8ssFypKvgwJm82kiLBF0OHXFLBKqkw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"colocolo@gmail.com\",\n\"firstName\":\"colocolo\",\n\"lastName\":\"colocolo\",\n\"email\":\"colocolo@gmail.com\", \n\"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth login",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjI5NDIxMjYsImlhdCI6MTYyMjkyNDEyNiwianRpIjoiYTcwOWI3MWUtMzMyMS00YTUyLWE2ZjktODBlMWI1Y2ZmOTBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiYzlmYTIwNzMtZjk3NC00OTNjLWFhZGYtYzc4M2YxYjgyZTUwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiIxOWM3NWQwYy0xMDUyLTRkMjktYTU1OS1mN2E2OWMzYTkxYzAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwidmlldy1yZWFsbSIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImRhcm8gZGFybyIsInByZWZlcnJlZF91c2VybmFtZSI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImRhcm8iLCJmYW1pbHlfbmFtZSI6ImRhcm8iLCJlbWFpbCI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIn0.TSFqIjbEKZeDuIfnObiMhMzsrfgptUaRmkOzJ9uSeJ2JsVwAyyHzESB_fQbqFywkjjJ4fJTlUWiPvP2EIXWKDgdRqsBiSD-qLp7B2Sa4LEf8JQInDynlXMpCUfbLwcLk9vZMl0fgoiIqIdjMDhlw8RTJ-NmsIQj-6FvEZZif0x6gbekL4_t0OofS1t7DgzzYKQQ_aMv3xIAord_7cRGf-XJVMI6_8VOUovbysWMhSVE0kSq3vw6o_irjCjcTbPfggnNucrXWDA7-Or9CmUIFd-GLVls35lHLUeoWpbZYxCVzqQL-4CBm12HN8ssFypKvgwJm82kiLBF0OHXFLBKqkw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"colocolo@gmail.com\",\n\"firstName\":\"colocolo\",\n\"lastName\":\"colocolo\",\n\"email\":\"colocolo@gmail.com\", \n\"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjI5NDIxMjYsImlhdCI6MTYyMjkyNDEyNiwianRpIjoiYTcwOWI3MWUtMzMyMS00YTUyLWE2ZjktODBlMWI1Y2ZmOTBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiYzlmYTIwNzMtZjk3NC00OTNjLWFhZGYtYzc4M2YxYjgyZTUwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiIxOWM3NWQwYy0xMDUyLTRkMjktYTU1OS1mN2E2OWMzYTkxYzAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwidmlldy1yZWFsbSIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImRhcm8gZGFybyIsInByZWZlcnJlZF91c2VybmFtZSI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImRhcm8iLCJmYW1pbHlfbmFtZSI6ImRhcm8iLCJlbWFpbCI6ImRhcmlvcGFsbWluaW9AZ21haWwuY29tIn0.TSFqIjbEKZeDuIfnObiMhMzsrfgptUaRmkOzJ9uSeJ2JsVwAyyHzESB_fQbqFywkjjJ4fJTlUWiPvP2EIXWKDgdRqsBiSD-qLp7B2Sa4LEf8JQInDynlXMpCUfbLwcLk9vZMl0fgoiIqIdjMDhlw8RTJ-NmsIQj-6FvEZZif0x6gbekL4_t0OofS1t7DgzzYKQQ_aMv3xIAord_7cRGf-XJVMI6_8VOUovbysWMhSVE0kSq3vw6o_irjCjcTbPfggnNucrXWDA7-Or9CmUIFd-GLVls35lHLUeoWpbZYxCVzqQL-4CBm12HN8ssFypKvgwJm82kiLBF0OHXFLBKqkw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":\"c564cd25-3cbb-4b20-b138-2cd9e0462a1f\",\n\"adminToken\":\"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MzYwNzgyMzcsImlhdCI6MTYzNjA3ODE3NywianRpIjoiNGEyNWMxZDItMTE3Mi00ZjlkLWI4MGMtYTQwNTk4OWIzNDhkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiNzBkMjE3NGItOGJkZC00ODdhLTk0YjQtNWM1YjZlNjE5ODI2IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI5YWJhZmJkOC1iODlkLTQ4YTUtYmY2MS1iNGIwY2FjYTI0MzciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwidmlldy1yZWFsbSIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfSwicmVzdC1jbGllbnQtdGVzdCI6eyJyb2xlcyI6WyJtYW5hZ2UtcmVhbG0iLCJtYW5hZ2UtdXNlcnMiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJEYSBDaG95IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGFjaG95QHN0ZWZhbmluaS5jb20iLCJnaXZlbl9uYW1lIjoiRGEiLCJmYW1pbHlfbmFtZSI6IkNob3kiLCJlbWFpbCI6ImRhY2hveUBzdGVmYW5pbmkuY29tIn0.ItrwVI4zoMrIMqQS11mqwTQNvWbmXvd64gY5xWoQD4EyIPPD0ky77BJR3gI40CpWzrUZ-QWH9EZpiK1D4bWXsnUGEgFa4k3FXQvynkU4HAHsqh_ekL6A559WSUUB5yXvcmUkFloOIlx8bKPapIcekBQm_ygfz-KtBhaPVnzm09zBY4fgzDtvOS-fRY9BOl0BZqWO1FK-Yc9RNsTndAKiDl-Dj8-BSpgS1z1js5gLIJEauhUrYhUHKOyqFyAGAGQKVkistojWp9WvXO91fvq4nqoyLeqDPWUmQNiW8WOa5MF1e7WWmnwkiOrUXQtiOBQ0HQau0PXDwDh5zgcP9XrB-w\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user Hello",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user\": \"test\",\n\"code\": \"example\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User ALL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/users/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"users",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/sendStartEmailConfirm",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "locale",
+						"value": "es",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"coc\",\n\"username\": \"dariopalminio@gmail.com\",\n\"email\": \"dariopalminio@gmail.com\",\n\"verificationPageLink\": \"https://www.gettyimages.es/fotos/santiago-chile\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/auth/register/confirm/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"auth",
+						"register",
+						"confirm",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/sendEndEmailConfirm",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"Test Name\",\n\"email\": \"dachoy@stefanini.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/user/sendEndEmailConfirm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user",
+						"sendEndEmailConfirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"authId\": \"1234567890\",\n\"userName\": \"kalo@gmail.com\",\n\"firstName\": \"Kalo\",\n\"lastName\": \"Prado\",\n\"email\": \"kalo@gmail.co\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/users/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"users",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/isVerificationCodeOk",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"username\": \"kalo@gmail.com\",\n\"verificationCode\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/users/isVerificationCodeOk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"users",
+						"isVerificationCodeOk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/delete User ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/users/delete?id=6175b91487a04a35d18440af",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"users",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "6175b91487a04a35d18440af"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category Hello",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category ALL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/all?page=1&limit=2&orderBy=name&isAsc=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						"all"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "2"
+						},
+						{
+							"key": "orderBy",
+							"value": "name"
+						},
+						{
+							"key": "isAsc",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Category Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"Celulares\",\n\"description\": \"Celulares y gadgets\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/id/60e0ded93267c61a7e118918",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						"id",
+						"60e0ded93267c61a7e118918"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Category",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"Jardin grande\",\n\"description\": \"Artefactos de hogares grandes\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/update?id=60e0ded93267c61a7e118918",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						"update"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60e0ded93267c61a7e118918"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/categories/delete?id=60e264d5d9787e34850f57df",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"categories",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60e264d5d9787e34850f57df"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product Hello",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqbVM2UGZhRXRqbXhVM1UxSmt2blhaQ2V0YkFYR3JWdzJpYl9ESXhVWW80In0.eyJleHAiOjE2MjQyNDA3ODEsImlhdCI342432Zi00YjI4LThkZTYtNzU5N2QzYzUxNmY2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL215LXJlYWxtLXRlc3QiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYmI3M2M5NTMtNTdmNy00ZTcxLTlhZDUtMzQyZTRkNWYwNjdmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicmVzdC1jbGllbnQtdGVzdCIsInNlc3Npb25fc3RhdGUiOiI4MmIyN2Q2Yy03ZTc2LTRmZDMtOGE5MC0yZmM1OTUzNGQ5ZTQiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbXktcmVhbG0tdGVzdCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImNvY28gY29jbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImNvY29AZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6ImNvY28iLCJmYW1pbHlfbmFtZSI6ImNvY28iLCJlbWFpbCI6ImNvY29AZ21haWwuY29tIn0.srydBpUEONumQSy624h5cYJR9k1Re9CI1iz_hyXqwlget4lM142kBjE7-dzI11PNZx0-7bQEDcvdx0lS1Nf31Hvu6pTwBm9wgldWc4LDUzJOnTvfkf81x0XhmtLgu4OvaS8z_HOSh6rD6CXq94iAl6aGaFlkBZM5B34fHkTVYUnSH-hT-nQi8LOv5FfeOMCV-wkof_52lgxY9ytYfOp23tkK5XxkLlGI1P3F58dOth8vcdWPF8iVAxr3bUnvtH_burldvFSqh7QIFDdK4WMkb6g0N_MZMozXadDlnY_plKBqtGBXUJLMTd4_Ze93Lf3gfLpUO-ArOTvknkXBRt12uw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"mueble de patio\",\n\"description\": \"Mueble de patio\",\n\"imageURL\":\"https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=658&q=80\",\n\"price\": 2000,\n\"sku\": \"aaHRQ3979\",\n\"barcode\": \"aaHRQ3979\",\n\"stock\": 5,\n\"categories\": {\n        \"_id\": \"60e0ded93267c61a7e118918\",\n        \"name\": \"Jardin\",\n        \"description\": \"Artefactos de hogar\"\n}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Productos ALL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/id/60e13c077fb12f24e2f7a61e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						"id",
+						"60e13c077fb12f24e2f7a61e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/delete?id=60e12e1207d43822059cde81",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60e12e1207d43822059cde81"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product Copy",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"mueble de lujo\",\n\"description\": \"Mueble de frio\",\n\"imageURL\":\"https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=658&q=80\",\n\"price\": 2000,\n\"sku\": \"aaHRQ3979\",\n\"barcode\": \"aaHRQ3979\",\n\"stock\": 5,\n\"categories\": {\n        \"_id\": \"60e0ded93267c61a7e118918\"\n}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/webshop/v1/products/update?id=60e13c077fb12f24e2f7a61e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"webshop",
+						"v1",
+						"products",
+						"update"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "60e13c077fb12f24e2f7a61e"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

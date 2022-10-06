@@ -1,0 +1,57 @@
+{
+  "exp": 1662587448,
+  "iat": 1662587148,
+  "jti": "f66719b7-6233-48d8-8d45-ccb55dfe3b72",
+  "iss": "http://localhost:8080/auth/realms/my-realm-test",
+  "aud": [
+    "realm-management",
+    "account"
+  ],
+  "sub": "c67936af-dc90-4f0a-9d79-6dc39f498af1",
+  "typ": "Bearer",
+  "azp": "rest-client-test",
+  "session_state": "7a646e30-4dcb-481c-ac8c-8c43bf1a260f",
+  "acr": "1",
+  "allowed-origins": [
+    "*"
+  ],
+  "realm_access": {
+    "roles": [
+      "default-roles-my-realm-test",
+      "offline_access",
+      "app-admin",
+      "uma_authorization",
+      "app-user"
+    ]
+  },
+  "resource_access": {
+    "realm-management": {
+      "roles": [
+        "manage-users",
+        "view-users",
+        "query-groups",
+        "query-users"
+      ]
+    },
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    },
+    "rest-client-test": {
+      "roles": [
+        "uma_protection",
+        "admin",
+        "user"
+      ]
+    }
+  },
+  "scope": "profile email",
+  "email_verified": false,
+  "clientId": "rest-client-test",
+  "clientHost": "127.0.0.1",
+  "preferred_username": "service-account-rest-client-test",
+  "clientAddress": "127.0.0.1"
+}
