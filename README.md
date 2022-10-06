@@ -4,7 +4,17 @@
   <p><a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable backend server-side applications.</p>
   <p><a href="https://nestjs.com/" target="_blank">NestJs</a> framework for building backend.</p>
 
+## Stack
 
+- Stack: MERN + Nest + Typescript
+- Programming Language: Javascript, Typescript
+- Testing: Jest
+- Build, pack & automation tool: npm
+- Data Base NoSQL: Mongo
+- Security, authentication & authorization: OAuth 2.0
+- Backend Frameworks & libraries: NodeJS, NestJS
+- Documentation: Swagger
+- HTTP Client: Axios
 
 ## Installation from zero
 
