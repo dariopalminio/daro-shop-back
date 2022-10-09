@@ -152,7 +152,11 @@ export class AuthTokensService implements IAuthTokensService {
     if (!user)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. User not found!" });
 
+      console.log("login-->loginForm.password:", loginForm.password);
+      console.log("login--> user.password:",  user.password);
     const validPassword = await bcrypt.compare(loginForm.password, user.password);
+
+    console.log("login-->validPassword:", validPassword);
 
     if (!validPassword)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
@@ -164,7 +168,7 @@ export class AuthTokensService implements IAuthTokensService {
       email_verified: user.verified,
       firstName: user.firstName,
       lastName: user.lastName,
-      username: user.userName,
+      userName: user.userName,
       email: user.email
     };
 
@@ -208,7 +212,7 @@ export class AuthTokensService implements IAuthTokensService {
       email_verified: user.verified,
       firstName: user.firstName,
       lastName: user.lastName,
-      username: user.userName,
+      userName: user.userName,
       email: user.email
     };
 
@@ -242,7 +246,7 @@ export class AuthTokensService implements IAuthTokensService {
       email_verified: true,
       firstName: "App",
       lastName: "App",
-      username: authClientDTO.client_id,
+      userName: authClientDTO.client_id,
       email: authClientDTO.client_id
     };
 
@@ -283,7 +287,7 @@ export class AuthTokensService implements IAuthTokensService {
         email_verified: jwtDecoded.email_verified,
         firstName: jwtDecoded.firstName,
         lastName: jwtDecoded.lastName,
-        username: jwtDecoded.username,
+        userName: jwtDecoded.username,
         email: jwtDecoded.email
       };
     } catch (error) {

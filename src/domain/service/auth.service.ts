@@ -118,7 +118,7 @@ export class AuthService implements IAuthService {
       email_verified: userCreated.verified,
       firstName: userCreated.firstName,
       lastName: userCreated.lastName,
-      username: userCreated.userName,
+      userName: userCreated.userName,
       email: userCreated.email
     };
 
