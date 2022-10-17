@@ -1,6 +1,4 @@
-import { Controller, Get, Res, Inject, Headers, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put } from '@nestjs/common';
-import { HttpHealthIndicator, HealthCheckService, MongooseHealthIndicator } from "@nestjs/terminus";
-import { ITranslator } from 'src/domain/output-port/translator.interface';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Address } from 'src/domain/model/profile/address';
 import { IShippingPriceService } from 'src/domain/service/interface/shipping-price.service.interface';
@@ -11,26 +9,26 @@ import { RolesGuard } from '../guard/roles.guard';
 @Controller('shipping/price')
 export class ShippingPriceController {
 
-    constructor(
-        @Inject('IShippingPriceService')
-        private readonly shippingPriceService: IShippingPriceService<IShippingPrice>,
-        @Inject('IGlobalConfig')
-        private readonly globalConfig: IGlobalConfig,
-      ) { }
+  constructor(
+    @Inject('IShippingPriceService')
+    private readonly shippingPriceService: IShippingPriceService<IShippingPrice>,
+    @Inject('IGlobalConfig')
+    private readonly globalConfig: IGlobalConfig,
+  ) { }
 
 
-    @Get('address')
-    async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
-        if (!countryParam || !stateParam || !neighborhoodParam || !cityParam) throw new BadRequestException('Missing some parameter!');
-        //(country?: string, state?: string, city?: string, neighborhood?: string, street?: string, department?: string)
-        const addrs: Address = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
-        console.log("address/price addrs:", addrs);
-        console.log("getPriceByRegion to region:", stateParam.toString());
-        const pricingObj: any = await this.shippingPriceService.getPriceByAddress(addrs);
-        return res.status(200).json(pricingObj);
-    };
+  @Get('address')
+  async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
+    if (!countryParam || !stateParam || !neighborhoodParam || !cityParam)
+      throw new BadRequestException('Missing some parameter!');
+    const addrs: Address = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
+    const pricingObj: any = await this.shippingPriceService.getPriceByAddress(addrs);
+    if (pricingObj === null) 
+      throw new NotFoundException('Location not found');
+    return res.status(200).json(pricingObj);
+  };
 
-    // Get Products /user/all
+  // Get Products /user/all
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
 
@@ -75,10 +73,10 @@ export class ShippingPriceController {
     });
   };
 
-  
+
   @Put('update')
-  async updateProfile(@Res() res, @Body() shippingPriceDTO: IShippingPrice){
-    const query = {location: shippingPriceDTO.location};
+  async updateProfile(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
+    const query = { location: shippingPriceDTO.location };
     const updatedObj = await this.shippingPriceService.update(query, shippingPriceDTO);
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
