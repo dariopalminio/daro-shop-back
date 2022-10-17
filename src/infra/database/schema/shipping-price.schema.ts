@@ -1,0 +1,25 @@
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import { Document, Schema as MongoSchema } from 'mongoose';
+
+export type ShippingPriceDocument = ShippingPrice & Document;
+
+@Schema()
+export class ShippingPrice {
+
+  //_id: holds an ObjectId.
+
+  @Prop({ required: true, unique: true })
+  location: string; 
+
+  @Prop({ required: true })
+  price: number;
+
+  @Prop({ required: true })
+  money: string;
+
+  @Prop({ required: true })
+  description: string;
+
+};
+
+export const ShippingPriceSchema = SchemaFactory.createForClass(ShippingPrice);

@@ -53,7 +53,10 @@ import { ProfileSchema } from 'src/infra/database/schema/profile.schema';
 import { ProfileRepository } from 'src/infra/database/repository/profile.repository';
 import { ProfileController } from './controller/profile.controller';
 import { ProfileService } from '../domain/service/profile.service';
-import { ShippingController } from './controller/shipping.controller';
+import { ShippingPriceService } from '../domain/service/shipping-price.service';
+import { ShippingPriceController } from './controller/shipping-price.controller';
+import { ShippingPriceSchema } from 'src/infra/database/schema/shipping-price.schema';
+import { ShippingPriceRepository } from 'src/infra/database/repository/shipping-price.repository';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -68,6 +71,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'Category', schema: CategorySchema },
       { name: 'User', schema: UserSchema },
       { name: 'Profile', schema: ProfileSchema },
+      { name: 'ShippingPrice', schema: ShippingPriceSchema },
     ]),
     I18nModuleConfig,
     /*ServeStaticModule.forRoot({
@@ -79,7 +83,9 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       }
     }),*/
   ],
-  controllers: [AppController, AuthController, AuthTokensController, UserController, ProfileController, NotificationController, ProductController, CategoryController, ShippingController],
+  controllers: [AppController, AuthController, AuthTokensController,
+    UserController, ProfileController, NotificationController,
+    ProductController, CategoryController, ShippingPriceController],
   providers: [
     {
       provide: APP_GUARD,
@@ -126,6 +132,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       useClass: CategoryService,
     },
     {
+      provide: 'IShippingPriceService',
+      useClass: ShippingPriceService,
+    },
+    {
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
@@ -140,6 +150,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
     {
       provide: 'IProductRepository',
       useClass: ProductRepository,
+    },
+    {
+      provide: 'IShippingPriceRepository',
+      useClass: ShippingPriceRepository,
     },
     {
       provide: APP_FILTER,
@@ -159,9 +173,9 @@ export class AppModule implements OnModuleInit {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware)
       .exclude({ path: 'login', method: RequestMethod.POST },
-      { path: 'auth/tokens/login', method: RequestMethod.POST },
-      { path: '/auth/tokens/login', method: RequestMethod.POST },
-      { path: '/auth/tokens/login/', method: RequestMethod.POST },
+        { path: 'auth/tokens/login', method: RequestMethod.POST },
+        { path: '/auth/tokens/login', method: RequestMethod.POST },
+        { path: '/auth/tokens/login/', method: RequestMethod.POST },
       )
       .forRoutes(AppController, AuthController, UserController, NotificationController, ProductController, CategoryController);
   };
