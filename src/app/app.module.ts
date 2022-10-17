@@ -53,6 +53,7 @@ import { ProfileSchema } from 'src/infra/database/schema/profile.schema';
 import { ProfileRepository } from 'src/infra/database/repository/profile.repository';
 import { ProfileController } from './controller/profile.controller';
 import { ProfileService } from '../domain/service/profile.service';
+import { ShippingController } from './controller/shipping.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -78,7 +79,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       }
     }),*/
   ],
-  controllers: [AppController, AuthController, AuthTokensController, UserController, ProfileController, NotificationController, ProductController, CategoryController],
+  controllers: [AppController, AuthController, AuthTokensController, UserController, ProfileController, NotificationController, ProductController, CategoryController, ShippingController],
   providers: [
     {
       provide: APP_GUARD,
