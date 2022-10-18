@@ -93,14 +93,14 @@ export class AuthService implements IAuthService {
       roles: ["User"]
     };
 
-    let wasCreated: boolean;
+    let idNew: string;
     try {
-      wasCreated = await this.userService.create(newUser);
+      idNew = await this.userService.create(newUser);
     } catch (error) {
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Error al registrar usuario' });
     }
     let userCreated: IUser;
-    if (wasCreated) {
+    if (idNew) {
       try {
         userCreated = await this.userService.getUserJustRegister(userRegisterData.email );
       } catch (error) {

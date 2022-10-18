@@ -33,7 +33,7 @@ export class Order {
     @Prop({ required: true })
     total: number;
 
-    @Prop({ required: true })
+    @Prop({ required: true, default: "INITIALIZED" })
     status: string;
 
     @Prop({ required: true, default: new Date() })

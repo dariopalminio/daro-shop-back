@@ -111,11 +111,12 @@ export class CategoryRepository implements IRepository<ICategory> {
         return true;
     }
 
-    async create<ICategory>(doc: ICategory): Promise<boolean> {
+    async create<ICategory>(doc: ICategory): Promise<string> {
         const docCreated: CategoryDocument = await this.categoryModel.create(doc);
-        return !!docCreated;
-    };
-
+        const objectIdNew = docCreated._id;
+        return objectIdNew.toString();
+    }
+    
     async updateById(id: string, doc: any): Promise<boolean> {
         const docUpdated: CategoryDocument = await this.categoryModel.findByIdAndUpdate(id, doc, { useFindAndModify: false }).exec();
         return !!docUpdated;

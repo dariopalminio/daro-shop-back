@@ -18,7 +18,7 @@ export interface IRepository<T> {
     getByQuery(query: any, fieldsToExclude?: any): Promise<T>;
     hasById(id: string): Promise<boolean> ;
     hasByQuery(query: any): Promise<boolean>;
-    create<R>(doc: R | T): Promise<boolean>;
+    create<R>(doc: R | T): Promise<string>;
     updateById<R>(id: string, doc: R | T): Promise<boolean>;
     update(query: any, valuesToSet: any): Promise<boolean>;
     delete(id: string): Promise<boolean>;

@@ -32,10 +32,9 @@ export class CategoryService implements ICategoryService<ICategory> {
     return category;
   };
 
-  async create(categoryDTO: CategoryDTO): Promise<boolean> {
-    const newCat: Promise<boolean> = this.categoryRepository.create(categoryDTO);
-    console.log(newCat);
-    return newCat;
+  async create(categoryDTO: CategoryDTO): Promise<string> {
+    const idNew: Promise<string> = this.categoryRepository.create(categoryDTO);
+    return idNew;
   };
 
   // Delete category return this.labelModel.deleteOne({ osCode }).exec();

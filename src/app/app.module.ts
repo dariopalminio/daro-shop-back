@@ -60,6 +60,7 @@ import { ShippingPriceRepository } from 'src/infra/database/repository/shipping-
 import { OrderRepository } from 'src/infra/database/repository/order.repository';
 import { OrderService } from 'src/domain/service/order.service';
 import { OrderController } from './controller/order.controller';
+import { OrderSchema } from 'src/infra/database/schema/order.schema';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -75,7 +76,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'User', schema: UserSchema },
       { name: 'Profile', schema: ProfileSchema },
       { name: 'ShippingPrice', schema: ShippingPriceSchema },
-      { name: 'Order', schema: ShippingPriceSchema },
+      { name: 'Order', schema: OrderSchema },
     ]),
     I18nModuleConfig,
     /*ServeStaticModule.forRoot({

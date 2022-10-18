@@ -28,7 +28,7 @@ export class ProfileService implements IProfileService<IProfile> {
     return user;
   };
 
-  async create(userRegisterDTO: IProfile): Promise<boolean> {
+  async create(userRegisterDTO: IProfile): Promise<string> {
     try {
       let newProf: IProfile = new Profile();
       newProf.userId = userRegisterDTO.userId;
@@ -43,9 +43,8 @@ export class ProfileService implements IProfileService<IProfile> {
       newProf.addresses = userRegisterDTO.addresses,
       newProf.enable = true;
 
-      const newCat: boolean = await this.profileRepository.create(newProf);
-      console.log(newCat);
-      return newCat;
+      const idNew: string = await this.profileRepository.create(newProf);
+      return idNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {

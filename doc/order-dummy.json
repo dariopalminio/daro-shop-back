@@ -1,0 +1,56 @@
+{
+    "client": {
+        "userId": "ANONYMOUS",
+        "firstName": "ANONYMOUS",
+        "lastName": "ANONYMOUS",
+        "email": "ANONYMOUS@gmail.com",
+        "docType": "",
+        "document": "",
+        "telephone": ""
+    },
+    "orderItems": [
+        {
+            "itemId": "0",
+            "productId": "1",
+            "imageUrl": "https://i.pinimg.com/originals/95/5d/e2/955de20dd2d6f457a1cfdadb8edc23d4.png",
+            "name": "Paisaje con palmeras",
+            "grossPrice": 23.4,
+            "qty": 1,
+            "stock": 1,
+            "amount": 23.4
+        },
+        {
+            "itemId": "1",
+            "productId": "3",
+            "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2SmahEEhWXut-9211CpUtZLrOljU8BfdnBUlt60UwBVemJ0rXC3T9-SEuMAfH6ttUmMg&usqp=CAU",
+            "name": "Entre montañas 3D",
+            "grossPrice": 50,
+            "qty": 1,
+            "stock": 1,
+            "amount": 50
+        },
+        {
+            "itemId": "2",
+            "productId": "6",
+            "imageUrl": "https://wallpaperbat.com/img/11896-outrun-sunset-wallpaper.jpg",
+            "name": "Palmeras al sol",
+            "grossPrice": 88,
+            "qty": 1,
+            "stock": 1,
+            "amount": 88
+        }
+    ],
+    "includesShipping": true,
+    "shippingAddress": {
+        "street": "Galvarino Gallardo 1750",
+        "department": "1001",
+        "neighborhood": "Providencia",
+        "city": "Santiago",
+        "state": "Santiago",
+        "country": "Chile"
+    },
+    "subTotal": 73.4,
+    "shippingPrice": 10,
+    "total": 83.4,
+    "status": "INITIALIZED"
+}

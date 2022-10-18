@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
 import { IUser } from 'src/domain/model/user/user.interface';
 import { UserDTO } from 'src/domain/model/user/user-register.dto.type';
@@ -81,11 +81,16 @@ export class UserController {
   @Roles('admin', 'manage-account')
   @Post('create')
   async createUser(@Res() res, @Body() userRegisterDTO: UserDTO) {
-    const categoryCreated = await this.userService.create(userRegisterDTO);
-    if (!categoryCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    let createdId: string;
+    try {
+      createdId = await this.userService.create(userRegisterDTO);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
+    if (!createdId) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
-      categoryCreated
+      id: createdId
     });
   };
 

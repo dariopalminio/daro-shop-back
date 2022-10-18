@@ -46,7 +46,7 @@ export class UserService implements IUserService<IUser> {
     return u2;
   };
 
-  async create(userRegisterDTO: IUser): Promise<boolean> {
+  async create(userRegisterDTO: IUser): Promise<string> {
     try {
       let newUser: IUser = new User();
       newUser.userName = userRegisterDTO.userName;
@@ -59,9 +59,8 @@ export class UserService implements IUserService<IUser> {
       newUser.enable = true;
       newUser.verificationCode = "";
 
-      const newCat: boolean = await this.userRepository.create(newUser);
-      console.log(newCat);
-      return newCat;
+      const idNew: string = await this.userRepository.create(newUser);
+      return idNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {

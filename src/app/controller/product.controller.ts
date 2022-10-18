@@ -139,16 +139,16 @@ export class ProductController {
   @Roles('admin', 'manage-account')
   @Post('create')
   async createProduct(@Res() res, @Body() createProductDTO: Product) {
-    let productCreated: boolean;
+    let productCreatedId: string;
     try {
-      productCreated = await this.productService.create(createProductDTO);
+      productCreatedId = await this.productService.create(createProductDTO);
     } catch (error) {
       throw new InternalServerErrorException(error);
-    };
-    if (!productCreated) throw new NotFoundException('Product does not exist or canot delete!');
+    }
+    if (!productCreatedId) throw new NotFoundException('Product does not exist or canot delete!');
     return res.status(HttpStatus.OK).json({
       message: 'Product Successfully Created',
-      created: productCreated
+      id: productCreatedId
     });
   };
 

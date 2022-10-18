@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Address } from 'src/domain/model/profile/address';
 import { IShippingPriceService } from 'src/domain/service/interface/shipping-price.service.interface';
@@ -23,7 +23,7 @@ export class ShippingPriceController {
       throw new BadRequestException('Missing some parameter!');
     const addrs: Address = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
     const pricingObj: any = await this.shippingPriceService.getPriceByAddress(addrs);
-    if (pricingObj === null) 
+    if (pricingObj === null)
       throw new NotFoundException('Location not found');
     return res.status(200).json(pricingObj);
   };
@@ -49,11 +49,16 @@ export class ShippingPriceController {
   @Post('create')
   async createShippingPrice(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
     console.log("create-->shippingPriceDTO:", shippingPriceDTO);
-    const objCreated = await this.shippingPriceService.create(shippingPriceDTO);
-    if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    let objCreatedId: string;
+    try {
+      objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
+    if (!objCreatedId) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Created Successfully',
-      objCreated
+      id: objCreatedId
     });
   };
 

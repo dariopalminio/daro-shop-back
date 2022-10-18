@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -80,11 +80,16 @@ export class ProfileController {
   @Roles('admin', 'manage-account')
   @Post('create')
   async createUser(@Res() res, @Body() userRegisterDTO: UserProfileDTO) {
-    const categoryCreated = await this.profileService.create(userRegisterDTO);
-    if (!categoryCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    let newId: string;
+    try {
+      newId = await this.profileService.create(userRegisterDTO);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
+    if (!newId) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
-      categoryCreated
+      id: newId
     });
   };
 
@@ -101,9 +106,9 @@ export class ProfileController {
     });
   };
 
-  
+
   @Put('update')
-  async updateProfile(@Res() res, @Body() userProfileDTO: UserProfileDTO){
+  async updateProfile(@Res() res, @Body() userProfileDTO: UserProfileDTO) {
     const updatedUser = await this.profileService.updateProfile(userProfileDTO);
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

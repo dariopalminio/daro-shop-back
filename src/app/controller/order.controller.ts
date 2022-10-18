@@ -38,7 +38,7 @@ export class OrderController {
     const objCreated = await this.orderService.create(orderDTO);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
-      message: 'Shipping Price Created Successfully',
+      message: 'Order Created Successfully',
       objCreated
     });
   };

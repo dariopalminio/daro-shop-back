@@ -139,11 +139,12 @@ console.log("order by:", orderByField);
         return true;
     }
 
-    async create<IProduct>(prod: Product): Promise<boolean> {
+    async create<IProduct>(prod: Product): Promise<string> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
-        return !!docCreated;
-    };
-
+        const objectIdNew = docCreated._id;
+        return objectIdNew.toString();
+    }
+    
     async updateById(id: string, prod: Product): Promise<boolean> {
         const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(id, prod, { useFindAndModify: false }).exec();
         return !!docUpdated;

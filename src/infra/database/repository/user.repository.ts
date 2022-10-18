@@ -111,10 +111,11 @@ export class UserRepository implements IRepository<IUser> {
         return true;
     }
 
-    async create<IUser>(doc: IUser): Promise<boolean> {
+    async create<IUser>(doc: IUser): Promise<string> {
         const docCreated: UserDocument = await this.userModel.create(doc);
-        return !!docCreated;
-    };
+        const objectIdNew = docCreated._id;
+        return objectIdNew.toString();
+    }
 
     async updateById(id: string, doc: any): Promise<boolean> {
         const docUpdated: UserDocument = await this.userModel.findByIdAndUpdate(id, doc, {useFindAndModify: false}).exec();

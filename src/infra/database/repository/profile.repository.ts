@@ -113,10 +113,11 @@ export class ProfileRepository implements IRepository<IProfile> {
         return true;
     }
 
-    async create<IProfile>(doc: IProfile): Promise<boolean> {
+    async create<IProfile>(doc: IProfile): Promise<string> {
         const docCreated: ProfileDocument = await this.profileModel.create(doc);
-        return !!docCreated;
-    };
+        const objectIdNew = docCreated._id;
+        return objectIdNew.toString();
+    }
 
     async updateById(id: string, doc: any): Promise<boolean> {
         const docUpdated: ProfileDocument = await this.profileModel.findByIdAndUpdate(id, doc, {useFindAndModify: false}).exec();

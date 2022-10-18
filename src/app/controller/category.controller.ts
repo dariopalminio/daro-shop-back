@@ -73,16 +73,16 @@ export class CategoryController {
   @Roles('admin', 'manage-account')
   @Post('create')
   async createCategory(@Res() res, @Body() createCategoryDTO: ICategory) {
-    let categoryCreated: boolean;
+    let newId: string;
     try {
-      categoryCreated = await this.categoryService.create(createCategoryDTO);
+      newId = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     };
-    if (!categoryCreated) throw new NotFoundException('Category does not exist or canot delete category!');
+    if (!newId) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
       message: 'Category Created Successfully',
-      created: categoryCreated
+      id: newId
     });
   };
 

@@ -2,21 +2,21 @@ import { IOrderItem } from './order-item.interface';
 
 export class OrderItem implements IOrderItem {
 
-    constructor(itemId: string, productId: string, imageURL: string, productName: string, grossPrice: number, quantity: number, itemAmount: number) {
+    constructor(itemId: string, productId: string, imageURL: string, productName: string, grossPrice: number, qty: number, amount: number) {
         this.itemId = itemId;
         this.productId = productId;
         this.imageURL = imageURL;
-        this.productName = productName;
+        this.name = productName;
         this.grossPrice = grossPrice;
-        this.quantity = quantity;
-        this.itemAmount = itemAmount;
+        this.qty = qty;
+        this.amount = amount;
     }
 
     itemId: string;
-    productId: string; //_id: holds an ObjectId.
+    productId: string;
     imageURL: string;
-    productName: string;
-    grossPrice: number;
-    quantity: number; 
-    itemAmount: number;
+    name: string;
+    grossPrice: number; //Total price of sale with VAT included
+    qty: number; 
+    amount: number;
 };

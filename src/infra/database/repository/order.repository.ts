@@ -108,9 +108,10 @@ export class OrderRepository implements IRepository<IOrder> {
         return true;
     }
 
-    async create<IOrder>(doc: IOrder): Promise<boolean> {
+    async create<IOrder>(doc: IOrder): Promise<string> {
         const docCreated: OrderDocument = await this.entityModel.create(doc);
-        return !!docCreated;
+        const objectIdNew = docCreated._id;
+        return objectIdNew.toString();
     };
 
     async updateById(id: string, doc: any): Promise<boolean> {
