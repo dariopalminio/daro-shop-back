@@ -35,8 +35,7 @@ export class UserRepository implements IRepository<IUser> {
             arrayDoc = await this.userModel.find({}).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
-        //return this.conversorArrayDocToCategory(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
     async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
@@ -54,7 +53,7 @@ export class UserRepository implements IRepository<IUser> {
             arrayDoc = await this.userModel.find(query).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
@@ -72,7 +71,7 @@ export class UserRepository implements IRepository<IUser> {
             arrayDoc = await this.userModel.find(query).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<IUser> {
@@ -146,14 +145,12 @@ export class UserRepository implements IRepository<IUser> {
     };
 
       
-    castArrayDocToUser(categoryDocArray: UserDocument[]): IUser[] {
-        let arrayCategory: User[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
+    castArrayDocToArrayDomainEntity(schemaDocArray: UserDocument[]): IUser[] {
+        let entityArray: User[] = [];
+        schemaDocArray.forEach(element => entityArray.push(
             JSON.parse(JSON.stringify(element))
         ));
-
-        return arrayCategory;
+        return entityArray;
     };
 
     async count(query: any): Promise<number>{

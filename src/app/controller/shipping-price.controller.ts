@@ -28,7 +28,6 @@ export class ShippingPriceController {
     return res.status(200).json(pricingObj);
   };
 
-  // Get Products /user/all
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
 
@@ -45,8 +44,6 @@ export class ShippingPriceController {
     }
   };
 
-
-  // Add User: /profiles/create
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')

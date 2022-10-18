@@ -19,7 +19,6 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
     return this.getByQuery({location: address.state});
   }
 
-  // Get all
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
     const shipPrice: IShippingPrice[] = await this.shippingPriceRepository.getAll(page, limit, orderByField, isAscending);
     return shipPrice;
@@ -30,13 +29,11 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
     return users;
   };
 
-  // Get a single
   async getById(id: string): Promise<IShippingPrice> {
     const user: IShippingPrice = await this.shippingPriceRepository.getById(id);
     return user;
   };
 
-  //Create new user with basic data
   async create(shippingPriceRegisterDTO: IShippingPrice): Promise<boolean> {
     try {
       let newObj: IShippingPrice = new ShippingPrice();
@@ -61,13 +58,11 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
     }
   };
 
-  // Delete user return this.labelModel.deleteOne({ osCode }).exec();
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.shippingPriceRepository.delete(id);
     return deleted;
   };
 
-  // Put a single user
   async updateById(id: string, user: IShippingPrice): Promise<boolean> {
     const updatedUser: boolean = await this.shippingPriceRepository.updateById(id, user);
     return updatedUser;

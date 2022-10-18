@@ -1,18 +1,26 @@
 import { IOrder } from './order.interface';
 import { IOrderItem } from './order-item.interface';
+import { Address } from '../profile/address';
+import { Client } from './client';
+import { OrderStatus } from './order-status.enum';
 
 export class Order implements IOrder {
 
-    constructor(id: string, userId: string) {
-        this._id = id;
-        this.userId = userId;
-        this.orderAmount = 0;
-        this.status = "pending"; 
-    }
-
     _id: string; //_id: holds an ObjectId.
-    userId: string;
+
+    client: Client;
+    
     orderItems: IOrderItem[];
-    orderAmount: number;
+
+    includesShipping: boolean; //if is false then includes pick up in store
+    shippingAddress: Address;
+
+    subTotal: number;
+    shippingPrice: number;
+    total: number;
+    
     status: string;
+    
+    createdAt?: Date;
+    updatedAt?: Date;
 };

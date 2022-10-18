@@ -57,6 +57,9 @@ import { ShippingPriceService } from '../domain/service/shipping-price.service';
 import { ShippingPriceController } from './controller/shipping-price.controller';
 import { ShippingPriceSchema } from 'src/infra/database/schema/shipping-price.schema';
 import { ShippingPriceRepository } from 'src/infra/database/repository/shipping-price.repository';
+import { OrderRepository } from 'src/infra/database/repository/order.repository';
+import { OrderService } from 'src/domain/service/order.service';
+import { OrderController } from './controller/order.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -72,6 +75,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'User', schema: UserSchema },
       { name: 'Profile', schema: ProfileSchema },
       { name: 'ShippingPrice', schema: ShippingPriceSchema },
+      { name: 'Order', schema: ShippingPriceSchema },
     ]),
     I18nModuleConfig,
     /*ServeStaticModule.forRoot({
@@ -85,7 +89,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
   ],
   controllers: [AppController, AuthController, AuthTokensController,
     UserController, ProfileController, NotificationController,
-    ProductController, CategoryController, ShippingPriceController],
+    ProductController, CategoryController, ShippingPriceController, OrderController],
   providers: [
     {
       provide: APP_GUARD,
@@ -136,6 +140,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       useClass: ShippingPriceService,
     },
     {
+      provide: 'IOrderService',
+      useClass: OrderService,
+    },
+    {
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
@@ -154,6 +162,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
     {
       provide: 'IShippingPriceRepository',
       useClass: ShippingPriceRepository,
+    },
+    {
+      provide: 'IOrderRepository',
+      useClass: OrderRepository,
     },
     {
       provide: APP_FILTER,

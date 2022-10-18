@@ -1,0 +1,39 @@
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import { Document, Schema as MongoSchema, Types } from 'mongoose';
+import { PaymentStatus } from 'src/domain/model/payment/payment-status.enum';
+
+export type PaymentDocument = Payment & Document;
+
+@Schema()
+export class Payment {
+
+  //_id: holds an ObjectId.
+  @Prop({ required: true })
+  userName: string;
+
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  orderId: string;
+
+  @Prop()
+  amount: number;
+
+  @Prop()
+  paymentMethod: string;
+
+  @Prop({ required: true, default: PaymentStatus.INITIALIZED })
+  status?: string;
+
+  @Prop({ required: true, default: new Date() })
+  createdAt?: Date;
+
+  @Prop({ required: true, default: new Date() })
+  updatedAt?: Date;
+
+  @Prop({ type: Types.Map })
+  meta: any;
+};
+
+export const PaymentSchema = SchemaFactory.createForClass(Payment);

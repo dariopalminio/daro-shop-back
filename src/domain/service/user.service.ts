@@ -12,7 +12,6 @@ export class UserService implements IUserService<IUser> {
     private readonly userRepository: IRepository<IUser>) {
   }
 
-  // Get all
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
     const users: IUser[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
     return users;
@@ -23,7 +22,6 @@ export class UserService implements IUserService<IUser> {
     return users;
   };
 
-  // Get a single
   async getById(id: string): Promise<IUser> {
     const user: IUser = await this.userRepository.getById(id);
     return user;
@@ -48,7 +46,6 @@ export class UserService implements IUserService<IUser> {
     return u2;
   };
 
-  //Create new user with basic data
   async create(userRegisterDTO: IUser): Promise<boolean> {
     try {
       let newUser: IUser = new User();
@@ -78,13 +75,11 @@ export class UserService implements IUserService<IUser> {
     }
   };
 
-  // Delete user return this.labelModel.deleteOne({ osCode }).exec();
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.userRepository.delete(id);
     return deleted;
   };
 
-  // Put a single user
   async updateById(id: string, user: IUser): Promise<boolean> {
     const updatedUser: boolean = await this.userRepository.updateById(id, user);
     return updatedUser;

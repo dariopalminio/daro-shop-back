@@ -36,7 +36,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
             arrayDoc = await this.shippingPriceModel.find({}).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
         //return this.conversorArrayDocToCategory(arrayDoc);
     };
 
@@ -55,7 +55,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
             arrayDoc = await this.shippingPriceModel.find(query).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
@@ -73,7 +73,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
             arrayDoc = await this.shippingPriceModel.find(query).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<IShippingPrice> {
@@ -147,14 +147,12 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
     };
 
       
-    castArrayDocToUser(categoryDocArray: ShippingPriceDocument[]): IShippingPrice[] {
-        let arrayCategory: ShippingPrice[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
+    castArrayDocToArrayDomainEntity(entityDocArray: ShippingPriceDocument[]): IShippingPrice[] {
+        let entitiesArray: ShippingPrice[] = [];
+        entityDocArray.forEach(element => entitiesArray.push(
             JSON.parse(JSON.stringify(element))
         ));
-
-        return arrayCategory;
+        return entitiesArray;
     };
 
     async count(query: any): Promise<number>{

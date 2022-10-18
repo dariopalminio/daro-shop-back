@@ -1,11 +1,9 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
 import { ICategory } from '../../../domain/model/category/category.interface';
 import { Category } from '../../../domain/model/category/category';
-import { CategoryDTO } from '../../../domain/model/category/category.dto';
 import { CategoryDocument } from '../schema/category.schema';
 
 
@@ -38,7 +36,7 @@ export class CategoryRepository implements IRepository<ICategory> {
             console.log(`getAll without page/limit`);
             arrayDoc = await this.categoryModel.find({}).exec();
         }
-        return this.castArrayDocToCategory(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
     async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ICategory[]> {
@@ -56,7 +54,7 @@ export class CategoryRepository implements IRepository<ICategory> {
             arrayDoc = await this.categoryModel.find(query).exec();
         }
 
-        return this.castArrayDocToCategory(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
     
@@ -146,30 +144,12 @@ export class CategoryRepository implements IRepository<ICategory> {
             String(categoryDoc.description));
     };
 
-    /**
-     * Convert from Mongo CategoryDocument array to Category class array.
-     *  This is a Casting function.
-     * @param categoryDocArray 
-     * @returns 
-     */
-    conversorArrayDocToCategory(categoryDocArray: CategoryDocument[]): ICategory[] {
-        let arrayCategory: Category[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
-            new Category(String(element._id), String(element.name), String(element.description))
-        ));
-
-        return arrayCategory;
-    };
-
-    castArrayDocToCategory(categoryDocArray: CategoryDocument[]): ICategory[] {
-        let arrayCategory: Category[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
+    castArrayDocToArrayDomainEntity(schemaDocArray: CategoryDocument[]): ICategory[] {
+        let domainEntityArray: Category[] = [];
+        schemaDocArray.forEach(element => domainEntityArray.push(
             JSON.parse(JSON.stringify(element))
         ));
-
-        return arrayCategory;
+        return domainEntityArray;
     };
 
     async count(query: any): Promise<number>{

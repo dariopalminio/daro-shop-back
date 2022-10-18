@@ -33,7 +33,7 @@ export class ProductRepository implements IRepository<IProduct> {
             // All without pagination and without sorting
             arrayDoc = await this.productModel.find({}).exec();
         }
-        return this.castArrayDocToProduct(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
     async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
@@ -51,7 +51,7 @@ export class ProductRepository implements IRepository<IProduct> {
             arrayDoc = await this.productModel.find(query).exec();
         }
 
-        return this.castArrayDocToProduct(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
     /**
@@ -96,7 +96,7 @@ console.log("order by:", orderByField);
             arrayDoc = await this.productModel.find(query).exec();
         }
 
-        return this.castArrayDocToProduct(arrayDoc);
+        return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
     /**
@@ -195,30 +195,12 @@ console.log("order by:", orderByField);
         );
     };
 
-    /**
-     * Convert from Mongo CategoryDocument array to Category class array.
-     *  This is a Casting function.
-     * @param categoryDocArray 
-     * @returns 
-     */
-    conversorArrayDocToCategory(docArray: ProductDocument[]): IProduct[] {
-        let productArray: IProduct[] = [];
-
-        docArray.forEach(element => productArray.push(
-            this.conversorDocToCategory(element)
-        ));
-
-        return productArray;
-    };
-
-    castArrayDocToProduct(categoryDocArray: ProductDocument[]): IProduct[] {
-        let arrayCategory: IProduct[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
+    castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): IProduct[] {
+        let domainEntityArray: IProduct[] = [];
+        schemaDocArray.forEach(element => domainEntityArray.push(
             JSON.parse(JSON.stringify(element))
         ));
-
-        return arrayCategory;
+        return domainEntityArray;
     };
 
     async count(query: any): Promise<number>{

@@ -147,14 +147,12 @@ export class ProfileRepository implements IRepository<IProfile> {
     };
 
       
-    castArrayDocToUser(categoryDocArray: ProfileDocument[]): IProfile[] {
-        let arrayCategory: Profile[] = [];
-
-        categoryDocArray.forEach(element => arrayCategory.push(
+    castArrayDocToUser(schemaDocArray: ProfileDocument[]): IProfile[] {
+        let entityArray: Profile[] = [];
+        schemaDocArray.forEach(element => entityArray.push(
             JSON.parse(JSON.stringify(element))
         ));
-
-        return arrayCategory;
+        return entityArray;
     };
 
     async count(query: any): Promise<number>{

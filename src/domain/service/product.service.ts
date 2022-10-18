@@ -85,19 +85,15 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async create(product: IProduct): Promise<boolean> {
-    //console.log("product to create:",product);
     const newProductCreated: Promise<boolean> = this.productRepository.create(product);
-    //console.log("product created:",newProducto);
     return newProductCreated;
   };
 
-  // Delete category return this.labelModel.deleteOne({ osCode }).exec();
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.productRepository.delete(id);
     return deleted;
   };
 
-  // Put a single category
   async updateById(id: string, product: IProduct): Promise<boolean> {
     const updatedProduct: boolean = await this.productRepository.updateById(id, product);
     return updatedProduct;

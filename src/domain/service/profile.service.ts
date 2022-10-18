@@ -13,7 +13,6 @@ export class ProfileService implements IProfileService<IProfile> {
     private readonly profileRepository: IRepository<IProfile>) {
   }
 
-  // Get all
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
     const users: IProfile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);
     return users;
@@ -24,13 +23,11 @@ export class ProfileService implements IProfileService<IProfile> {
     return users;
   };
 
-  // Get a single
   async getById(id: string): Promise<IProfile> {
     const user: IProfile = await this.profileRepository.getById(id);
     return user;
   };
 
-  //Create new user with basic data
   async create(userRegisterDTO: IProfile): Promise<boolean> {
     try {
       let newProf: IProfile = new Profile();
@@ -62,13 +59,11 @@ export class ProfileService implements IProfileService<IProfile> {
     }
   };
 
-  // Delete user return this.labelModel.deleteOne({ osCode }).exec();
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.profileRepository.delete(id);
     return deleted;
   };
 
-  // Put a single user
   async updateById(id: string, user: IProfile): Promise<boolean> {
     const updatedUser: boolean = await this.profileRepository.updateById(id, user);
     return updatedUser;
