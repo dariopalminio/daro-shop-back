@@ -79,12 +79,17 @@ export class Product {
     //The prices in television commercials, catalogues, internet and in the straps of the gondolas 
     //is published with VAT included.
 
-    
     @Prop({ required: true })
     stock: number; //value of inventory existence 
 
     @Prop()
     active: Boolean; //is active to sell?
+
+    @Prop({ required: true, default: new Date() })
+    createdAt?: Date;
+  
+    @Prop({ required: true, default: new Date() })
+    updatedAt?: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

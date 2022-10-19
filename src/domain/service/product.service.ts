@@ -84,9 +84,9 @@ export class ProductService implements IProductService<IProduct> {
     return product;
   };
 
-  async create(product: IProduct): Promise<string> {
-    const idNew: Promise<string> = this.productRepository.create(product);
-    return idNew;
+  async create(product: IProduct): Promise<IProduct> {
+    const entityNew: Promise<IProduct> = this.productRepository.create(product);
+    return entityNew;
   };
 
   async delete(id: string): Promise<boolean> {

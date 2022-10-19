@@ -46,7 +46,7 @@ export class UserService implements IUserService<IUser> {
     return u2;
   };
 
-  async create(userRegisterDTO: IUser): Promise<string> {
+  async create(userRegisterDTO: IUser): Promise<IUser> {
     try {
       let newUser: IUser = new User();
       newUser.userName = userRegisterDTO.userName;
@@ -59,8 +59,8 @@ export class UserService implements IUserService<IUser> {
       newUser.enable = true;
       newUser.verificationCode = "";
 
-      const idNew: string = await this.userRepository.create(newUser);
-      return idNew;
+      const userNew: IUser = await this.userRepository.create(newUser);
+      return userNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {

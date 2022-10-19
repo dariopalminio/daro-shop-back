@@ -113,10 +113,10 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
         return true;
     }
 
-    async create<IShippingPrice>(doc: IShippingPrice): Promise<string> {
+    async create(doc: IShippingPrice): Promise<IShippingPrice> {
         const docCreated: ShippingPriceDocument = await this.shippingPriceModel.create(doc);
-        const objectIdNew = docCreated._id;
-        return objectIdNew.toString();
+        const objCasted: IShippingPrice = JSON.parse(JSON.stringify(docCreated));
+        return objCasted;
     }
 
     async updateById(id: string, doc: any): Promise<boolean> {

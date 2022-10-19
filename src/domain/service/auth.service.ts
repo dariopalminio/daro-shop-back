@@ -84,25 +84,24 @@ export class AuthService implements IAuthService {
     const passwordCrypted: string = await bcrypt.hash(userRegisterData.password, salt);
 
     // Create new user in user database
-    const newUser: UserDTO = {
-      userName: userRegisterData.email,
-      firstName: userRegisterData.firstName,
-      lastName: userRegisterData.lastName,
-      email: userRegisterData.email,
-      password: passwordCrypted,
-      roles: ["User"]
-    };
+    let newObj: IUser = new User();
+    newObj.userName = userRegisterData.email;
+    newObj.firstName = userRegisterData.firstName;
+    newObj.lastName = userRegisterData.lastName;
+    newObj.email = userRegisterData.email;
+    newObj.password = passwordCrypted;
+    newObj.roles = ["User"];
 
-    let idNew: string;
+    let userNew: IUser;
     try {
-      idNew = await this.userService.create(newUser);
+      userNew = await this.userService.create(newObj);
     } catch (error) {
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Error al registrar usuario' });
     }
     let userCreated: IUser;
-    if (idNew) {
+    if (userNew) {
       try {
-        userCreated = await this.userService.getUserJustRegister(userRegisterData.email );
+        userCreated = await this.userService.getUserJustRegister(userRegisterData.email);
       } catch (error) {
         console.log("Cannot retrieve created user in registration process!");
         return { message: 'Cannot obtain user from data base!' }
@@ -123,7 +122,7 @@ export class AuthService implements IAuthService {
     };
 
     const tokens: TokensDTO = this.authTokensService.createTokens(payload, 86400, 86400 * 2);
-    
+
     return tokens;
   };
 

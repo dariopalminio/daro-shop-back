@@ -33,9 +33,8 @@ export class OrderService implements IOrderService<IOrder> {
     return user;
   };
 
-  async create(orderNew: IOrder): Promise<string> {
+  async create(orderNew: IOrder): Promise<IOrder> {
     try {
-      console.log("Service->Create orderNew:",orderNew);
       let newObj: IOrder = new Order();
       newObj.client = orderNew.client;
       newObj.orderItems = orderNew.orderItems;
@@ -45,8 +44,8 @@ export class OrderService implements IOrderService<IOrder> {
       newObj.shippingPrice = orderNew.shippingPrice;
       newObj.total = orderNew.total;
 
-      const idNew: string = await this.orderRepository.create(newObj);
-      return idNew;
+      const entityNew: IOrder = await this.orderRepository.create(newObj);
+      return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {

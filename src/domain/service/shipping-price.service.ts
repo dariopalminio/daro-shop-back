@@ -34,7 +34,7 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
     return user;
   };
 
-  async create(shippingPriceRegisterDTO: IShippingPrice): Promise<string> {
+  async create(shippingPriceRegisterDTO: IShippingPrice): Promise<IShippingPrice> {
     try {
       let newObj: IShippingPrice = new ShippingPrice();
       newObj.location = shippingPriceRegisterDTO.location;
@@ -42,8 +42,8 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
       newObj.price = shippingPriceRegisterDTO.price;
       newObj.money = shippingPriceRegisterDTO.money;
       
-      const idNew: string = await this.shippingPriceRepository.create(newObj);
-      return idNew;
+      const entityNew: IShippingPrice = await this.shippingPriceRepository.create(newObj);
+      return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {

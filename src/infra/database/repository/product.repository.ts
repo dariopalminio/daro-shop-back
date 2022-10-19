@@ -139,10 +139,10 @@ console.log("order by:", orderByField);
         return true;
     }
 
-    async create<IProduct>(prod: Product): Promise<string> {
+    async create(prod: Product): Promise<IProduct> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
-        const objectIdNew = docCreated._id;
-        return objectIdNew.toString();
+        const objCasted: IProduct = JSON.parse(JSON.stringify(docCreated));
+        return objCasted;
     }
     
     async updateById(id: string, prod: Product): Promise<boolean> {

@@ -2,7 +2,7 @@ export interface IPersistentAggregateService<T> {
       getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Array<T>>;
       find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Array<T>>; 
       getById(id: string): Promise<T>;
-      create<R>(doc: R | T): Promise<string>;
+      create(doc: T): Promise<T>;
       updateById<R>(id: string, doc: R | T): Promise<boolean>;
       delete(id: string): Promise<boolean>;
       getByQuery(query: any): Promise<T>;

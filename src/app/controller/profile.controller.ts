@@ -79,17 +79,17 @@ export class ProfileController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
-  async createUser(@Res() res, @Body() userRegisterDTO: UserProfileDTO) {
-    let newId: string;
+  async createUser(@Res() res, @Body() userRegisterDTO: IProfile) {
+    let newProfile: IProfile;
     try {
-      newId = await this.profileService.create(userRegisterDTO);
+      newProfile = await this.profileService.create(userRegisterDTO);
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!newId) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!newProfile) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
-      id: newId
+      profile: newProfile
     });
   };
 

@@ -33,13 +33,13 @@ export class OrderController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
-  async createShippingPrice(@Res() res, @Body() orderDTO: IOrder) {
+  async create(@Res() res, @Body() orderDTO: IOrder) {
     console.log("create-->shippingPriceDTO:", orderDTO);
     const objCreated = await this.orderService.create(orderDTO);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Created Successfully',
-      objCreated
+      order: objCreated
     });
   };
 

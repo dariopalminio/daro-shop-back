@@ -111,10 +111,10 @@ export class UserRepository implements IRepository<IUser> {
         return true;
     }
 
-    async create<IUser>(doc: IUser): Promise<string> {
+    async create(doc: IUser): Promise<IUser> {
         const docCreated: UserDocument = await this.userModel.create(doc);
-        const objectIdNew = docCreated._id;
-        return objectIdNew.toString();
+        const objCasted: IUser = JSON.parse(JSON.stringify(docCreated));
+        return objCasted;
     }
 
     async updateById(id: string, doc: any): Promise<boolean> {

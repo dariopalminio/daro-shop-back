@@ -49,7 +49,7 @@ export class ShippingPriceController {
   @Post('create')
   async createShippingPrice(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
     console.log("create-->shippingPriceDTO:", shippingPriceDTO);
-    let objCreatedId: string;
+    let objCreatedId: IShippingPrice;
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
     } catch (error) {
@@ -58,7 +58,7 @@ export class ShippingPriceController {
     if (!objCreatedId) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Created Successfully',
-      id: objCreatedId
+      shippingPrice: objCreatedId
     });
   };
 

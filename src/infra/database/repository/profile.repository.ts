@@ -113,10 +113,10 @@ export class ProfileRepository implements IRepository<IProfile> {
         return true;
     }
 
-    async create<IProfile>(doc: IProfile): Promise<string> {
+    async create(doc: IProfile): Promise<IProfile> {
         const docCreated: ProfileDocument = await this.profileModel.create(doc);
-        const objectIdNew = docCreated._id;
-        return objectIdNew.toString();
+        const objCasted: IProfile = JSON.parse(JSON.stringify(docCreated));
+        return objCasted;
     }
 
     async updateById(id: string, doc: any): Promise<boolean> {

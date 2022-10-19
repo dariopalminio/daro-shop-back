@@ -80,8 +80,8 @@ export class UserController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
-  async createUser(@Res() res, @Body() userRegisterDTO: UserDTO) {
-    let createdId: string;
+  async createUser(@Res() res, @Body() userRegisterDTO: IUser) {
+    let createdId: IUser;
     try {
       createdId = await this.userService.create(userRegisterDTO);
     } catch (error) {
@@ -90,7 +90,7 @@ export class UserController {
     if (!createdId) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
-      id: createdId
+      user: createdId
     });
   };
 
