@@ -55,4 +55,16 @@ export class OrderController {
     });
   };
 
+  @UseGuards(RolesGuard)
+  @Post('initialize')
+  async initialize(@Res() res, @Body() orderDTO: IOrder) {
+    console.log("initialize-->shippingPriceDTO:", orderDTO);
+    const objCreated = await this.orderService.initialize(orderDTO);
+    if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    return res.status(HttpStatus.OK).json({
+      message: 'Order Initialized Successfully',
+      order: objCreated
+    });
+  };
+
 };

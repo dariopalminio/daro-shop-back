@@ -2,7 +2,6 @@ import { IOrder } from './order.interface';
 import { IOrderItem } from './order-item.interface';
 import { Address } from '../profile/address';
 import { Client } from './client';
-import { OrderStatus } from './order-status.enum';
 
 export class Order implements IOrder {
 

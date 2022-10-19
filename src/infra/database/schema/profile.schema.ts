@@ -59,7 +59,11 @@ export class Profile {
     country: { type: String } //country
   }]
 
+  @Prop({ required: true, default: new Date() })
+  createdAt?: Date;
 
+  @Prop({ required: true, default: new Date() })
+  updatedAt?: Date;
 };
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
