@@ -134,8 +134,14 @@ export class OrderService implements IOrderService<IOrder> {
   };
 
   async confirm(orderId: string) {
+    //you must reserve the products
     const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.CONFIRMED, updatedAt: new Date()});
   }
+
+  async completePayment(orderId: string) {
+    //you must register the sale effectively discounting the stock
+    const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.PAID, updatedAt: new Date()});
+  };
 
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.orderRepository.delete(id);
