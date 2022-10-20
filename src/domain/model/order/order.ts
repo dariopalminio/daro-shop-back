@@ -10,7 +10,8 @@ export class Order implements IOrder {
     client: Client;
     
     orderItems: IOrderItem[];
-
+    count: number;
+    
     includesShipping: boolean; //if is false then includes pick up in store
     shippingAddress: Address;
 

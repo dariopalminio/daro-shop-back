@@ -19,6 +19,9 @@ export class Order {
     orderItems: IOrderItem[];
 
     @Prop({ required: true })
+    count: number;
+
+    @Prop({ required: true })
     includesShipping: boolean; //if is false then includes pick up in store
 
     @Prop()

@@ -10,6 +10,7 @@ import { IProduct } from '../model/product/product.interface';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
 import { IShippingPrice } from '../model/shipping/shipping-price.interface';
 import { OrderItem } from '../model/order/order-item';
+import { OrderStatus } from '../model/order/order-status.enum';
 
 @Injectable()
 export class OrderService implements IOrderService<IOrder> {
@@ -46,6 +47,7 @@ export class OrderService implements IOrderService<IOrder> {
       let newObj: IOrder = new Order();
       newObj.client = orderNew.client;
       newObj.orderItems = orderNew.orderItems;
+      newObj.count=orderNew.count;
       newObj.includesShipping = orderNew.includesShipping;
       newObj.shippingAddress = orderNew.shippingAddress;
       newObj.subTotal = orderNew.subTotal;
@@ -78,6 +80,7 @@ export class OrderService implements IOrderService<IOrder> {
     let newObj: IOrder = new Order();
     newObj.client = orderParam.client;
     newObj.orderItems = [];
+    newObj.count=0;
     newObj.includesShipping = orderParam.includesShipping;
     newObj.shippingAddress = orderParam.shippingAddress;
     newObj.subTotal = 0;
@@ -93,6 +96,7 @@ export class OrderService implements IOrderService<IOrder> {
       const newAmount: number = product.grossPrice * item.qty;
       const newItem = new OrderItem(item.itemId, item.productId, item.imageUrl, product.name, product.grossPrice, item.qty, newAmount);
       newObj.orderItems.push(newItem);
+      newObj.count+=item.qty;
     }
 
     //Calculate subtotals
@@ -129,14 +133,18 @@ export class OrderService implements IOrderService<IOrder> {
     }
   };
 
+  async confirm(orderId: string) {
+    const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.CONFIRMED, updatedAt: new Date()});
+  }
+
   async delete(id: string): Promise<boolean> {
     const deleted: boolean = await this.orderRepository.delete(id);
     return deleted;
   };
 
-  async updateById(id: string, user: IOrder): Promise<boolean> {
-    const updatedUser: boolean = await this.orderRepository.updateById(id, user);
-    return updatedUser;
+  async updateById(id: string, order: IOrder): Promise<boolean> {
+    const updated: boolean = await this.orderRepository.updateById(id, order);
+    return updated;
   };
 
   async getByUserName(userName: string): Promise<IOrder> {

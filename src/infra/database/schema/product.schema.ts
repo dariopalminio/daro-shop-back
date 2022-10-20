@@ -82,6 +82,10 @@ export class Product {
     @Prop({ required: true })
     stock: number; //value of inventory existence 
 
+
+    //reservations: {orderId, quantity}
+    //sales: {orderId, quantity, grossPrice}
+
     @Prop()
     active: Boolean; //is active to sell?
 

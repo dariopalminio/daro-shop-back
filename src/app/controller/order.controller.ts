@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
@@ -55,10 +55,9 @@ export class OrderController {
     });
   };
 
-  @UseGuards(RolesGuard)
   @Post('initialize')
   async initialize(@Res() res, @Body() orderDTO: IOrder) {
-    console.log("initialize-->shippingPriceDTO:", orderDTO);
+    console.log("initialize-->orderDTO:", orderDTO);
     const objCreated = await this.orderService.initialize(orderDTO);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -66,5 +65,21 @@ export class OrderController {
       order: objCreated
     });
   };
+
+  @Post('confirm')
+  async confirm(@Res() res, @Body() body: any) {
+    console.log("confirm-->body:", body);
+    const orderId: string = body.orderId;
+    try {
+      await this.orderService.confirm(orderId);
+      return res.status(HttpStatus.OK).json({
+        message: 'Order Confirmed Successfully',
+        orderId: orderId
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  };
+
 
 };
