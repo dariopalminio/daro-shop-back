@@ -61,6 +61,10 @@ import { OrderRepository } from 'src/infra/database/repository/order.repository'
 import { OrderService } from 'src/domain/service/order.service';
 import { OrderController } from './controller/order.controller';
 import { OrderSchema } from 'src/infra/database/schema/order.schema';
+import { PaymentMethodSchema } from 'src/infra/database/schema/payment-method.schema';
+import { PaymentMethodRepository } from 'src/infra/database/repository/payment-method.repository';
+import { PaymentMethodService } from 'src/domain/service/payment-method.service';
+import { PaymentMethodController } from './controller/payment-method.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -77,6 +81,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'Profile', schema: ProfileSchema },
       { name: 'ShippingPrice', schema: ShippingPriceSchema },
       { name: 'Order', schema: OrderSchema },
+      { name: 'PaymentMethod', schema: PaymentMethodSchema },
     ]),
     I18nModuleConfig,
     /*ServeStaticModule.forRoot({
@@ -90,7 +95,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
   ],
   controllers: [AppController, AuthController, AuthTokensController,
     UserController, ProfileController, NotificationController,
-    ProductController, CategoryController, ShippingPriceController, OrderController],
+    ProductController, CategoryController, ShippingPriceController, OrderController, PaymentMethodController],
   providers: [
     {
       provide: APP_GUARD,
@@ -145,6 +150,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       useClass: OrderService,
     },
     {
+      provide: 'IPaymentMethodService',
+      useClass: PaymentMethodService,
+    },
+    {
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
@@ -167,6 +176,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
     {
       provide: 'IOrderRepository',
       useClass: OrderRepository,
+    },
+    {
+      provide: 'IPaymentMethodRepository',
+      useClass: PaymentMethodRepository,
     },
     {
       provide: APP_FILTER,

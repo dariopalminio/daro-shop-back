@@ -108,3 +108,5 @@ shippingprices
 users
 db.orders.getIndexes()
 db.orders.dropIndexes()
+db.orders.createIndex( { userName: "text"} );
+db.orders.dropIndex("any_index_name_userName_1")
