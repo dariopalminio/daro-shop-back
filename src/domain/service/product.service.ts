@@ -4,6 +4,8 @@ import { IProduct } from 'src/domain/model/product/product.interface';
 import { IRepository } from '../output-port/repository.interface';
 import { ProductItemDTO } from 'src/domain/model/product/product-item.dto';
 import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { Reservation } from '../model/product/reservation';
+import { Sale } from '../model/product/sale';
 
 
 @Injectable()
@@ -49,8 +51,8 @@ export class ProductService implements IProductService<IProduct> {
 
     console.log("***********************************getCatalog:");
     let queryQuilter;
-    if (category.trim()==='') queryQuilter = { active: "true" };
-      else queryQuilter = { category: category, active: "true" };
+    if (category.trim() === '') queryQuilter = { active: "true" };
+    else queryQuilter = { category: category, active: "true" };
     const products: ProductItemDTO[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
     let filtered: FilteredProductsDTO = new FilteredProductsDTO();
     filtered.list = products;
@@ -95,7 +97,7 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async updateById(id: string, product: IProduct): Promise<boolean> {
-    const updatedProduct: boolean = await this.productRepository.updateById(id, {...product, updatedAt: new Date()});
+    const updatedProduct: boolean = await this.productRepository.updateById(id, { ...product, updatedAt: new Date() });
     return updatedProduct;
   };
 
@@ -105,7 +107,7 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.productRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    const updatedProduct: boolean = await this.productRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
     return updatedProduct;
   };
 
@@ -148,5 +150,61 @@ export class ProductService implements IProductService<IProduct> {
     sku = sku.toUpperCase();
     return sku;
   };
+
+  async addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean> {
+    let reserva: Reservation = new Reservation();
+    reserva.orderId = orderId;
+    reserva.quantity = quantity;
+    reserva.date = new Date();
+    let product: IProduct = await this.getById(productId);
+    if (quantity > product.stock)
+      throw new Error(`Insufficient stock. In orderId ${orderId} try to reserve quantity ${quantity} when there is ${product.stock} in stock`);
+    product.stock -= reserva.quantity;
+    product.reservations.push(reserva);
+    const updated: boolean = await this.updateById(productId, product);
+    return updated;
+  }
+
+  async revertStockReservation(productId: string, orderId: string): Promise<boolean> {
+    let product: IProduct = await this.getById(productId);
+    const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
+    if (reserveIndex === -1)
+      throw new Error(`Not found ${orderId} in reservation list of product ${productId}`);
+    const qty = product.reservations[reserveIndex].quantity;
+    product.stock += qty;
+
+    const newReservationList = [
+      ...product.reservations.slice(0, reserveIndex),
+      ...product.reservations.slice(reserveIndex + 1),
+    ];
+
+    product.reservations = newReservationList;
+
+    const updated: boolean = await this.updateById(productId, product);
+    return updated;
+  }
+
+  async moveReservationToSale(productId: string, orderId: string): Promise<boolean> {
+    let product: IProduct = await this.getById(productId);
+    const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
+    const reservation : Reservation = product.reservations[reserveIndex];
+
+    const newReservationList = [
+      ...product.reservations.slice(0, reserveIndex),
+      ...product.reservations.slice(reserveIndex + 1),
+    ];
+
+    product.reservations = newReservationList;
+
+    let newSale: Sale = new Sale();
+    newSale.orderId = reservation.orderId;
+    newSale.quantity = reservation.quantity;
+    newSale.grossPrice = product.grossPrice;
+    newSale.date = new Date();
+    product.sales.push(newSale);
+
+    const updated: boolean = await this.updateById(productId, product);
+    return updated;
+  }
 
 };

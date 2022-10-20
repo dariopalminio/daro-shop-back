@@ -99,4 +99,5 @@ export class ProfileService implements IProfileService<IProfile> {
     return await this.profileRepository.hasByQuery(query);
   };
 
+
 };

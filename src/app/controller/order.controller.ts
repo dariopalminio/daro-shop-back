@@ -51,7 +51,7 @@ export class OrderController {
     const objDeleted = await this.orderService.delete(id);
     if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
-      message: 'Shipping Price Deleted Successfully',
+      message: 'Order Deleted Successfully',
       objDeleted
     });
   };
@@ -83,5 +83,34 @@ export class OrderController {
     }
   };
 
+  @Put('abort')
+  async abort(@Res() res, @Body() body: any, @Query('orderId') orderId) {
+    console.log("confirm-->orderId:", orderId);
+    if (!orderId) throw new BadRequestException('orderId not specified!');
+    try {
+      await this.orderService.abort(orderId);
+      return res.status(HttpStatus.OK).json({
+        message: 'Order Aborted Successfully',
+        orderId: orderId
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  };
 
+  @Put('pay')
+  async completePayment(@Res() res, @Body() body: any, @Query('orderId') orderId) {
+    console.log("confirm-->orderId:", orderId);
+    if (!orderId) throw new BadRequestException('orderId not specified!');
+    try {
+      await this.orderService.completePayment(orderId);
+      return res.status(HttpStatus.OK).json({
+        message: 'Order Paid Successfully',
+        orderId: orderId
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  };
+  
 };

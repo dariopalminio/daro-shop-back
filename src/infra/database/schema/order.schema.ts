@@ -2,7 +2,6 @@ import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
 import { Client } from 'src/domain/model/order/client';
 import { IOrderItem } from 'src/domain/model/order/order-item.interface';
-
 import { Address } from 'src/domain/model/profile/address';
 
 export type OrderDocument = Order & Document;
@@ -24,7 +23,7 @@ export class Order {
     @Prop({ required: true })
     includesShipping: boolean; //if is false then includes pick up in store
 
-    @Prop()
+    @Prop({ required: true })
     shippingAddress: Address;
 
     @Prop({ required: true })

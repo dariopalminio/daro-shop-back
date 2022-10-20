@@ -1,5 +1,5 @@
 MongoDB Commands: https://mindmajix.com/mongodb-commands
-
+MongoDB shell version v5.0.10-rc0
 
 //launch db server
 export PATH=/Users/dariopalminio/Applications/mongodb-macos-x86_64-4.4.6/bin:$PATH
@@ -87,3 +87,24 @@ db.auth('admin','admin');
 db.getUsers();
 db.dbname.save({name:'darodb'});
 show collections;
+
+
+
+
+---------------------------RESET an index
+> show databases
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.001GB
+> use test
+switched to db test
+> show collections
+categories
+orders
+products
+profiles
+shippingprices
+users
+db.orders.getIndexes()
+db.orders.dropIndexes()

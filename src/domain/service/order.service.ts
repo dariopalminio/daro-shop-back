@@ -11,6 +11,8 @@ import { IShippingPriceService } from './interface/shipping-price.service.interf
 import { IShippingPrice } from '../model/shipping/shipping-price.interface';
 import { OrderItem } from '../model/order/order-item';
 import { OrderStatus } from '../model/order/order-status.enum';
+import { ResponseCode } from '../model/service/response.code.enum';
+
 
 @Injectable()
 export class OrderService implements IOrderService<IOrder> {
@@ -22,10 +24,6 @@ export class OrderService implements IOrderService<IOrder> {
     @Inject('IProductService')
     private readonly productService: IProductService<IProduct>,
   ) { }
-
-  getPriceByAddress(address: Address): Promise<any> {
-    return this.getByQuery({ location: address.state });
-  }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
     const shipPrice: IOrder[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);
@@ -44,10 +42,10 @@ export class OrderService implements IOrderService<IOrder> {
 
   async create(orderNew: IOrder): Promise<IOrder> {
     try {
-      let newObj: IOrder = new Order();
+      let newObj: Order = new Order();
       newObj.client = orderNew.client;
       newObj.orderItems = orderNew.orderItems;
-      newObj.count=orderNew.count;
+      newObj.count = orderNew.count;
       newObj.includesShipping = orderNew.includesShipping;
       newObj.shippingAddress = orderNew.shippingAddress;
       newObj.subTotal = orderNew.subTotal;
@@ -77,10 +75,10 @@ export class OrderService implements IOrderService<IOrder> {
     if (!orderParam.orderItems || orderParam.orderItems.length === 0)
       throw new DomainError(500, 'This order has no product items', {});
 
-    let newObj: IOrder = new Order();
+    let newObj: Order = new Order();
     newObj.client = orderParam.client;
     newObj.orderItems = [];
-    newObj.count=0;
+    newObj.count = 0;
     newObj.includesShipping = orderParam.includesShipping;
     newObj.shippingAddress = orderParam.shippingAddress;
     newObj.subTotal = 0;
@@ -96,7 +94,7 @@ export class OrderService implements IOrderService<IOrder> {
       const newAmount: number = product.grossPrice * item.quantity;
       const newItem = new OrderItem(item.productId, item.imageUrl, product.name, product.grossPrice, item.quantity, newAmount);
       newObj.orderItems.push(newItem);
-      newObj.count+=item.quantity;
+      newObj.count += item.quantity;
     }
 
     //Calculate subtotals
@@ -133,16 +131,65 @@ export class OrderService implements IOrderService<IOrder> {
     }
   };
 
-  async confirm(orderId: string) {
-    //you must reserve the products
-    //const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.CONFIRMED, updatedAt: new Date()});
-    const updated: boolean = await this.update({_id: orderId}, {status: OrderStatus.CONFIRMED});
+  async confirm(orderId: string): Promise<boolean> {
+    //you must reserve quantity in the products of each order items and set status to CONFIRMED
+    try {
+      const order: IOrder = await this.getById(orderId);
+
+      //validate that the stock is sufficient to full order
+      for (let i = 0; i < order.orderItems.length; i++) {
+        let product: IProduct = await this.productService.getById(order.orderItems[i].productId);
+        if (order.orderItems[i].quantity > product.stock)
+          throw new Error(`Insufficient stock for order ${orderId}.`);
+      }
+
+      //add reservations in products indicated in order
+      for (let i = 0; i < order.orderItems.length; i++) {
+        await this.productService.addStockReservation(order.orderItems[i].productId, orderId, order.orderItems[i].quantity);
+      }
+
+      //change order status
+      const confirmed: boolean = await this.update({ _id: orderId }, { status: OrderStatus.CONFIRMED });
+      return confirmed;
+    } catch (error) {
+      console.log("Order confirm error:", error);
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+    }
+  };
+
+  async abort(orderId: string): Promise<boolean> {
+    try {
+      const order: IOrder = await this.getById(orderId);
+
+      //revert reservations in products indicated in order
+      for (let i = 0; i < order.orderItems.length; i++) {
+        await this.productService.revertStockReservation(order.orderItems[i].productId, orderId);
+      }
+
+      //change order status
+      const aborted: boolean = await this.update({ _id: orderId }, { status: OrderStatus.ABORTED });
+      return aborted;
+    } catch (error) {
+      console.log("Order abort error:", error);
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+    }
   }
 
-  async completePayment(orderId: string) {
+  async completePayment(orderId: string): Promise<boolean> {
     //you must register the sale effectively discounting the stock
-    //const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.PAID, updatedAt: new Date()});
-    const updated: boolean = await this.update({_id: orderId}, {status: OrderStatus.PAID});
+    try {
+      const order: IOrder = await this.getById(orderId);
+
+      for (let i = 0; i < order.orderItems.length; i++) {
+        await this.productService.moveReservationToSale(order.orderItems[i].productId, orderId);
+      }
+
+      const paid: boolean = await this.update({ _id: orderId }, { status: OrderStatus.PAID });
+      return paid;
+    } catch (error) {
+      console.log("Order completePayment error:", error);
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+    }
   };
 
   async delete(id: string): Promise<boolean> {
@@ -151,7 +198,7 @@ export class OrderService implements IOrderService<IOrder> {
   };
 
   async updateById(id: string, order: IOrder): Promise<boolean> {
-    const updated: boolean = await this.orderRepository.updateById(id, {...order, updatedAt: new Date()});
+    const updated: boolean = await this.orderRepository.updateById(id, { ...order, updatedAt: new Date() });
     return updated;
   };
 
@@ -167,7 +214,7 @@ export class OrderService implements IOrderService<IOrder> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.orderRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    const updatedProduct: boolean = await this.orderRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
     return updatedProduct;
   };
 

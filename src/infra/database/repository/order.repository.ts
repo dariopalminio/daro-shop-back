@@ -6,6 +6,7 @@ import { Order } from '../../../domain/model/order/order';
 import { OrderDocument } from '../schema/order.schema';
 import { IOrder } from 'src/domain/model/order/order.interface';
 
+
 /**
  * Mongo repository implementation
  */
@@ -108,8 +109,8 @@ export class OrderRepository implements IRepository<IOrder> {
         return true;
     }
 
-    async create(doc: IOrder): Promise<IOrder> {
-        const docCreated: OrderDocument = await this.entityModel.create(doc);
+    async create(order: IOrder): Promise<IOrder> {
+        const docCreated: OrderDocument = await this.entityModel.create(order);
         const objCasted: IOrder = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     };

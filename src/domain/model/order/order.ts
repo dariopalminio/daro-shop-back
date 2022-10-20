@@ -6,21 +6,17 @@ import { Client } from './client';
 export class Order implements IOrder {
 
     _id: string; //_id: holds an ObjectId.
-
     client: Client;
-    
     orderItems: IOrderItem[];
     count: number;
-    
     includesShipping: boolean; //if is false then includes pick up in store
     shippingAddress: Address;
-
     subTotal: number;
     shippingPrice: number;
     total: number;
-    
     status: string;
-    
     createdAt?: Date;
     updatedAt?: Date;
 };
+
+

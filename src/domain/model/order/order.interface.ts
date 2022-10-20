@@ -4,7 +4,7 @@ import { IOrderItem } from './order-item.interface';
 import { OrderStatus } from './order-status.enum';
 
 export interface IOrder {
-    _id: string; //_id: holds an ObjectId.
+    _id?: string; //_id: holds an ObjectId.
 
     client: Client;
     
