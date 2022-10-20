@@ -80,7 +80,7 @@ export class UserService implements IUserService<IUser> {
   };
 
   async updateById(id: string, user: IUser): Promise<boolean> {
-    const updatedUser: boolean = await this.userRepository.updateById(id, user);
+    const updatedUser: boolean = await this.userRepository.updateById(id, {...user, updatedAt: new Date()});
     return updatedUser;
   };
 
@@ -96,7 +96,7 @@ export class UserService implements IUserService<IUser> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.userRepository.update(query, valuesToSet);
+    const updatedProduct: boolean = await this.userRepository.update(query, {...valuesToSet, updatedAt: new Date()});
     return updatedProduct;
   };
 

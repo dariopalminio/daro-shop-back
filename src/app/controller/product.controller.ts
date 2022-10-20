@@ -174,10 +174,10 @@ export class ProductController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async updateProduct(@Res() res, @Body() createProductDTO: Product, @Query('id') id) {
+  async updateProduct(@Res() res, @Body() productDTO: Product, @Query('id') id) {
     let updatedProduct: boolean;
     try {
-      updatedProduct = await this.productService.updateById(id, createProductDTO);
+      updatedProduct = await this.productService.updateById(id, productDTO);
     } catch (error) {
       throw new InternalServerErrorException(error);
     };

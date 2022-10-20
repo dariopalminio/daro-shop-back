@@ -15,7 +15,7 @@
             "imageUrl": "https://i.pinimg.com/originals/95/5d/e2/955de20dd2d6f457a1cfdadb8edc23d4.png",
             "name": "Paisaje con palmeras",
             "grossPrice": 23.4,
-            "qty": 1,
+            "quantity": 1,
             "stock": 1,
             "amount": 23.4
         },
@@ -25,7 +25,7 @@
             "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2SmahEEhWXut-9211CpUtZLrOljU8BfdnBUlt60UwBVemJ0rXC3T9-SEuMAfH6ttUmMg&usqp=CAU",
             "name": "Entre montañas 3D",
             "grossPrice": 50,
-            "qty": 1,
+            "quantity": 1,
             "stock": 1,
             "amount": 50
         }

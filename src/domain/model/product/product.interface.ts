@@ -1,4 +1,6 @@
 import { ICategory } from '../category/category.interface';
+import { Reservation } from './reservation';
+import { Sale } from './sale';
 
 export interface IProduct{
     _id: string; //_id: holds an ObjectId. { type: String, required: true, unique: true },
@@ -28,5 +30,8 @@ export interface IProduct{
     //Inventory
     stock: number;
     active:boolean;  //is active to sell?
+
+    reservations: Reservation[];
+    sales: Sale[];
 };
 

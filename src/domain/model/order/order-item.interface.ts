@@ -3,7 +3,7 @@ export interface IOrderItem{
     imageUrl: string;
     name: string;
     grossPrice: number; //Total price of sale with VAT included
-    qty: number; 
+    quantity: number; 
     amount: number;
 };
 

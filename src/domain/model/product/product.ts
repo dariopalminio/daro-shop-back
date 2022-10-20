@@ -1,5 +1,7 @@
 import { IProduct } from './product.interface';
 import { ICategory } from '../category/category.interface';
+import { Reservation } from './reservation';
+import { Sale } from './sale';
 
 export class Product implements IProduct {
 
@@ -46,6 +48,8 @@ export class Product implements IProduct {
         this.grossPrice = grossPrice;
         this.stock = stock;
         this.active = active;
+        this.reservations = [];
+        this.sales = [];
     };
 
     _id: string; //_id: holds an ObjectId.
@@ -69,6 +73,8 @@ export class Product implements IProduct {
     grossPrice: number;
     stock: number;
     active: boolean;
+    reservations: Reservation[];
+    sales: Sale[];
 };
 
 

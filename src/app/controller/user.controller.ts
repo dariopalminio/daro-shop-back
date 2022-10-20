@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
 import { IUser } from 'src/domain/model/user/user.interface';
 import { UserDTO } from 'src/domain/model/user/user-register.dto.type';
@@ -63,6 +63,7 @@ export class UserController {
 
   @Get('/id/:userID')
   async getById(@Res() res, @Param('userID') userID) {
+    if (!userID) throw new BadRequestException('userID not specified!');
     const user = await this.userService.getById(userID);
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -99,6 +100,7 @@ export class UserController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
+    if (!id) throw new BadRequestException('id not specified!');
     const categoryDeleted = await this.userService.delete(id);
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -110,6 +112,7 @@ export class UserController {
   // Update user: /update?id=5c9d45e705ea4843c8d0e8f7
   @Put('update')
   async updateUser(@Res() res, @Body() user: IUser, @Query('id') id) {
+    if (!id) throw new BadRequestException('id not specified!');
     const updatedUser = await this.userService.updateById(id, user);
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

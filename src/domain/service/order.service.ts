@@ -91,12 +91,12 @@ export class OrderService implements IOrderService<IOrder> {
     for (let i = 0; i < orderParam.orderItems.length; i++) {
       const item = orderParam.orderItems[i];
       const product: IProduct = await this.productService.getById(item.productId);
-      if (orderParam.orderItems[i].qty > product.stock)
+      if (orderParam.orderItems[i].quantity > product.stock)
         throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });
-      const newAmount: number = product.grossPrice * item.qty;
-      const newItem = new OrderItem(item.productId, item.imageUrl, product.name, product.grossPrice, item.qty, newAmount);
+      const newAmount: number = product.grossPrice * item.quantity;
+      const newItem = new OrderItem(item.productId, item.imageUrl, product.name, product.grossPrice, item.quantity, newAmount);
       newObj.orderItems.push(newItem);
-      newObj.count+=item.qty;
+      newObj.count+=item.quantity;
     }
 
     //Calculate subtotals
@@ -135,12 +135,14 @@ export class OrderService implements IOrderService<IOrder> {
 
   async confirm(orderId: string) {
     //you must reserve the products
-    const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.CONFIRMED, updatedAt: new Date()});
+    //const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.CONFIRMED, updatedAt: new Date()});
+    const updated: boolean = await this.update({_id: orderId}, {status: OrderStatus.CONFIRMED});
   }
 
   async completePayment(orderId: string) {
     //you must register the sale effectively discounting the stock
-    const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.PAID, updatedAt: new Date()});
+    //const updatedProduct: boolean = await this.orderRepository.update({_id: orderId}, {status: OrderStatus.PAID, updatedAt: new Date()});
+    const updated: boolean = await this.update({_id: orderId}, {status: OrderStatus.PAID});
   };
 
   async delete(id: string): Promise<boolean> {
@@ -149,7 +151,7 @@ export class OrderService implements IOrderService<IOrder> {
   };
 
   async updateById(id: string, order: IOrder): Promise<boolean> {
-    const updated: boolean = await this.orderRepository.updateById(id, order);
+    const updated: boolean = await this.orderRepository.updateById(id, {...order, updatedAt: new Date()});
     return updated;
   };
 
@@ -165,7 +167,7 @@ export class OrderService implements IOrderService<IOrder> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.orderRepository.update(query, valuesToSet);
+    const updatedProduct: boolean = await this.orderRepository.update(query, {...valuesToSet, updatedAt: new Date()});
     return updatedProduct;
   };
 

@@ -47,6 +47,7 @@ export class OrderController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
+    if (!id) throw new BadRequestException('id not specified!');
     const objDeleted = await this.orderService.delete(id);
     if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -66,10 +67,11 @@ export class OrderController {
     });
   };
 
-  @Post('confirm')
-  async confirm(@Res() res, @Body() body: any) {
-    console.log("confirm-->body:", body);
-    const orderId: string = body.orderId;
+
+  @Put('confirm')
+  async updateUser(@Res() res, @Body() body: any, @Query('orderId') orderId) {
+    console.log("confirm-->orderId:", orderId);
+    if (!orderId) throw new BadRequestException('orderId not specified!');
     try {
       await this.orderService.confirm(orderId);
       return res.status(HttpStatus.OK).json({

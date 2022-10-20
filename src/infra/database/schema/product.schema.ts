@@ -1,7 +1,10 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
+import { Reservation } from 'src/domain/model/product/reservation';
+import { Sale } from 'src/domain/model/product/sale';
 
 export type ProductDocument = Product & Document;
+
 
 @Schema()
 export class Product {
@@ -9,10 +12,10 @@ export class Product {
     //_id: holds an ObjectId.
 
     @Prop()
-    sku:  String; //Stock-keeping unit of 12 digits
-    
+    sku: String; //Stock-keeping unit of 12 digits
+
     @Prop()
-    barcode:  String; //UPC - Universal Product Code (EAN, ISBN, GTIN, Part number)
+    barcode: String; //UPC - Universal Product Code (EAN, ISBN, GTIN, Part number)
 
     @Prop({ required: true })
     name: String;
@@ -28,7 +31,7 @@ export class Product {
 
     @Prop()
     type: String; //Sub-category
-    
+
     @Prop()
     brand: String;
 
@@ -45,25 +48,25 @@ export class Product {
     size: String;
 
     @Prop()
-    netCost: Number; 
+    netCost: Number;
     //purchase net price or amount of the purchase, before including VAT
 
     @Prop()
-    ivaAmountOnCost: Number; 
+    ivaAmountOnCost: Number;
     //IVA value of purchase or VAT amount on netCost (value added tax)
-    
+
 
     @Prop()
-    grossCost: Number; 
+    grossCost: Number;
     //gross value of purchase to provider
 
     @Prop()
-    netPrice: Number; 
+    netPrice: Number;
     //netPrice price of sale or Net amount: It is the amount of the sale, before including VAT.
     //netPrice = (grossPrice * 100) / (100 + %IVA)
 
     @Prop()
-    ivaAmountOnPrice: Number; 
+    ivaAmountOnPrice: Number;
     //IVA value of sale or VAT amount (value added tax): 
     //Corresponds to an additional X% based on the net amount. If the ticket is exempt, the value remains at $0.
     //ivaAmountOnPrice = ((netPrice * %IVA)/100)
@@ -71,7 +74,7 @@ export class Product {
     //Amount not affected or exempt: This amount will be different from $0 when the tax document is an exempt ticket or is not affected by VAT.
 
     @Prop()
-    grossPrice: Number; 
+    grossPrice: Number;
     //Total amount with VAT included or gross Price: 
     //Equivalent to the sum of the totals (net, VAT and exempt) according to the type of document. It is the amount consumer paid.
     //gross price of sale, grossPrice = netPrice + ivaAmountOnPrice
@@ -80,20 +83,29 @@ export class Product {
     //is published with VAT included.
 
     @Prop({ required: true })
-    stock: number; //value of inventory existence 
+    stock: Number; //value of inventory existence 
+
+    orderId: string; //order confirmed in a customer purchase attempt
+    quantity: number; //number of items reserved
+    date: Date;
 
 
-    //reservations: {orderId, quantity}
-    //sales: {orderId, quantity, grossPrice}
+    @Prop({ required: true, default: [] })
+    reservations: [Reservation];
+
+    @Prop({ required: true, default: [] })
+    sales: [Sale];
 
     @Prop()
     active: Boolean; //is active to sell?
 
+    //new Date() returns the current date as a Date object. mongosh wraps the Date object with the ISODate helper. 
+    //The ISODate is in UTC; for example ISODate("2020-05-18T14:10:30Z")
     @Prop({ required: true, default: new Date() })
     createdAt?: Date;
-  
-    @Prop({ required: true, default: new Date() })
-    updatedAt?: Date;
+
+    @Prop({ required: true, default: new Date() }) 
+    updatedAt?: Date; 
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

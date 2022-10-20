@@ -63,8 +63,8 @@ export class ProfileService implements IProfileService<IProfile> {
     return deleted;
   };
 
-  async updateById(id: string, user: IProfile): Promise<boolean> {
-    const updatedUser: boolean = await this.profileRepository.updateById(id, user);
+  async updateById(id: string, profile: IProfile): Promise<boolean> {
+    const updatedUser: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
     return updatedUser;
   };
 
@@ -80,7 +80,7 @@ export class ProfileService implements IProfileService<IProfile> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.profileRepository.update(query, valuesToSet);
+    const updatedProduct: boolean = await this.profileRepository.update(query, {...valuesToSet, updatedAt: new Date()});
     return updatedProduct;
   };
 

@@ -95,7 +95,7 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async updateById(id: string, product: IProduct): Promise<boolean> {
-    const updatedProduct: boolean = await this.productRepository.updateById(id, product);
+    const updatedProduct: boolean = await this.productRepository.updateById(id, {...product, updatedAt: new Date()});
     return updatedProduct;
   };
 
@@ -105,7 +105,7 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.productRepository.update(query, valuesToSet);
+    const updatedProduct: boolean = await this.productRepository.update(query, {...valuesToSet, updatedAt: new Date()});
     return updatedProduct;
   };
 
