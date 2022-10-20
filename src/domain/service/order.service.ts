@@ -94,7 +94,7 @@ export class OrderService implements IOrderService<IOrder> {
       if (orderParam.orderItems[i].qty > product.stock)
         throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });
       const newAmount: number = product.grossPrice * item.qty;
-      const newItem = new OrderItem(item.itemId, item.productId, item.imageUrl, product.name, product.grossPrice, item.qty, newAmount);
+      const newItem = new OrderItem(item.productId, item.imageUrl, product.name, product.grossPrice, item.qty, newAmount);
       newObj.orderItems.push(newItem);
       newObj.count+=item.qty;
     }

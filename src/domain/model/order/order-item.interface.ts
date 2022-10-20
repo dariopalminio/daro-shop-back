@@ -1,5 +1,4 @@
 export interface IOrderItem{
-    itemId: string;
     productId: string; //_id: holds an ObjectId.
     imageUrl: string;
     name: string;
