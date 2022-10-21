@@ -19,12 +19,19 @@ export class ShippingPriceController {
 
   @Get('address')
   async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
-    if (!countryParam || !stateParam || !neighborhoodParam || !cityParam)
+    let addrs: Address;
+    try {
+      addrs = this.buildAndValidateAddress(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
+    } catch (error) {
       throw new BadRequestException('Missing some parameter!');
-    const addrs: Address = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
-    const pricingObj: any = await this.shippingPriceService.getPriceByAddress(addrs);
-    if (pricingObj === null)
-      throw new NotFoundException('Location not found');
+    }
+    let pricingObj: any;
+    try {
+       pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
+    if (pricingObj === null) throw new NotFoundException('Location not found');
     return res.status(200).json(pricingObj);
   };
 
@@ -87,5 +94,10 @@ export class ShippingPriceController {
     });
   };
 
+  private buildAndValidateAddress(countryParam: string, stateParam: string, cityParam: string, neighborhoodParam: string): Address {
+    if (!countryParam || !stateParam || !neighborhoodParam || !cityParam) throw new Error('Missing some parameter!');
+    const addrs: Address = new Address(countryParam, stateParam, cityParam, neighborhoodParam);
+    return addrs;
+  };
 
 };

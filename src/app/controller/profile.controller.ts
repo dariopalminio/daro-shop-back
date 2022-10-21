@@ -70,16 +70,22 @@ export class ProfileController {
   //Example http://localhost:3001/api/webshop/v1/users/username/dariopalminio@gmail.com
   @Get('/profile')
   async getByUserName(@Res() res, @Query('userName') userName) {
-    const user = await this.profileService.getByUserName(userName);
-    if (!user) throw new NotFoundException('User does not exist!');
-    return res.status(HttpStatus.OK).json(user);
+    if (!userName) throw new BadRequestException('Param userName not specified!');
+    const profile: IProfile = await this.profileService.getByUserName(userName);
+    if (!profile) throw new NotFoundException('User does not exist!');
+    return res.status(HttpStatus.OK).json(profile);
   };
 
   // Add User: /profiles/create
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
-  async createUser(@Res() res, @Body() userRegisterDTO: IProfile) {
+  async create(@Res() res, @Body() userRegisterDTO: IProfile) {
+    try {
+      this.validateProfile(userRegisterDTO);
+    } catch (error) {
+      new BadRequestException('Some field is missing: ' + error.message);
+    }
     let newProfile: IProfile;
     try {
       newProfile = await this.profileService.create(userRegisterDTO);
@@ -97,7 +103,7 @@ export class ProfileController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Delete('delete')
-  async deleteUser(@Res() res, @Query('id') id) {
+  async delete(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
     const categoryDeleted = await this.profileService.delete(id);
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
@@ -109,7 +115,7 @@ export class ProfileController {
 
 
   @Put('update')
-  async updateProfile(@Res() res, @Body() userProfileDTO: UserProfileDTO) {
+  async update(@Res() res, @Body() userProfileDTO: UserProfileDTO) {
     const updatedUser = await this.profileService.updateProfile(userProfileDTO);
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -118,6 +124,18 @@ export class ProfileController {
     });
   };
 
-
+/**
+ * Validation of Profile
+ * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
+ * In the future move this validation to a validatable object!
+ */
+  private validateProfile(profile: IProfile): boolean {
+    if (!profile.userName || !profile.email)
+      throw new Error('Some field (userName, email) is missing!');
+    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const hasClientEmail: boolean = expresionsRegularEmail.test(profile.email);
+    if (!hasClientEmail) throw new Error('Field email has invalid format!');
+    return true;
+  }
 
 };

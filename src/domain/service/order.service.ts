@@ -12,6 +12,7 @@ import { IShippingPrice } from '../model/shipping/shipping-price.interface';
 import { OrderItem } from '../model/order/order-item';
 import { OrderStatus } from '../model/order/order-status.enum';
 import { ResponseCode } from '../model/service/response.code.enum';
+import { IOrderItem } from '../model/order/order-item.interface';
 
 
 @Injectable()
@@ -72,9 +73,6 @@ export class OrderService implements IOrderService<IOrder> {
    */
   async initialize(orderParam: IOrder): Promise<IOrder> {
 
-    if (!orderParam.orderItems || orderParam.orderItems.length === 0)
-      throw new DomainError(500, 'This order has no product items', {});
-
     let newObj: Order = new Order();
     newObj.client = orderParam.client;
     newObj.orderItems = [];
@@ -87,7 +85,7 @@ export class OrderService implements IOrderService<IOrder> {
 
     //Calculate amounts
     for (let i = 0; i < orderParam.orderItems.length; i++) {
-      const item = orderParam.orderItems[i];
+      const item: IOrderItem = orderParam.orderItems[i];
       const product: IProduct = await this.productService.getById(item.productId);
       if (orderParam.orderItems[i].quantity > product.stock)
         throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });

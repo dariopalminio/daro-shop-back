@@ -4,6 +4,7 @@ import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IOrderService } from 'src/domain/service/interface/order.service.interface';
 import { IOrder } from 'src/domain/model/order/order.interface';
+import { Order } from 'src/domain/model/order/order';
 
 @Controller('orders')
 export class OrderController {
@@ -58,17 +59,22 @@ export class OrderController {
 
   @Post('initialize')
   async initialize(@Res() res, @Body() orderDTO: IOrder) {
-    const objCreated = await this.orderService.initialize(orderDTO);
-    if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    try {
+      this.validateOrderParam(orderDTO);
+    } catch (error) {
+      throw new BadRequestException('Order data malformed:' + error.message);
+    }
+    const orderCreated = await this.orderService.initialize(orderDTO);
+    if (!orderCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Initialized Successfully',
-      order: objCreated
+      order: orderCreated
     });
   };
 
 
   @Put('confirm')
-  async updateUser(@Res() res, @Body() body: any, @Query('orderId') orderId) {
+  async confirm(@Res() res, @Body() body: any, @Query('orderId') orderId) {
     if (!orderId) throw new BadRequestException('orderId not specified!');
     try {
       await this.orderService.confirm(orderId);
@@ -108,5 +114,38 @@ export class OrderController {
       throw new InternalServerErrorException(error);
     }
   };
-  
+
+/**
+ * Validation of Order
+ * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
+ * In the future move this validation to a validatable object!
+ */
+  private validateOrderParam(orderParam: IOrder): IOrder {
+    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const hasClientEmail: boolean = expresionsRegularEmail.test(orderParam.client.email);
+    if (!hasClientEmail) throw new Error('Field email has invalid format!');
+    if (!orderParam.orderItems || orderParam.orderItems.length === 0) throw new Error('This order has no product items');
+    const hasAnArray: boolean = Array.isArray(orderParam.orderItems);
+    if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
+    if (isNaN(orderParam.count)) throw new Error('Casting error: quantity field is not a number!');
+    let newObj: IOrder = new Order();
+    newObj.client = orderParam.client;
+    newObj.orderItems = orderParam.orderItems;
+    newObj.count = orderParam.count;
+    newObj.includesShipping = orderParam.includesShipping;
+    newObj.shippingAddress = orderParam.shippingAddress;
+    newObj.subTotal = orderParam.subTotal;
+    newObj.shippingPrice = orderParam.shippingPrice;
+    newObj.total = orderParam.total;
+
+    for (let i = 0; i < orderParam.orderItems.length; i++) {
+      if(isNaN(orderParam.orderItems[i].quantity)) throw new Error('Casting error: quantity field is not a number!');
+      if (typeof orderParam.orderItems[i].quantity === 'string') throw new Error('Casting error: quantity field is a string!');
+      if (typeof orderParam.orderItems[i].productId !== 'string' ||
+      orderParam.orderItems[i].productId.trim() ==='') throw new Error('Some item has no valid product id!');
+    }
+
+    return newObj;
+  };
+
 };

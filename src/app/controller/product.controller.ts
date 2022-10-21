@@ -88,29 +88,33 @@ export class ProductController {
     };
   };
 
-  // Example: http://localhost:3001/api/webshop/v1/products/catalog?category=Rubro&page=1&limit=100&orderBy=name&isAsc=true
+  // getCatalog example: http://localhost:3001/api/webshop/v1/products/catalog?category=Rubro&page=1&limit=100&orderBy=name&isAsc=true
   @Get('catalog')
   async getCatalog(@Res() res, @Query('page') pageParam, @Query('category') category, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
+    let page: number, limit: number, orderByField: string, isAscending: boolean;
     try {
-      if (pageParam && limitParam && orderBy && isAsc) {
-        const page: number = parseInt(pageParam);
-        const limit: number = parseInt(limitParam);
-        const orderByField: string = orderBy.toString();
-        const isAscending: boolean = (isAsc === 'true') ? true : false;
-        const data: FilteredProductsDTO = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
-        return res.status(HttpStatus.OK).json(data);
-      } else {
-        throw new InternalServerErrorException("No params");
-      }
+      if (!pageParam && !limitParam && !orderBy && !isAsc && !category)
+        throw new Error("No params category, page, limit, orderBy or isAsc");
+      page = parseInt(pageParam);
+      limit = parseInt(limitParam);
+      orderByField = orderBy.toString();
+      isAscending = (isAsc === 'true') ? true : false;
+    } catch (error) {
+      throw new BadRequestException('Some parameter is wrong:' + error);
+    }
+    try {
+      const data: FilteredProductsDTO = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
+      return res.status(HttpStatus.OK).json(data);
     } catch (error) {
       throw new InternalServerErrorException(error);
     };
   };
 
 
-  // GET single http://localhost:3001/api/webshop/v1/products/id/632ded6d5a88c40e4fa634e9
+  // getProductById example http://localhost:3001/api/webshop/v1/products/id/632ded6d5a88c40e4fa634e9
   @Get('/id/:productID')
-  async getProduct(@Res() res, @Param('productID') productID) {
+  async getProductById(@Res() res, @Param('productID') productID) {
+    if (!productID) throw new BadRequestException('Param productID not specified!');
     let product: any;
     try {
       product = await this.productService.getById(productID);
@@ -121,7 +125,7 @@ export class ProductController {
     return res.status(HttpStatus.OK).json(product);
   };
 
-  // GET single http://localhost:3001/api/webshop/v1/products/id/632ded6d5a88c40e4fa634e9
+  // getDetailById example single http://localhost:3001/api/webshop/v1/products/id/632ded6d5a88c40e4fa634e9
   @Get('/detail/id/:productID')
   async getDetailById(@Res() res, @Param('productID') productID) {
     if (!productID) throw new BadRequestException('Param productID not specified!');
@@ -135,14 +139,18 @@ export class ProductController {
     return res.status(HttpStatus.OK).json(product);
   };
 
-  // Add Product: /product/create
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
-  async createProduct(@Res() res, @Body() createProductDTO: Product) {
+  async create(@Res() res, @Body() productToCreateDTO: Product) {
+    try {
+      this.validateProduct(productToCreateDTO);
+    } catch (error) {
+      throw new BadRequestException('Product data malformed:' + error.message);
+    }
     let productCreatedId: IProduct;
     try {
-      productCreatedId = await this.productService.create(createProductDTO);
+      productCreatedId = await this.productService.create(productToCreateDTO);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -153,11 +161,11 @@ export class ProductController {
     });
   };
 
-  // Delete Product: /delete?productID=5c9d45e705ea4843c8d0e8f7
+  // Delete Product example: /delete?productID=5c9d45e705ea4843c8d0e8f7
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Delete('delete')
-  async deleteProduct(@Res() res, @Query('id') productID) {
+  async delete(@Res() res, @Query('id') productID) {
     if (!productID) throw new BadRequestException('Param productID not specified!');
     let productDeleted: boolean;
     try {
@@ -172,11 +180,11 @@ export class ProductController {
     });
   };
 
-  // Update Product: /update?id=5c9d45e705ea4843c8d0e8f7
+  // Update Product example: /update?id=5c9d45e705ea4843c8d0e8f7
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async updateProduct(@Res() res, @Body() productDTO: Product, @Query('id') id) {
+  async update(@Res() res, @Body() productDTO: Product, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
     let updatedProduct: boolean;
     try {
@@ -211,4 +219,10 @@ export class ProductController {
     };
   };
 
+
+  private validateProduct(product: IProduct): boolean {
+    if (!product.name || (typeof product.name !== 'string') || (product.name.trim() === ''))
+      throw new Error('The product has no name!');
+    return true;
+  }
 };

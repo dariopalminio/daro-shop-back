@@ -1,14 +1,20 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import {
+  Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus,
+  NotFoundException, UseGuards, InternalServerErrorException, BadRequestException
+} from '@nestjs/common';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
 import { IUser } from 'src/domain/model/user/user.interface';
-import { UserDTO } from 'src/domain/model/user/user-register.dto.type';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UserProfileDTO } from 'src/domain/model/profile/user-profile.dto.type';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 
+/**
+ * Users controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('users')
 export class UserController {
 
@@ -19,17 +25,6 @@ export class UserController {
     private readonly globalConfig: IGlobalConfig,
   ) { }
 
-
-  @ApiOperation({
-    summary:
-      'Hello world is get method to do Ping and test this service.',
-  })
-  @ApiResponse({
-    status: 200,
-    description:
-      'Succefully Ping',
-    type: HelloWorldDTO,
-  })
   @Get()
   getHello(@Res() res) {
     const response: HelloWorldDTO = {
@@ -81,6 +76,11 @@ export class UserController {
   @Roles('admin', 'manage-account')
   @Post('create')
   async createUser(@Res() res, @Body() userRegisterDTO: IUser) {
+    try {
+      this.validateUser(userRegisterDTO);
+    } catch (error) {
+      throw new BadRequestException('User data malformed:' + error.message);
+    }
     let createdId: IUser;
     try {
       createdId = await this.userService.create(userRegisterDTO);
@@ -120,4 +120,18 @@ export class UserController {
     });
   };
 
+/**
+ * Validation of User
+ * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
+ * In the future move this validation to a validatable object!
+ */
+  private validateUser(userRegisterDTO: IUser): boolean {
+    if (!userRegisterDTO.userName || !userRegisterDTO.email || !userRegisterDTO.password
+      || !userRegisterDTO.firstName || !userRegisterDTO.lastName || !userRegisterDTO.roles)
+      throw new Error('Some field (userName, firstName, lastName, email, password) is missing!');
+    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const hasClientEmail: boolean = expresionsRegularEmail.test(userRegisterDTO.email);
+    if (!hasClientEmail) throw new Error('Field email has invalid format!');
+    return true;
+  }
 };
