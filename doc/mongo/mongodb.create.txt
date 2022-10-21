@@ -1,4 +1,6 @@
 MongoDB Commands: https://mindmajix.com/mongodb-commands
+https://www.freecodecamp.org/news/learn-mongodb-a4ce205e7739/
+
 MongoDB shell version v5.0.10-rc0
 
 //launch db server
@@ -80,6 +82,7 @@ db.user.createIndex( { userName: "text"} );
 
 mydatabase.dropDatabase();
 
+db
 show databases;
 use darodb;
 db.createUser({user:"admin",pwd:"admin",roles:[{role:"root",db:"admin"}]});
@@ -87,10 +90,39 @@ db.auth('admin','admin');
 db.getUsers();
 db.dbname.save({name:'darodb'});
 show collections;
+db.createCollection("myCollection")
+db.myCollection.insert({"name": "john", "age" : 22, "location": "colombo"})
+db.myCollection.insertOne(
+  {
+    "name": "navindu", 
+    "age": 22
+  }
+)
+db.myCollection.insertMany([
+  {
+    "name": "navindu", 
+    "age": 22
+  },
+  {
+    "name": "kavindu", 
+    "age": 20
+  },
 
-
-
-
+  {
+    "name": "john doe", 
+    "age": 25,
+    "location": "colombo"
+  }
+])
+db.myCollection.find()
+db.myCollection.find().pretty()
+db.myCollection.find(
+  {
+    name: "john"
+  }
+).pretty()
+db.myCollection.update({age : 20}, {$set: {age: 23}})
+db.myCollection.remove({name: "navindu"});
 ---------------------------RESET an index
 > show databases
 admin   0.000GB
