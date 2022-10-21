@@ -58,7 +58,6 @@ export class OrderController {
 
   @Post('initialize')
   async initialize(@Res() res, @Body() orderDTO: IOrder) {
-    console.log("initialize-->orderDTO:", orderDTO);
     const objCreated = await this.orderService.initialize(orderDTO);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -70,7 +69,6 @@ export class OrderController {
 
   @Put('confirm')
   async updateUser(@Res() res, @Body() body: any, @Query('orderId') orderId) {
-    console.log("confirm-->orderId:", orderId);
     if (!orderId) throw new BadRequestException('orderId not specified!');
     try {
       await this.orderService.confirm(orderId);
@@ -85,7 +83,6 @@ export class OrderController {
 
   @Put('abort')
   async abort(@Res() res, @Body() body: any, @Query('orderId') orderId) {
-    console.log("confirm-->orderId:", orderId);
     if (!orderId) throw new BadRequestException('orderId not specified!');
     try {
       await this.orderService.abort(orderId);
@@ -100,7 +97,6 @@ export class OrderController {
 
   @Put('pay')
   async completePayment(@Res() res, @Body() body: any, @Query('orderId') orderId) {
-    console.log("confirm-->orderId:", orderId);
     if (!orderId) throw new BadRequestException('orderId not specified!');
     try {
       await this.orderService.completePayment(orderId);

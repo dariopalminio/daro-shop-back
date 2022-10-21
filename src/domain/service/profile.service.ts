@@ -14,18 +14,18 @@ export class ProfileService implements IProfileService<IProfile> {
   }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
-    const users: IProfile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);
-    return users;
+    const list: IProfile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
-    const users: IProfile[] = await this.profileRepository.find(query, page, limit, orderByField, isAscending);
-    return users;
+    const list: IProfile[] = await this.profileRepository.find(query, page, limit, orderByField, isAscending);
+    return list;
   };
 
   async getById(id: string): Promise<IProfile> {
-    const user: IProfile = await this.profileRepository.getById(id);
-    return user;
+    const entity: IProfile = await this.profileRepository.getById(id);
+    return entity;
   };
 
   async create(userRegisterDTO: IProfile): Promise<IProfile> {
@@ -64,8 +64,8 @@ export class ProfileService implements IProfileService<IProfile> {
   };
 
   async updateById(id: string, profile: IProfile): Promise<boolean> {
-    const updatedUser: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
-    return updatedUser;
+    const updated: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
+    return updated;
   };
 
   async getByUserName(userName: string): Promise<IProfile> {
@@ -75,20 +75,20 @@ export class ProfileService implements IProfileService<IProfile> {
   };
 
   async getByQuery(query: any): Promise<IProfile> {
-    const user = await this.profileRepository.getByQuery(query);
-    return user;
+    const entity = await this.profileRepository.getByQuery(query);
+    return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.profileRepository.update(query, {...valuesToSet, updatedAt: new Date()});
-    return updatedProduct;
+    const updated: boolean = await this.profileRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    return updated;
   };
 
   async updateProfile(userProfileDTO: UserProfileDTO): Promise<boolean> {
     const query = {userName: userProfileDTO.userName};
     const valuesToSet = userProfileDTO;
-    const updatedProduct: boolean = await this.profileRepository.update(query, valuesToSet);
-    return updatedProduct;
+    const updated: boolean = await this.profileRepository.update(query, valuesToSet);
+    return updated;
   };
 
   async hasById(id: string): Promise<boolean> {

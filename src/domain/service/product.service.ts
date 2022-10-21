@@ -18,13 +18,13 @@ export class ProductService implements IProductService<IProduct> {
 
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const products: IProduct[] = await this.productRepository.getAll(page, limit, orderByField, isAscending);
-    return products;
+    const list: IProduct[] = await this.productRepository.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const products: IProduct[] = await this.productRepository.find({ active: "true" }, page, limit, orderByField, isAscending);
-    return products;
+    const list: IProduct[] = await this.productRepository.find({ active: "true" }, page, limit, orderByField, isAscending);
+    return list;
   };
 
   /**
@@ -64,13 +64,13 @@ export class ProductService implements IProductService<IProduct> {
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const products: IProduct[] = await this.productRepository.find(query, page, limit, orderByField, isAscending);
-    return products;
+    const list: IProduct[] = await this.productRepository.find(query, page, limit, orderByField, isAscending);
+    return list;
   };
 
   async getById(id: string): Promise<IProduct> {
-    const product: IProduct = await this.productRepository.getById(id);
-    return product;
+    const entity: IProduct = await this.productRepository.getById(id);
+    return entity;
   };
 
   async getDetailById(id: string): Promise<IProduct> {
@@ -82,8 +82,8 @@ export class ProductService implements IProductService<IProduct> {
       ivaAmountOnPrice: 0,
     };
 
-    const product: IProduct = await this.productRepository.getById(id, fieldsToExclude);
-    return product;
+    const entity: IProduct = await this.productRepository.getById(id, fieldsToExclude);
+    return entity;
   };
 
   async create(product: IProduct): Promise<IProduct> {

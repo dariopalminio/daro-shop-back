@@ -8,8 +8,20 @@ export class PaymentMethod {
 
   //_id: holds an ObjectId.
 
-  @Prop()
+  @Prop({ required: true, unique: true })
+  key: string;
+
+  @Prop({ required: true, unique: true })
   name: string;
+
+  @Prop()
+  description: string;
+
+  @Prop()
+  image: string;
+
+  @Prop({ required: true })
+  active: boolean;
 
   @Prop({ type: Types.Map })
   meta: any;

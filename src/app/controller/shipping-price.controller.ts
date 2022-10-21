@@ -30,7 +30,6 @@ export class ShippingPriceController {
 
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-
     if (pageParam && limitParam && orderBy && isAsc) {
       const page: number = parseInt(pageParam);
       const limit: number = parseInt(limitParam);
@@ -67,6 +66,7 @@ export class ShippingPriceController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
+    if (!id) throw new BadRequestException('Param id not specified!');
     const objDeleted = await this.shippingPriceService.delete(id);
     if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({

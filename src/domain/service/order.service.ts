@@ -26,13 +26,13 @@ export class OrderService implements IOrderService<IOrder> {
   ) { }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
-    const shipPrice: IOrder[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);
-    return shipPrice;
+    const list: IOrder[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
-    const users: IOrder[] = await this.orderRepository.find(query, page, limit, orderByField, isAscending);
-    return users;
+    const entity: IOrder[] = await this.orderRepository.find(query, page, limit, orderByField, isAscending);
+    return entity;
   };
 
   async getById(id: string): Promise<IOrder> {

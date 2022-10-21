@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards, BadRequestException } from '@nestjs/common';
 import { ICategoryService } from 'src/domain/service/interface/category.service.interface';
 import { ICategory } from 'src/domain/model/category/category.interface';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
@@ -91,6 +91,7 @@ export class CategoryController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteCategory(@Res() res, @Query('id') id) {
+    if (!id) throw new BadRequestException('Param id not specified!');
     let categoryDeleted: boolean;;
     try {
       categoryDeleted = await this.categoryService.delete(id);
@@ -108,10 +109,11 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async updateCategory(@Res() res, @Body() categoryDTO: ICategory, @Query('id') categoryID) {
+  async updateCategory(@Res() res, @Body() categoryDTO: ICategory, @Query('id') id) {
+    if (!id) throw new BadRequestException('Param id not specified!');
     let updatedCategory: boolean;
     try {
-      updatedCategory = await this.categoryService.updateById(categoryID, categoryDTO);
+      updatedCategory = await this.categoryService.updateById(id, categoryDTO);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     };

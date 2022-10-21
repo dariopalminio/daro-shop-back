@@ -124,6 +124,7 @@ export class ProductController {
   // GET single http://localhost:3001/api/webshop/v1/products/id/632ded6d5a88c40e4fa634e9
   @Get('/detail/id/:productID')
   async getDetailById(@Res() res, @Param('productID') productID) {
+    if (!productID) throw new BadRequestException('Param productID not specified!');
     let product: any;
     try {
       product = await this.productService.getDetailById(productID);
@@ -157,6 +158,7 @@ export class ProductController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteProduct(@Res() res, @Query('id') productID) {
+    if (!productID) throw new BadRequestException('Param productID not specified!');
     let productDeleted: boolean;
     try {
       productDeleted = await this.productService.delete(productID);
@@ -175,6 +177,7 @@ export class ProductController {
   @Roles('admin', 'manage-account')
   @Put('update')
   async updateProduct(@Res() res, @Body() productDTO: Product, @Query('id') id) {
+    if (!id) throw new BadRequestException('Param id not specified!');
     let updatedProduct: boolean;
     try {
       updatedProduct = await this.productService.updateById(id, productDTO);

@@ -24,13 +24,13 @@ export class PaymentMethodService implements IPaymentMethodService<IPaymentMetho
   ) { }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
-    const shipPrice: IPaymentMethod[] = await this.paymentMethodRepo.getAll(page, limit, orderByField, isAscending);
-    return shipPrice;
+    const list: IPaymentMethod[] = await this.paymentMethodRepo.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
-    const users: IPaymentMethod[] = await this.paymentMethodRepo.find(query, page, limit, orderByField, isAscending);
-    return users;
+    const entity: IPaymentMethod[] = await this.paymentMethodRepo.find(query, page, limit, orderByField, isAscending);
+    return entity;
   };
 
   async getById(id: string): Promise<IPaymentMethod> {
@@ -41,7 +41,11 @@ export class PaymentMethodService implements IPaymentMethodService<IPaymentMetho
   async create(paymentMethod: IPaymentMethod): Promise<IPaymentMethod> {
     try {
       let newObj: PaymentMethod = new PaymentMethod();
+      newObj.key = paymentMethod.key;
       newObj.name = paymentMethod.name;
+      newObj.description = paymentMethod.description;
+      newObj.image = paymentMethod.image;
+      newObj.active = paymentMethod.active;
       newObj.meta = paymentMethod.meta;
 
       const entityNew: IPaymentMethod = await this.paymentMethodRepo.create(newObj);

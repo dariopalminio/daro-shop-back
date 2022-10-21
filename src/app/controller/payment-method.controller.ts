@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException, Param } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
@@ -30,6 +30,19 @@ export class PaymentMethodController {
     }
   };
 
+  @Get('/key/:key')
+  async getPaymentMethodByKey(@Res() res, @Param('key') key) {
+    if (!key) throw new BadRequestException('Param key not specified!');
+    let element: any;
+    try {
+      element = await this.paymentMethodService.getByQuery({key: key});
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    };
+    if (!element) throw new NotFoundException('Payment Method does not exist!');
+    return res.status(HttpStatus.OK).json(element);
+  };
+
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Post('create')
@@ -52,7 +65,7 @@ export class PaymentMethodController {
     if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Deleted Successfully',
-      objDeleted
+      deleted: objDeleted
     });
   };
 

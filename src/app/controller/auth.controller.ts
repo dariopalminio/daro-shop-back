@@ -69,23 +69,19 @@ export class AuthController {
 
   @Post('register/confirm/start')
   async sendStartEmailConfirm(@Headers() headers, @Res() res, @Body() startConfirmEmailData: StartConfirmEmailDataDTO) {
-
     const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
     return res.status(result.status).json(result);
   };
 
   @Post('register/confirm')
   async confirmAccount(@Headers() headers, @Res() res, @Body() verificationCodeData: VerificationCodeDataDTO): Promise<any> {
-
     const confirmed: any = await this.authService.confirmAccount(verificationCodeData, this.getLang(headers));
     return res.status(HttpStatus.OK).json(confirmed);
   };
 
   @Post('logout')
   async logout(@Res() res, @Body() logoutFormDTO: LogoutFormDTO) {
-
     let authResponse: boolean;
-
     try {
       authResponse = await this.authService.logout(logoutFormDTO);
       if (authResponse === true)
@@ -100,13 +96,10 @@ export class AuthController {
 
   @Post('recovery/start')
   async sendEmailToRecoveryPass(@Headers() headers, @Res() res, @Body() startRecoveryDataDTO: StartRecoveryDataDTO) {
-
     console.log("sendEmailToRecoveryPass getLang:", this.getLang(headers));
     console.log("sendEmailToRecoveryPass startRecoveryDataDTO:", startRecoveryDataDTO);
-
     const authResponse: any = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
     return res.status(authResponse.status).json(authResponse);
-
   };
 
   @Post('recovery/update')

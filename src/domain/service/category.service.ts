@@ -17,13 +17,13 @@ export class CategoryService implements ICategoryService<ICategory> {
 
   // Get all category
   async getAll(): Promise<ICategory[]> {
-    const cats: ICategory[] = await this.categoryRepository.getAll();
-    return cats;
+    const list: ICategory[] = await this.categoryRepository.getAll();
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ICategory[]>{
-    const cats: ICategory[] = await this.categoryRepository.find(query, page, limit, orderByField, isAscending);
-    return cats;
+    const entity: ICategory[] = await this.categoryRepository.find(query, page, limit, orderByField, isAscending);
+    return entity;
   };
 
   // Get a single category

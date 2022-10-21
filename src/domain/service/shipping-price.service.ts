@@ -20,18 +20,18 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
   }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
-    const shipPrice: IShippingPrice[] = await this.shippingPriceRepository.getAll(page, limit, orderByField, isAscending);
-    return shipPrice;
+    const list: IShippingPrice[] = await this.shippingPriceRepository.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
-    const users: IShippingPrice[] = await this.shippingPriceRepository.find(query, page, limit, orderByField, isAscending);
-    return users;
+    const list: IShippingPrice[] = await this.shippingPriceRepository.find(query, page, limit, orderByField, isAscending);
+    return list;
   };
 
   async getById(id: string): Promise<IShippingPrice> {
-    const user: IShippingPrice = await this.shippingPriceRepository.getById(id);
-    return user;
+    const entity: IShippingPrice = await this.shippingPriceRepository.getById(id);
+    return entity;
   };
 
   async create(shippingPriceRegisterDTO: IShippingPrice): Promise<IShippingPrice> {
@@ -63,24 +63,18 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
   };
 
   async updateById(id: string, user: IShippingPrice): Promise<boolean> {
-    const updatedUser: boolean = await this.shippingPriceRepository.updateById(id, user);
-    return updatedUser;
-  };
-
-  async getByUserName(userName: string): Promise<IShippingPrice> {
-    const query = {userName: userName};
-    const user = await this.shippingPriceRepository.getByQuery(query);
-    return user;
+    const updated: boolean = await this.shippingPriceRepository.updateById(id, user);
+    return updated;
   };
 
   async getByQuery(query: any): Promise<IShippingPrice> {
-    const user = await this.shippingPriceRepository.getByQuery(query);
-    return user;
+    const entity = await this.shippingPriceRepository.getByQuery(query);
+    return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.shippingPriceRepository.update(query, valuesToSet);
-    return updatedProduct;
+    const updated: boolean = await this.shippingPriceRepository.update(query, valuesToSet);
+    return updated;
   };
 
   async hasById(id: string): Promise<boolean> {

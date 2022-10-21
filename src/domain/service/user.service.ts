@@ -13,18 +13,18 @@ export class UserService implements IUserService<IUser> {
   }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
-    const users: IUser[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
-    return users;
+    const list: IUser[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
+    return list;
   };
 
   async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
-    const users: IUser[] = await this.userRepository.find(query, page, limit, orderByField, isAscending);
-    return users;
+    const list: IUser[] = await this.userRepository.find(query, page, limit, orderByField, isAscending);
+    return list;
   };
 
   async getById(id: string): Promise<IUser> {
-    const user: IUser = await this.userRepository.getById(id);
-    return user;
+    const entity: IUser = await this.userRepository.getById(id);
+    return entity;
   };
 
   async getUserJustRegister(userName: string): Promise<IUser> {
@@ -80,8 +80,8 @@ export class UserService implements IUserService<IUser> {
   };
 
   async updateById(id: string, user: IUser): Promise<boolean> {
-    const updatedUser: boolean = await this.userRepository.updateById(id, {...user, updatedAt: new Date()});
-    return updatedUser;
+    const updated: boolean = await this.userRepository.updateById(id, {...user, updatedAt: new Date()});
+    return updated;
   };
 
   async getByUserName(userName: string): Promise<IUser> {
@@ -91,13 +91,13 @@ export class UserService implements IUserService<IUser> {
   };
 
   async getByQuery(query: any): Promise<IUser> {
-    const user = await this.userRepository.getByQuery(query);
-    return user;
+    const entity = await this.userRepository.getByQuery(query);
+    return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.userRepository.update(query, {...valuesToSet, updatedAt: new Date()});
-    return updatedProduct;
+    const updated: boolean = await this.userRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    return updated;
   };
 
   async hasById(id: string): Promise<boolean> {

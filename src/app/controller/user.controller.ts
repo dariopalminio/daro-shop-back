@@ -46,7 +46,6 @@ export class UserController {
   // Get Products /user/all
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-
     if (pageParam && limitParam && orderBy && isAsc) {
       const page: number = parseInt(pageParam);
       const limit: number = parseInt(limitParam);

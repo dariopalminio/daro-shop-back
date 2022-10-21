@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -45,7 +45,6 @@ export class ProfileController {
   // Get Products /user/all
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-
     if (pageParam && limitParam && orderBy && isAsc) {
       const page: number = parseInt(pageParam);
       const limit: number = parseInt(limitParam);
@@ -62,6 +61,7 @@ export class ProfileController {
 
   @Get('/id/:userID')
   async getById(@Res() res, @Param('userID') userID) {
+    if (!userID) throw new BadRequestException('Param userID not specified!');
     const user = await this.profileService.getById(userID);
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -98,6 +98,7 @@ export class ProfileController {
   @Roles('admin', 'manage-account')
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
+    if (!id) throw new BadRequestException('Param id not specified!');
     const categoryDeleted = await this.profileService.delete(id);
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({

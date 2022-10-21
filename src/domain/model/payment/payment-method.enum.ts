@@ -1,3 +1,3 @@
 export enum PaymentMethod {
-    MANUAL = 'MANUAL',
+    BANK_TRANSFER = 'BANK_TRANSFER',
 }
