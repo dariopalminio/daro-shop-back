@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-
+import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { setupDocModule } from './infra/document/setup-doc-module';
 require('dotenv').config();
@@ -17,6 +17,8 @@ async function bootstrap() {
 
   //CORS proxy to avoid “No Access-Control-Allow-Origin header” problems
   app.enableCors();
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.useStaticAssets(join(__dirname, '..', '/public/img'), {
     prefix: '/public/img',

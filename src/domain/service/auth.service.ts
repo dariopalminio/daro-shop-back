@@ -1,9 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IAuthService } from '../service/interface/auth.service.interface';
-import { IAuth } from '../output-port/auth.interface';
-import { UserRegisterDataDTO } from 'src/domain/model/auth/register/user-register-data.dto.type';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import { UserDTO } from 'src/domain/model/user/user-register.dto.type';
 import IEmailSender from '../output-port/email-sender.interface';
 import { validEmail } from '../helper/validators.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from '../helper/token.helper';
@@ -16,14 +13,14 @@ import { LogoutFormDTO } from 'src/domain/model/auth/login/logout-form.dto';
 import { IUser } from 'src/domain/model/user/user.interface';
 import { ITranslator } from 'src/domain/output-port/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
-import { UserRegisterDataDTOValidator } from 'src/domain/validator/user-register-data-dto.validator';
+import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';;
 import { DomainError } from 'src/domain/error/domain-error';
 import { User } from '../model/user/user';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
 import { PayloadType } from '../model/auth/token/payload.type';
 import { TokensDTO } from '../model/auth/token/tokens.dto';
 import { RolesEnum } from '../model/auth/reles.enum';
+import { RegisterForm } from '../model/auth/register/register-form';
 const bcrypt = require('bcrypt');
 
 /**
@@ -63,22 +60,7 @@ export class AuthService implements IAuthService {
    * @param userRegisterData 
    * @returns 
    */
-  async register(userRegisterData: UserRegisterDataDTO): Promise<any> {
-
-    console.log("userRegisterData:", userRegisterData);
-    //Validate data
-    console.log("Validate data");
-    try {
-      let validator = new UserRegisterDataDTOValidator();
-      if (!validator.validate(userRegisterData)) {
-        throw new Error(await validator.traslateValidateErrorsText(this.i18n));
-      };
-    } catch (error) {
-      console.log("Validate data error:", error);
-      // Error BadRequestException
-      //return this.responseBadRequest(error);
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: error.message });
-    };
+  async register(userRegisterData: RegisterForm): Promise<any> {
 
     //const isEmailExist = await User.findOne({ email: req.body.email });
     const isEmailExist: boolean = await this.userService.hasByQuery({ email: userRegisterData.email });
@@ -93,7 +75,7 @@ export class AuthService implements IAuthService {
 
     // Create new user in user database
     let newObj: IUser = new User();
-    newObj.userName = userRegisterData.email;
+    newObj.userName = userRegisterData.email; //userName is email
     newObj.firstName = userRegisterData.firstName;
     newObj.lastName = userRegisterData.lastName;
     newObj.email = userRegisterData.email;

@@ -6,6 +6,8 @@ import { IOrderService } from 'src/domain/service/interface/order.service.interf
 import { IOrder } from 'src/domain/model/order/order.interface';
 import { Order } from 'src/domain/model/order/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
+import { OrderToCreateDTO } from '../dto/order-to-create.dto';
 
 /**
  * Order controller
@@ -41,8 +43,15 @@ export class OrderController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() orderDTO: IOrder) {
-    console.log("create-->shippingPriceDTO:", orderDTO);
+  async create(@Res() res, @Body() orderToCreateDTO: OrderToCreateDTO) {
+    let orderDTO: IOrder;
+    try {
+      orderDTO = orderToCreateDTO;
+      this.validateOrderParam(orderDTO);
+    } catch (error) {
+      throw new BadRequestException('Order data malformed:' + error.message);
+    }
+
     const objCreated = await this.orderService.create(orderDTO);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -65,20 +74,24 @@ export class OrderController {
   };
 
   @Post('initialize')
-  async initialize(@Res() res, @Body() orderDTO: IOrder) {
+  async initialize(@Res() res, @Body() orderToInitializeDTO: OrderToInitializeDTO) {
+    let order: IOrder;
     try {
-      this.validateOrderParam(orderDTO);
+      order = orderToInitializeDTO;
+      this.validateOrderParam(order);
     } catch (error) {
       throw new BadRequestException('Order data malformed:' + error.message);
     }
-    const orderCreated = await this.orderService.initialize(orderDTO);
-    if (!orderCreated) throw new NotFoundException('User does not exist or canot delete user!');
-    return res.status(HttpStatus.OK).json({
-      message: 'Order Initialized Successfully',
-      order: orderCreated
-    });
+    try {
+      const orderCreated = await this.orderService.initialize(order);
+      return res.status(HttpStatus.OK).json({
+        message: 'Order Initialized Successfully',
+        order: orderCreated
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   };
-
 
   @Put('confirm')
   async confirm(@Res() res, @Body() body: any, @Query('orderId') orderId) {
@@ -122,11 +135,11 @@ export class OrderController {
     }
   };
 
-/**
- * Validation of Order
- * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
- * In the future move this validation to a validatable object!
- */
+  /**
+   * Validation of Order (plainToClass)
+   * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
+   * In the future move this validation to a validatable object!
+   */
   private validateOrderParam(orderParam: IOrder): IOrder {
     const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     const hasClientEmail: boolean = expresionsRegularEmail.test(orderParam.client.email);
@@ -144,14 +157,12 @@ export class OrderController {
     newObj.subTotal = orderParam.subTotal;
     newObj.shippingPrice = orderParam.shippingPrice;
     newObj.total = orderParam.total;
-
     for (let i = 0; i < orderParam.orderItems.length; i++) {
-      if(isNaN(orderParam.orderItems[i].quantity)) throw new Error('Casting error: quantity field is not a number!');
+      if (isNaN(orderParam.orderItems[i].quantity)) throw new Error('Casting error: quantity field is not a number!');
       if (typeof orderParam.orderItems[i].quantity === 'string') throw new Error('Casting error: quantity field is a string!');
       if (typeof orderParam.orderItems[i].productId !== 'string' ||
-      orderParam.orderItems[i].productId.trim() ==='') throw new Error('Some item has no valid product id!');
+        orderParam.orderItems[i].productId.trim() === '') throw new Error('Some item has no valid product id!');
     }
-
     return newObj;
   };
 

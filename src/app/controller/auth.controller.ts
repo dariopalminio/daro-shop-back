@@ -1,8 +1,7 @@
 import {
   Controller, Get, Res, Post, Headers, Delete, Put, Body, Param, Query, Inject,
-  HttpStatus, NotFoundException, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards
+  HttpStatus, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards
 } from '@nestjs/common';
-import { UserRegisterDataDTO } from 'src/domain/model/auth/register/user-register-data.dto.type';
 import { IAuthService } from 'src/domain/service/interface/auth.service.interface';
 import { StartConfirmEmailDataDTO } from 'src/domain/model/auth/register/start-confirm-email-data.dto';
 import { StartRecoveryDataDTO } from 'src/domain/model/auth/recovery/start-recovery-data.dto.type';
@@ -15,6 +14,8 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { UserRegisterDTO } from '../dto/user-register.dto';
+import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 
 /**
  * Auth controller
@@ -49,12 +50,14 @@ export class AuthController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('register')
-  async register(@Res() res, @Body() userRegisterDTO: UserRegisterDataDTO): Promise<any> {
+  async register(@Res() res, @Body() userRegisterDTO: UserRegisterDTO): Promise<any> {
+    const { userName, firstName, lastName, email, password } = userRegisterDTO;
+    const registerForm: RegisterForm = new RegisterForm( userName, firstName, lastName, email, password );;
     console.log("register controller init");
     let result;
     try {
-      console.log("Controller register-->userRegisterDTO:",userRegisterDTO);
-      result = await this.authService.register(userRegisterDTO);
+      console.log("Controller register-->userRegisterDTO:",registerForm);
+      result = await this.authService.register(registerForm);
       console.log("register controller:", result);
     } catch (error) {
       switch (error.code) {

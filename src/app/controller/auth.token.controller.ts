@@ -2,7 +2,6 @@ import {
     Controller, Get, Res, Post, Headers, Delete, Put, Body, Param, Query, Inject,
     HttpStatus, NotFoundException, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards
 } from '@nestjs/common';
-import { LoginFormDTO } from 'src/domain/model/auth/login/login-form.dto';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
@@ -10,6 +9,8 @@ import { AuthClientDTO } from 'src/domain/model/auth/token/auth.client.dto';
 import { RequestRefreshToken } from 'src/domain/model/auth/token/auth.request.refresh.token.dto';
 import { IAuthTokensService } from 'src/domain/service/interface/auth.tokens.service.interface';
 import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.dto';
+import { UserLoginDTO } from '../dto/user-login.dto';
+import { LoginForm } from 'src/domain/model/auth/login/login-form';
 
 
 /**
@@ -55,9 +56,10 @@ export class AuthTokensController {
      * POST[UAT] Login to obtain access token for a user 
      */
     @Post('login')
-    async login(@Res() res, @Body() loginForm: LoginFormDTO) {
+    async login(@Res() res, @Body() userLoginDTO: UserLoginDTO) {
+        const { userName, password } = userLoginDTO;
+        const loginForm: LoginForm = new LoginForm(userName, password);
         let authResponse: any;
-        console.log('Controller login loginForm:', loginForm);
         try {
             authResponse = await this.authTokensService.login(loginForm);
         } catch (error) {

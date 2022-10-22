@@ -1,11 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IAuth } from '../output-port/auth.interface';
 import IEmailSender from '../output-port/email-sender.interface';
-import { LoginFormDTO } from 'src/domain/model/auth/login/login-form.dto';
 import { ITranslator } from 'src/domain/output-port/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
-import { LoginFormDTOValidator } from 'src/domain/validator/login-form-dto.validator';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
 import { TokensDTO } from 'src/domain/model/auth/token/tokens.dto';
@@ -17,6 +14,7 @@ import { PayloadType } from '../model/auth/token/payload.type';
 import { IUserService } from './interface/user.service.interface';
 import { IUser } from '../model/user/user.interface';
 import { RolesEnum } from '../model/auth/reles.enum';
+import { LoginForm } from '../model/auth/login/login-form';
 const bcrypt = require('bcrypt');
 
 /**
@@ -140,19 +138,11 @@ export class AuthTokensService implements IAuthTokensService {
    * @param loginForm 
    * @returns 
    */
-  async login(loginForm: LoginFormDTO): Promise<any> {
-
-    // Validate login form (error BadRequestException)
-    let loginFormDTOValidator = new LoginFormDTOValidator();
-    if (!loginFormDTOValidator.validate(loginForm)) {
-      const msg = await loginFormDTOValidator.traslateValidateErrorsText(this.i18n);
-      // Error BadRequestException
-      throw new DomainError(ResponseCode.BAD_REQUEST, msg, {});
-    };
+  async login(loginForm: LoginForm): Promise<any> {
 
     let user: IUser;
     try {
-      user = await this.userService.getByQuery({ userName: loginForm.username });
+      user = await this.userService.getByQuery({ userName: loginForm.userName });
     } catch (error) {
       if (error instanceof DomainError) throw error;
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Cannot obtain user from data base!' });
