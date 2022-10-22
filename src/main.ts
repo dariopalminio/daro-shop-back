@@ -18,7 +18,7 @@ async function bootstrap() {
   //CORS proxy to avoid “No Access-Control-Allow-Origin header” problems
   app.enableCors();
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe()); //used to validations with class-validator
 
   app.useStaticAssets(join(__dirname, '..', '/public/img'), {
     prefix: '/public/img',
