@@ -7,7 +7,16 @@ import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.
 import { Reservation } from '../model/product/reservation';
 import { Sale } from '../model/product/sale';
 
-
+/**
+ * Product Service
+ * 
+ * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Product' and Product collection.
+ * 
+ * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
+ * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
+ * The service only accesses the database or external services through the infrastructure using interfaces (output ports).
+ * A service is an orchestrator of domain objects to accomplish a goal.
+ */
 @Injectable()
 export class ProductService implements IProductService<IProduct> {
 

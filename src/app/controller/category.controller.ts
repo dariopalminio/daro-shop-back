@@ -7,7 +7,14 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * Category controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('products/categories')
 export class CategoryController {
 
@@ -70,7 +77,7 @@ export class CategoryController {
 
   // Add Category: /category/create
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createCategory(@Res() res, @Body() createCategoryDTO: ICategory) {
     let newCat: ICategory;

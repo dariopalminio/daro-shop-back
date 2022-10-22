@@ -10,9 +10,14 @@ import { AuthClientDTO } from 'src/domain/model/auth/token/auth.client.dto';
 import { RequestRefreshToken } from 'src/domain/model/auth/token/auth.request.refresh.token.dto';
 import { IAuthTokensService } from 'src/domain/service/interface/auth.tokens.service.interface';
 import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.dto';
-import extractTokenFromHeader from '../helper/token.helper';
 
 
+/**
+ * Auth Tokens controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('auth/tokens')
 export class AuthTokensController {
 
@@ -72,8 +77,6 @@ export class AuthTokensController {
      */
     @Post('app')
     async getAppToken(@Headers() headers, @Res() res, @Body() authClientDTO: AuthClientDTO) {
-
-
         let authResponse: any;
         console.log('authClientDTO:', authClientDTO);
         try {
@@ -83,8 +86,6 @@ export class AuthTokensController {
             if (error.code == 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
         };
-
-
         return res.status(HttpStatus.OK).json(authResponse);
     };
 
@@ -93,9 +94,7 @@ export class AuthTokensController {
      */
     @Post('admin')
     async getAdminToken(@Headers() headers, @Res() res, @Body() body: NewAdminTokenRequestType) {
-
         let data: any;
-
         try {
             data = await this.authTokensService.getAdminToken(body);
         } catch (error) {
@@ -103,7 +102,6 @@ export class AuthTokensController {
             if (error.code == 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
         };
-
         return res.status(HttpStatus.OK).json(data);
     };
 
@@ -127,17 +125,5 @@ export class AuthTokensController {
         };
         return res.status(HttpStatus.OK).json(authResponse);
     };
-
-    @Get('test')
-    async test( @Res() res) {
-        let authResponse: any;
-        try {
-            authResponse = await this.authTokensService.test();
-        } catch (error) {
-           console.log(error);
-        };
-        return res.status(HttpStatus.OK).json(authResponse);
-    };
-
 
 };

@@ -7,7 +7,14 @@ import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { IProfile } from 'src/domain/model/profile/profile.interface';
 import { IProfileService } from 'src/domain/service/interface/profile.service.interface';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * Profile controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('profiles')
 export class ProfileController {
 
@@ -78,7 +85,7 @@ export class ProfileController {
 
   // Add User: /profiles/create
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() userRegisterDTO: IProfile) {
     try {

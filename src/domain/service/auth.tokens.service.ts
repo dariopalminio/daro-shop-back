@@ -16,10 +16,18 @@ import { NewAdminTokenRequestType } from '../model/auth/token/auth.admin.dto';
 import { PayloadType } from '../model/auth/token/payload.type';
 import { IUserService } from './interface/user.service.interface';
 import { IUser } from '../model/user/user.interface';
+import { RolesEnum } from '../model/auth/reles.enum';
 const bcrypt = require('bcrypt');
 
 /**
  * Authorization Tokens service
+ * 
+ * Implements behavior associated with authentication tokens related to the 'User' domain object.
+ * 
+ * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
+ * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
+ * The service only accesses the database or external services through the infrastructure using interfaces.
+ * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
 export class AuthTokensService implements IAuthTokensService {
@@ -202,7 +210,7 @@ export class AuthTokensService implements IAuthTokensService {
     if (!validPassword)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
 
-    if (!user.roles.includes("Admin"))
+    if (!user.roles.includes(RolesEnum.ADMIN))
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User is not Admin!", { error: "Unauthorized!" });
 
     const payload: PayloadType = {
@@ -242,7 +250,7 @@ export class AuthTokensService implements IAuthTokensService {
     const payload: PayloadType = {
       id: authClientDTO.client_id,
       typ: "Bearer",
-      roles: ["App", "Anonymous"],
+      roles: [RolesEnum.APP],
       email_verified: true,
       firstName: "App",
       lastName: "App",
@@ -283,7 +291,7 @@ export class AuthTokensService implements IAuthTokensService {
       payload = {
         id: jwtDecoded.id,
         typ: "Bearer",
-        roles: ["App", "Anonymous"],
+        roles: jwtDecoded.roles, //["app"],
         email_verified: jwtDecoded.email_verified,
         firstName: jwtDecoded.firstName,
         lastName: jwtDecoded.lastName,

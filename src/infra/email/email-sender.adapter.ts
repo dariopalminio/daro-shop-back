@@ -7,7 +7,9 @@ const fs = require("fs")
 const nodemailer = require("nodemailer");
 const handlebars = require("handlebars")
 
-
+/**
+ * Email Smtp Sender implementation using nodemailer and handlebars
+ */
 @Injectable()
 export class EmailSmtpSenderAdapter implements IEmailSender {
 

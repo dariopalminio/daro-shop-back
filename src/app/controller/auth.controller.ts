@@ -14,7 +14,14 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * Auth controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('auth')
 export class AuthController {
 
@@ -40,7 +47,7 @@ export class AuthController {
 
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('register')
   async register(@Res() res, @Body() userRegisterDTO: UserRegisterDataDTO): Promise<any> {
     console.log("register controller init");

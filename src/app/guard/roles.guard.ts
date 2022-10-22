@@ -6,6 +6,14 @@ import { Reflector } from '@nestjs/core';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import extractTokenFromHeader from '../helper/token.helper';
 
+/**
+ * Roles Guards 
+ * 
+ * Global guards works as a middleware and are used across the whole application, for every controller and every route handler.
+ * This RolesGuard is used to validate authorization through of roles decorator and using JWT attachment in header.
+ * RolesGuard determine whether a given request will be handled by the route handler or not, 
+ * depending on permissions by roles indicated in routes of controllers (controller-scoped).
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(private reflector: Reflector,
@@ -58,7 +66,15 @@ export class RolesGuard implements CanActivate {
                     clientRoles = jwtDecoded.resource_access['account'].roles;
             }
 
-            const rolesFromJWT = clientRoles.concat(accountRoles);
+            let roles = [];
+
+            if (jwtDecoded.roles) {
+                if (jwtDecoded.roles instanceof Array)
+                    roles = jwtDecoded.roles;
+            }
+
+            let rolesFromJWT: Array<string> = clientRoles.concat(accountRoles);
+            rolesFromJWT = rolesFromJWT.concat(roles);
 
             console.log("RolesGuard.request.toke roles:", rolesFromJWT);
 

@@ -9,7 +9,7 @@ import { ProfileDocument } from '../schema/profile.schema';
 
 
 /**
- * Mongo repository implementation
+ * Profile Mongo repository implementation
  */
 @Injectable()
 export class ProfileRepository implements IRepository<IProfile> {

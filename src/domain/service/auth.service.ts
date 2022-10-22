@@ -23,10 +23,18 @@ import { User } from '../model/user/user';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
 import { PayloadType } from '../model/auth/token/payload.type';
 import { TokensDTO } from '../model/auth/token/tokens.dto';
+import { RolesEnum } from '../model/auth/reles.enum';
 const bcrypt = require('bcrypt');
 
 /**
- * Authorization service
+ * Auth service
+ * 
+ * It implements the behavior associated with authentication and authorization related to the 'User' domain object.
+ * 
+ * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
+ * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
+ * The service only accesses the database or external services through the infrastructure using interfaces.
+ * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
 export class AuthService implements IAuthService {
@@ -90,7 +98,7 @@ export class AuthService implements IAuthService {
     newObj.lastName = userRegisterData.lastName;
     newObj.email = userRegisterData.email;
     newObj.password = passwordCrypted;
-    newObj.roles = ["User"];
+    newObj.roles = [RolesEnum.USER];
 
     let userNew: IUser;
     try {

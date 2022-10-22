@@ -4,7 +4,14 @@ import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IPaymentMethodService } from 'src/domain/service/interface/payment-method.service.interface';
 import { IPaymentMethod } from 'src/domain/model/payment/payment-method.interface';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * Payment controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('payment/methods')
 export class PaymentMethodController {
 
@@ -44,7 +51,7 @@ export class PaymentMethodController {
   };
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() paymentMethodDTO: IPaymentMethod) {
     console.log("create-->shippingPriceDTO:", paymentMethodDTO);
@@ -57,7 +64,7 @@ export class PaymentMethodController {
   };
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');

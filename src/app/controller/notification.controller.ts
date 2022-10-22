@@ -6,7 +6,12 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmailDataDTO } from 'src/domain/model/notification/email-data-dto';
 
-
+/**
+ * Notification controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('notifications')
 export class NotificationController {
 

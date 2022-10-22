@@ -5,7 +5,14 @@ import { IShippingPriceService } from 'src/domain/service/interface/shipping-pri
 import { IShippingPrice } from 'src/domain/model/shipping/shipping-price.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * ShippingPrice controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('shipping/price')
 export class ShippingPriceController {
 
@@ -51,7 +58,7 @@ export class ShippingPriceController {
   };
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createShippingPrice(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
     console.log("create-->shippingPriceDTO:", shippingPriceDTO);
@@ -70,7 +77,7 @@ export class ShippingPriceController {
 
   // Delete user: /delete?id=5c9d45e705ea4843c8d0e8f7
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');

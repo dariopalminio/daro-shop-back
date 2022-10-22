@@ -5,6 +5,10 @@ import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import extractTokenFromHeader from '../helper/token.helper';
 
 /**
+ * Auth Middleware
+ * 
+ * This Middleware is used to validate authentication through JWT attachment in header
+ * 
  * Middleware is called only before the route handler is called. You have access to the response object, 
  * but you don't have the result of the route handler. They are basically express middleware functions.
  */
@@ -33,20 +37,17 @@ export class AuthMiddleware implements NestMiddleware {
         if (this.globalConfig.get<string>('AUTH_MIDDLEWARE_ON')) {
 
             if (!req.headers || !req.headers.authorization) {
-                console.log("????????????????????????" );
-                console.log("401 Unauthorized! No authorization data in Header." );
+                console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header." );
                 return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
             }
 
             try {
                 var token = extractTokenFromHeader(req.headers);
-                console.log("AuthMiddleware.token:", token);
+                console.log("AuthMiddleware. AuthMiddleware.token:", token);
 
                 jwt.verify(token, this.getPEMPublicKey(), { algorithms: ['RS256'] });
-                console.log("OKKKKKKKKKKKKKKKKKKKKKKKKKKKK!" );
             } catch (error) {
                 // Unauthorized, invalid signature
-                console.log("????????????????????????" );
                 console.log("401 Invalid token." );
                 return res.status(401).send({ message: error.message });
             };

@@ -8,7 +8,7 @@ import { IOrder } from 'src/domain/model/order/order.interface';
 
 
 /**
- * Mongo repository implementation
+ * Order Mongo repository implementation
  */
 @Injectable()
 export class OrderRepository implements IRepository<IOrder> {

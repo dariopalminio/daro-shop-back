@@ -8,6 +8,7 @@ import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
 /**
  * Users controller
@@ -73,7 +74,7 @@ export class UserController {
 
   // Add User: /user/create
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createUser(@Res() res, @Body() userRegisterDTO: IUser) {
     try {
@@ -96,7 +97,7 @@ export class UserController {
 
   // Delete user: /delete?id=5c9d45e705ea4843c8d0e8f7
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');

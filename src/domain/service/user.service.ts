@@ -5,6 +5,16 @@ import { User } from 'src/domain/model/user/user';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 
+/**
+ * User Service
+ * 
+ * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'User' and User collection.
+ * 
+ * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
+ * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
+ * The service only accesses the database or external services through the infrastructure using interfaces (output ports).
+ * A service is an orchestrator of domain objects to accomplish a goal.
+ */
 @Injectable()
 export class UserService implements IUserService<IUser> {
   constructor(

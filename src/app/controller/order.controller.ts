@@ -5,7 +5,14 @@ import { RolesGuard } from '../guard/roles.guard';
 import { IOrderService } from 'src/domain/service/interface/order.service.interface';
 import { IOrder } from 'src/domain/model/order/order.interface';
 import { Order } from 'src/domain/model/order/order';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
+/**
+ * Order controller
+ * 
+ * Note: Keep your controllers as thin as possible. Controllers should only do one thing: hand data off to other services to do work for them.
+ * Controllers themselves should only be responsible for moving data to and from your services and should contain no business logic.
+ */
 @Controller('orders')
 export class OrderController {
 
@@ -32,7 +39,7 @@ export class OrderController {
   };
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() orderDTO: IOrder) {
     console.log("create-->shippingPriceDTO:", orderDTO);
@@ -45,7 +52,7 @@ export class OrderController {
   };
 
   @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
+  @Roles(RolesEnum.ADMIN)
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');

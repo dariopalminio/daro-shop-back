@@ -9,7 +9,7 @@ import { ProductDocument } from '../schema/product.schema';
 
 export const CATEGORY_REPO_TOKEN = 'CategoryRepositoryImplementation'; //ModelToken
 /**
- * Mongo repository implementation
+ * Product Mongo repository implementation
  */
 @Injectable()
 export class ProductRepository implements IRepository<IProduct> {

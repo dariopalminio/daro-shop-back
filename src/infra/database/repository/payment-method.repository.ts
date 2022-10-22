@@ -8,7 +8,7 @@ import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 
 
 /**
- * Mongo repository implementation
+ * PaymentMethod Mongo repository implementation
  */
 @Injectable()
 export class PaymentMethodRepository implements IRepository<IPaymentMethod> {

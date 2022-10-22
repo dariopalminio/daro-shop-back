@@ -5,7 +5,16 @@ import { IRepository } from '../output-port/repository.interface';
 import { ICategoryService } from '../service/interface/category.service.interface';
 import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
 
-
+/**
+ * Category Service
+ * 
+ * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Category' and Category collection.
+ * 
+ * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
+ * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
+ * The service only accesses the database or external services through the infrastructure using interfaces.
+ * A service is an orchestrator of domain objects to accomplish a goal.
+ */
 @Injectable()
 export class CategoryService implements ICategoryService<ICategory> {
 

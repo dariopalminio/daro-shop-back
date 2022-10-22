@@ -9,7 +9,7 @@ import { ShippingPriceDocument } from '../schema/shipping-price.schema';
 
 
 /**
- * Mongo repository implementation
+ * ShippingPrice Mongo repository implementation
  */
 @Injectable()
 export class ShippingPriceRepository implements IRepository<IShippingPrice> {

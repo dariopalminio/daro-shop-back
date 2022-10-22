@@ -8,7 +8,7 @@ import { UserDocument } from '../schema/user.schema';
 
 
 /**
- * Mongo repository implementation
+ * User Mongo repository implementation
  */
 @Injectable()
 export class UserRepository implements IRepository<IUser> {
