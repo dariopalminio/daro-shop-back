@@ -1,3 +1,4 @@
+import { Entity } from "../entity";
 import { IAddress } from "./address.interface";
 import { IProfile } from "./profile.interface";
 
@@ -9,9 +10,8 @@ import { IProfile } from "./profile.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Profile implements IProfile {
+export class Profile extends Entity implements IProfile {
 
-    _id: string;
     userId: string;
     enable: boolean;
     userName: string;

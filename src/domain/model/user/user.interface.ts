@@ -1,7 +1,8 @@
+import { IEntity } from "../entity.interface";
 import { IAddress } from "../profile/address.interface";
 
-export interface IUser{
-    _id: string; //_id: holds an ObjectId.
+export interface IUser extends IEntity {
+
     enable: boolean;
     userName: string;
     firstName: string;

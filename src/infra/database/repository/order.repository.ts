@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
-import { Order } from '../../../domain/model/order/order';
+import { Order } from '../../../domain/model/order-aggregate/order';
 import { OrderDocument } from '../schema/order.schema';
-import { IOrder } from 'src/domain/model/order/order.interface';
+import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
 
 
 /**

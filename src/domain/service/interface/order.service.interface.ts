@@ -1,4 +1,4 @@
-import { IOrder } from 'src/domain/model/order/order.interface';
+import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
 
 /**

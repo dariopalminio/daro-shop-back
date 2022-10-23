@@ -28,7 +28,10 @@ export class ShippingPriceController {
   async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
     let addrs: Address;
     try {
-      addrs = this.buildAndValidateAddress(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString());
+       addrs = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString(), '', '');
+       addrs.validateCountry();
+       addrs.validateState();
+       addrs.validateNeighborhood();
     } catch (error) {
       throw new BadRequestException('Missing some parameter!');
     }
@@ -101,10 +104,5 @@ export class ShippingPriceController {
     });
   };
 
-  private buildAndValidateAddress(countryParam: string, stateParam: string, cityParam: string, neighborhoodParam: string): Address {
-    if (!countryParam || !stateParam || !neighborhoodParam || !cityParam) throw new Error('Missing some parameter!');
-    const addrs: Address = new Address(countryParam, stateParam, cityParam, neighborhoodParam);
-    return addrs;
-  };
 
 };

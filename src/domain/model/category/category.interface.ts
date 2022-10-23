@@ -1,8 +1,9 @@
+import { IEntity } from "../entity.interface";
 
 
 
-export interface ICategory{
-     _id: string; //_id: holds an ObjectId.
+export interface ICategory extends IEntity{
+
      name: string;
      description: string;
 };

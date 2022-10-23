@@ -160,42 +160,6 @@ console.log("order by:", orderByField);
         return !!docDeleted; //doc is not null
     };
 
-    /**
-    * Convert from Mongo CategoryDocument to Category class. 
-    * This is a Casting function.
-    * @param categoryDoc 
-    * @returns 
-    */
-    conversorDocToCategory(Doc: ProductDocument): IProduct {
-        let imagesArray = [];
-        imagesArray = Doc.images.map(function (image) {
-            return String(image);
-        });
-        return new Product(
-            String(Doc._id),
-            String(Doc.sku),
-            String(Doc.barcode),
-            String(Doc.name),
-            String(Doc.description),
-            imagesArray,
-            String(Doc.category),
-            String(Doc.type),
-            String(Doc.brand),
-            String(Doc.color),
-            String(Doc.gender),
-            String(Doc.model),
-            String(Doc.size),
-            Number(Doc.netCost),
-            Number(Doc.ivaAmountOnCost),
-            Number(Doc.grossCost),
-            Number(Doc.netPrice),
-            Number(Doc.ivaAmountOnPrice),
-            Number(Doc.grossPrice),
-            Number(Doc.stock),
-            Boolean(Doc.active)
-        );
-    };
-
     castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): IProduct[] {
         let domainEntityArray: IProduct[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(

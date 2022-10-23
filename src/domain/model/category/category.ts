@@ -1,3 +1,4 @@
+import { Entity } from '../entity';
 import { ICategory } from './category.interface';
 
 /**
@@ -8,15 +9,15 @@ import { ICategory } from './category.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Category implements ICategory {
+export class Category extends Entity implements ICategory {
 
-    constructor(id: string, name: string, description: string) {
-        this._id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    _id: string; //_id: holds an ObjectId.
     name: string;
     description: string;
+
+    public constructor(name: string, description: string) {
+        super();
+        this.name = name;
+        this.description = description;
+    };
+
 };

@@ -1,10 +1,9 @@
+import { IEntity } from '../entity.interface';
 import { Address } from '../profile/address';
 import { Client } from './client';
 import { IOrderItem } from './order-item.interface';
-import { OrderStatus } from './order-status.enum';
 
-export interface IOrder {
-    _id?: string; //_id: holds an ObjectId.
+export interface IOrder extends IEntity{
 
     client: Client;
     

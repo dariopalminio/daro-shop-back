@@ -1,6 +1,7 @@
+import { IEntity } from "../entity.interface";
 
-export interface IPaymentMethod {
-    _id?: string; //_id: holds an ObjectId.
+export interface IPaymentMethod extends IEntity {
+
     key: string;
     name: string;
     description: string;

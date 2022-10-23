@@ -1,7 +1,7 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
-import { Client } from 'src/domain/model/order/client';
-import { IOrderItem } from 'src/domain/model/order/order-item.interface';
+import { Client } from 'src/domain/model/order-aggregate/client';
+import { IOrderItem } from 'src/domain/model/order-aggregate/order-item.interface';
 import { Address } from 'src/domain/model/profile/address';
 
 export type OrderDocument = Order & Document;

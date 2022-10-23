@@ -3,8 +3,8 @@ import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IOrderService } from 'src/domain/service/interface/order.service.interface';
-import { IOrder } from 'src/domain/model/order/order.interface';
-import { Order } from 'src/domain/model/order/order';
+import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
+import { Order } from 'src/domain/model/order-aggregate/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
 import { OrderToCreateDTO } from '../dto/order-to-create.dto';
@@ -44,15 +44,15 @@ export class OrderController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() orderToCreateDTO: OrderToCreateDTO) {
-    let orderDTO: IOrder;
+    let order: Order;
     try {
-      orderDTO = orderToCreateDTO;
-      this.validateOrderParam(orderDTO);
+      order = new Order();
+      order.setFromAny(orderToCreateDTO);
     } catch (error) {
       throw new BadRequestException('Order data malformed:' + error.message);
     }
 
-    const objCreated = await this.orderService.create(orderDTO);
+    const objCreated = await this.orderService.create(order);
     if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Created Successfully',
@@ -75,10 +75,10 @@ export class OrderController {
 
   @Post('initialize')
   async initialize(@Res() res, @Body() orderToInitializeDTO: OrderToInitializeDTO) {
-    let order: IOrder;
+    let order: Order;
     try {
-      order = orderToInitializeDTO;
-      this.validateOrderParam(order);
+      order = new Order();
+      order.setFromAny(orderToInitializeDTO);
     } catch (error) {
       throw new BadRequestException('Order data malformed:' + error.message);
     }
@@ -135,35 +135,5 @@ export class OrderController {
     }
   };
 
-  /**
-   * Validation of Order (plainToClass)
-   * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
-   * In the future move this validation to a validatable object!
-   */
-  private validateOrderParam(orderParam: IOrder): IOrder {
-    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const hasClientEmail: boolean = expresionsRegularEmail.test(orderParam.client.email);
-    if (!hasClientEmail) throw new Error('Field email has invalid format!');
-    if (!orderParam.orderItems || orderParam.orderItems.length === 0) throw new Error('This order has no product items');
-    const hasAnArray: boolean = Array.isArray(orderParam.orderItems);
-    if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
-    if (isNaN(orderParam.count)) throw new Error('Casting error: quantity field is not a number!');
-    let newObj: IOrder = new Order();
-    newObj.client = orderParam.client;
-    newObj.orderItems = orderParam.orderItems;
-    newObj.count = orderParam.count;
-    newObj.includesShipping = orderParam.includesShipping;
-    newObj.shippingAddress = orderParam.shippingAddress;
-    newObj.subTotal = orderParam.subTotal;
-    newObj.shippingPrice = orderParam.shippingPrice;
-    newObj.total = orderParam.total;
-    for (let i = 0; i < orderParam.orderItems.length; i++) {
-      if (isNaN(orderParam.orderItems[i].quantity)) throw new Error('Casting error: quantity field is not a number!');
-      if (typeof orderParam.orderItems[i].quantity === 'string') throw new Error('Casting error: quantity field is a string!');
-      if (typeof orderParam.orderItems[i].productId !== 'string' ||
-        orderParam.orderItems[i].productId.trim() === '') throw new Error('Some item has no valid product id!');
-    }
-    return newObj;
-  };
 
 };

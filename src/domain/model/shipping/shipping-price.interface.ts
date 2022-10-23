@@ -1,5 +1,7 @@
-export interface IShippingPrice{
-    _id: string; //_id: holds an ObjectId.
+import { IEntity } from "../entity.interface";
+
+export interface IShippingPrice extends IEntity{
+
     location: string;
     price: number;
     money: string;

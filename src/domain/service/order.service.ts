@@ -1,18 +1,17 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { Address } from '../model/profile/address';
 import { IOrderService } from './interface/order.service.interface';
-import { IOrder } from '../model/order/order.interface';
-import { Order } from '../model/order/order';
+import { IOrder } from '../model/order-aggregate/order.interface';
+import { Order } from '../model/order-aggregate/order';
 import { IProductService } from './interface/product.service.interface';
 import { IProduct } from '../model/product/product.interface';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
 import { IShippingPrice } from '../model/shipping/shipping-price.interface';
-import { OrderItem } from '../model/order/order-item';
-import { OrderStatus } from '../model/order/order-status.enum';
+import { OrderItem } from '../model/order-aggregate/order-item';
+import { OrderStatus } from '../model/order-aggregate/order-status.enum';
 import { ResponseCode } from '../model/service/response.code.enum';
-import { IOrderItem } from '../model/order/order-item.interface';
+import { IOrderItem } from '../model/order-aggregate/order-item.interface';
 
 /**
  * Order Service

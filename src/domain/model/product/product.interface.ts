@@ -1,9 +1,10 @@
 import { ICategory } from '../category/category.interface';
+import { IEntity } from '../entity.interface';
 import { Reservation } from './reservation';
 import { Sale } from './sale';
 
-export interface IProduct{
-    _id: string; //_id: holds an ObjectId. { type: String, required: true, unique: true },
+export interface IProduct extends IEntity{
+    
     sku:  string;
     barcode:  string;
     name: string;

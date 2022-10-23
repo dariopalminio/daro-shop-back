@@ -150,14 +150,15 @@ export class ProductController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() productToCreateDTO: Product) {
+    let newProduct: Product = new Product();
     try {
-      this.validateProduct(productToCreateDTO);
+      newProduct.setFromAny(productToCreateDTO);
     } catch (error) {
       throw new BadRequestException('Product data malformed:' + error.message);
     }
     let productCreatedId: IProduct;
     try {
-      productCreatedId = await this.productService.create(productToCreateDTO);
+      productCreatedId = await this.productService.create(newProduct);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -227,9 +228,4 @@ export class ProductController {
   };
 
 
-  private validateProduct(product: IProduct): boolean {
-    if (!product.name || (typeof product.name !== 'string') || (product.name.trim() === ''))
-      throw new Error('The product has no name!');
-    return true;
-  }
 };

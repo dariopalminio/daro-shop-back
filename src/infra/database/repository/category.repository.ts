@@ -89,7 +89,6 @@ export class CategoryRepository implements IRepository<ICategory> {
         //Doc has id name "_id"
         const objCasted: ICategory = JSON.parse(JSON.stringify(catDoc));
         return objCasted;
-        //return this.conversorDocToCategory(catDoc);
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<ICategory> {
@@ -134,19 +133,6 @@ export class CategoryRepository implements IRepository<ICategory> {
     async delete(id: string): Promise<boolean> {
         const docDeleted = await this.categoryModel.findByIdAndDelete(id, { useFindAndModify: false }).exec();
         return !!docDeleted; //doc is not null
-    };
-
-    /**
-    * Convert from Mongo CategoryDocument to Category class. 
-    * This is a Casting function.
-    * @param categoryDoc 
-    * @returns 
-    */
-    conversorDocToCategory(categoryDoc: CategoryDocument): ICategory {
-        return new Category(
-            String(categoryDoc._id),
-            String(categoryDoc.name),
-            String(categoryDoc.description));
     };
 
     castArrayDocToArrayDomainEntity(schemaDocArray: CategoryDocument[]): ICategory[] {
