@@ -162,3 +162,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## References
+
+- Code commits standard: https://www.conventionalcommits.org/en/v1.0.0/
+- Node Style Guide: https://github.com/felixge/node-style-guide
+- Naming cheatsheet NestJS: https://narhakobyan.github.io/awesome-nest-boilerplate/docs/naming-cheatsheet.html#should
+- API Guide: https://github.com/byrondover/api-guidelines/blob/master/Guidelines.md#errors
+
