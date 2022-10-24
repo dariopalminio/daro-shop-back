@@ -153,7 +153,7 @@ export class ProductController {
   async create(@Res() res, @Body() productToCreateDTO: ProductDTO) {
     let newProduct: Product;
     try {
-      newProduct = this.productService.makeClassObjectFromAny(productToCreateDTO);
+      newProduct = this.productService.makeEntityFromAny(productToCreateDTO);
     } catch (error) {
       throw new BadRequestException('Product data malformed:' + error.message);
     }
@@ -197,7 +197,7 @@ export class ProductController {
     if (!id) throw new BadRequestException('Param id not specified!');
     let modifiedProduct: Product;
     try {
-      modifiedProduct = this.productService.makeClassObjectFromAny(productDTO);
+      modifiedProduct = this.productService.makeEntityFromAny(productDTO);
     } catch (error) {
       throw new BadRequestException('Product data malformed:' + error.message);
     }

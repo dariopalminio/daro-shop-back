@@ -60,7 +60,7 @@ export class ProductService implements IProductService<IProduct> {
     };
     let queryQuilter;
     if (category.trim() === '') queryQuilter = { active: "true" };
-      else queryQuilter = { category: category, active: "true" };
+    else queryQuilter = { category: category, active: "true" };
     const products: ProductOfCatalog[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
     let filtered: PaginatedResult = new PaginatedResult();
     filtered.list = products;
@@ -194,7 +194,7 @@ export class ProductService implements IProductService<IProduct> {
   async moveReservationToSale(productId: string, orderId: string): Promise<boolean> {
     let product: IProduct = await this.getById(productId);
     const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
-    const reservation : Reservation = product.reservations[reserveIndex];
+    const reservation: Reservation = product.reservations[reserveIndex];
 
     const newReservationList = [
       ...product.reservations.slice(0, reserveIndex),
@@ -219,10 +219,10 @@ export class ProductService implements IProductService<IProduct> {
    * @param dto dto any object
    * @returns  Product object instance
    */
-     makeClassObjectFromAny(dto: any): Product {
-      let product: Product = new Product();
-      product.setFromAny(dto);
-      return product;
-    };
+  makeEntityFromAny(dto: any): Product {
+    let product: Product = new Product();
+    product.setFromAny(dto);
+    return product;
+  };
 
 };

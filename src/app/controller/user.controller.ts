@@ -92,7 +92,7 @@ export class UserController {
   async createUser(@Res() res, @Body() userToCreateDTO: UserDTO) {
     let user: User;
     try {
-      user = this.userService.makeClassObjectFromAny(userToCreateDTO);
+      user = this.userService.makeEntityFromAny(userToCreateDTO);
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }
@@ -134,7 +134,7 @@ export class UserController {
     if (!id) throw new BadRequestException('id not specified!');
     let user: User;
     try {
-      user = this.userService.makeClassObjectFromAny(userDTO);
+      user = this.userService.makeEntityFromAny(userDTO);
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }

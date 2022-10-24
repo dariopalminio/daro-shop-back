@@ -124,7 +124,7 @@ export class UserService implements IUserService<IUser> {
    * @param dto dto any object
    * @returns  user object instance
    */
-  makeClassObjectFromAny(dto: any): User {
+   makeEntityFromAny(dto: any): User {
     let user: User = new User();
     user.setFromAny(dto);
     return user;

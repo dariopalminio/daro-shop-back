@@ -16,5 +16,5 @@ import { User } from 'src/domain/model/user/user';
 export interface IUserService<T> extends IPersistentAggregateService<T> {
     getByUserName(userName: string): Promise<IUser>;
     getUserJustRegister(userName: string): Promise<IUser>;
-    makeClassObjectFromAny(dto: any): User;
+    makeEntityFromAny(dto: any): User;
 };

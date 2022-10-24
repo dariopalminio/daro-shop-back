@@ -238,7 +238,7 @@ export class OrderService implements IOrderService<IOrder> {
    * @param dto dto any object
    * @returns  Order object instance
    */
-  makeClassObjectFromAny(dto: any): Order {
+  makeEntityFromAny(dto: any): Order {
     let order: Order = new Order();
     order.setFromAny(dto);
     return order;
