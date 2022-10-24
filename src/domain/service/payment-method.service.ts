@@ -9,7 +9,8 @@ import { PaymentMethod } from '../model/payment/payment-metod';
 /**
  * Payment Method Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'PaymentMethod' and PaymentMethod collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity root) 
+ * and its collections, as in this case the 'PaymentMethod' and PaymentMethods collection.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain or business logic and uses the domain model to implement use cases. 

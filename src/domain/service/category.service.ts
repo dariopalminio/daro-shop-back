@@ -3,12 +3,13 @@ import { ICategory } from 'src/domain/model/category/category.interface';
 import { CategoryDTO } from 'src/domain/model/category/category.dto';
 import { IRepository } from '../output-port/repository.interface';
 import { ICategoryService } from '../service/interface/category.service.interface';
-import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { PaginatedResult } from 'src/domain/model/paginated-result';
 
 /**
  * Category Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Category' and Category collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity root) 
+ * and its collections, as in this case the 'Category' and Category collection.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
@@ -76,18 +77,14 @@ export class CategoryService implements ICategoryService<ICategory> {
     return await this.categoryRepository.hasByQuery(query);
   };
 
-  async search(queryFilter?: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<FilteredProductsDTO> {
-
-    console.log("***********************************category search orderByField:", orderByField);
-    console.log("***********************************category search isAscending:", isAscending);
+  async search(queryFilter?: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
     const filter = queryFilter? queryFilter : {};
     const cats: ICategory[] = await this.categoryRepository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
-    let filtered: FilteredProductsDTO = new FilteredProductsDTO();
+    let filtered: PaginatedResult = new PaginatedResult();
     filtered.list = cats;
     filtered.page = page;
     filtered.limit = limit;
     filtered.count = await this.categoryRepository.count(filter);
-    console.log("***********************************search:", cats);
     return filtered;
   };
 

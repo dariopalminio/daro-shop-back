@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { UserProfileDTO } from 'src/domain/model/profile/user-profile.dto.type';
 import { IProfile } from '../model/profile/profile.interface';
 import { IProfileService } from './interface/profile.service.interface';
 import { Profile } from '../model/profile/profile';
@@ -9,7 +8,8 @@ import { Profile } from '../model/profile/profile';
 /**
  * Profile Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Profile' and Profile collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity root) 
+ * and its collections, as in this case the 'Profile' and Profiles collection.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
@@ -52,18 +52,15 @@ export class ProfileService implements IProfileService<IProfile> {
       newProf.language = userRegisterDTO.language,
       newProf.addresses = userRegisterDTO.addresses,
       newProf.enable = true;
-
       const entityNew: IProfile = await this.profileRepository.create(newProf);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {
         case 11000:
-          //  duplicate key error collection
-          throw new DomainError(409, error.message, error);
+          throw new DomainError(409, error.message, error, 'Duplicate key error collection or index problem.');
         default:
-          //Internal server error
-          throw new DomainError(500, error.message, error);
+          throw new DomainError(500, error.message, error); //Internal server error
       }
     }
   };
@@ -94,10 +91,10 @@ export class ProfileService implements IProfileService<IProfile> {
     return updated;
   };
 
-  async updateProfile(userProfileDTO: UserProfileDTO): Promise<boolean> {
+  async updateProfile(userProfileDTO: any): Promise<boolean> {
     const query = {userName: userProfileDTO.userName};
     const valuesToSet = userProfileDTO;
-    const updated: boolean = await this.profileRepository.update(query, valuesToSet);
+    const updated: boolean = await this.profileRepository.update(query, {...valuesToSet, updatedAt: new Date});
     return updated;
   };
 

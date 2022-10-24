@@ -6,7 +6,7 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
-import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 
 /**
@@ -70,7 +70,7 @@ export class CategoryController {
       category = await this.categoryService.getById(categoryID);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
-    };
+    }
     if (!category) throw new NotFoundException('Category does not exist!');
     return res.status(HttpStatus.OK).json(category);
   };
@@ -85,12 +85,12 @@ export class CategoryController {
       newCat = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
-    };
+    }
     if (!newCat) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
       message: 'Category Created Successfully',
       category: newCat
-    });
+    })
   };
 
   // Delete Category: /delete?id=5c9d45e705ea4843c8d0e8f7
@@ -104,12 +104,12 @@ export class CategoryController {
       categoryDeleted = await this.categoryService.delete(id);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
-    };
+    }
     if (!categoryDeleted) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
       message: 'Category Deleted Successfully',
       deleted: categoryDeleted
-    });
+    })
   };
 
   // Update Category: /update?id=5c9d45e705ea4843c8d0e8f7
@@ -128,7 +128,7 @@ export class CategoryController {
     return res.status(HttpStatus.OK).json({
       message: 'Category Updated Successfully',
       updated: updatedCategory
-    });
+    })
   };
 
     // Example: http://localhost:3001/api/webshop/v1/categories/search?page=1&limit=100&orderBy=name&isAsc=true
@@ -140,14 +140,14 @@ export class CategoryController {
           const limit: number = parseInt(limitParam);
           const orderByField: string = orderBy.toString();
           const isAscending: boolean = (isAsc === 'true') ? true : false;
-          const data: FilteredProductsDTO = await this.categoryService.search({},page, limit, orderByField, isAscending);
+          const data: PaginatedResult = await this.categoryService.search({},page, limit, orderByField, isAscending);
           return res.status(HttpStatus.OK).json(data);
         } else {
           throw new InternalServerErrorException("No params");
         }
       } catch (error) {
         throw new InternalServerErrorException(error);
-      };
+      }
     };
 
 };

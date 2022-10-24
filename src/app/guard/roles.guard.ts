@@ -1,6 +1,4 @@
 import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Reflector } from '@nestjs/core';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
@@ -86,16 +84,3 @@ export class RolesGuard implements CanActivate {
     };
 
 }
-
-/**
-Example of use...
-
-  @UseGuards(RolesGuard)
-  @Roles('admin', 'manage-account')
-  @Put('profile/update')
-  async updateProfile(@Res() res, @Body() userProfileDTO: UserProfileDTO){
-    
-    });
-  };
-
- */

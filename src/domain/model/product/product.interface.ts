@@ -1,4 +1,3 @@
-import { ICategory } from '../category/category.interface';
 import { IEntity } from '../entity.interface';
 import { Reservation } from './reservation';
 import { Sale } from './sale';
@@ -27,12 +26,15 @@ export interface IProduct extends IEntity{
     netPrice: number; 
     ivaAmountOnPrice: number;
     grossPrice: number; 
-
+    sales: Sale[];
+    
     //Inventory
     stock: number;
     active:boolean;  //is active to sell?
 
     reservations: Reservation[];
-    sales: Sale[];
+
+    createdAt?: Date;
+    updatedAt?: Date;
 };
 

@@ -1,11 +1,10 @@
-
-import { UserProfileDTO } from 'src/domain/model/profile/user-profile.dto.type';
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
-import { IProfile } from 'src/domain/model/profile/profile.interface';
 import { Address } from 'src/domain/model/profile/address';
 
 /**
  * Shipping Price Service Interface
+ * 
+ * This is a Domain Service Interface that works with an Entity Root and its collection.
  * 
  * Note: Services interfaces are fachade of 'use cases' that are the abstract definition of what the user would like to do in your application.  
  * All the business/domain logic and validations are happening in the use of case classes such as services. This interface works as input port. 

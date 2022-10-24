@@ -81,7 +81,6 @@ export class ProductRepository implements IRepository<IProduct> {
      */
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
         let arrayDoc: ProductDocument[];
-console.log("order by:", orderByField);
         if (page && limit && orderByField) {
             // All with pagination and sorting
             let mysort = {}; 
@@ -90,7 +89,6 @@ console.log("order by:", orderByField);
             //skip method will skip the document as per the number which was we have used with the skip method.
             const ascending = 1;
             arrayDoc = await this.productModel.find(query, fieldsToExclude).sort(mysort).skip(gap).limit(limit).exec();
-            console.log("*******************arrayDoc:", arrayDoc);
         } else {
             // All without pagination and without sorting
             arrayDoc = await this.productModel.find(query).exec();

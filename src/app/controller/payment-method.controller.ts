@@ -42,10 +42,10 @@ export class PaymentMethodController {
     if (!key) throw new BadRequestException('Param key not specified!');
     let element: any;
     try {
-      element = await this.paymentMethodService.getByQuery({key: key});
+      element = await this.paymentMethodService.getByQuery({ key: key });
     } catch (error) {
       throw new InternalServerErrorException(error);
-    };
+    }
     if (!element) throw new NotFoundException('Payment Method does not exist!');
     return res.status(HttpStatus.OK).json(element);
   };
@@ -54,26 +54,30 @@ export class PaymentMethodController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() paymentMethodDTO: IPaymentMethod) {
-    console.log("create-->shippingPriceDTO:", paymentMethodDTO);
-    const objCreated = await this.paymentMethodService.create(paymentMethodDTO);
-    if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    let objCreated;
+    try {
+      objCreated = await this.paymentMethodService.create(paymentMethodDTO);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!objCreated) throw new NotFoundException('Does not exist or canot delete!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Created Successfully',
       order: objCreated
-    });
+    })
   };
 
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Delete('delete')
-  async deleteUser(@Res() res, @Query('id') id) {
+  async delete(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
     const objDeleted = await this.paymentMethodService.delete(id);
-    if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!objDeleted) throw new NotFoundException('Does not exist or canot delete!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Deleted Successfully',
       deleted: objDeleted
-    });
+    })
   };
 
 };

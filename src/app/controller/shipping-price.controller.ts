@@ -23,21 +23,20 @@ export class ShippingPriceController {
     private readonly globalConfig: IGlobalConfig,
   ) { }
 
-
   @Get('address')
   async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
     let addrs: Address;
     try {
-       addrs = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString(), '', '');
-       addrs.validateCountry();
-       addrs.validateState();
-       addrs.validateNeighborhood();
+      addrs = new Address(countryParam.toString(), stateParam.toString(), cityParam.toString(), neighborhoodParam.toString(), '', '');
+      addrs.validateCountry();
+      addrs.validateState();
+      addrs.validateNeighborhood();
     } catch (error) {
       throw new BadRequestException('Missing some parameter!');
     }
     let pricingObj: any;
     try {
-       pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
+      pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
     } catch (error) {
       new InternalServerErrorException(error);
     }
@@ -47,16 +46,20 @@ export class ShippingPriceController {
 
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-    if (pageParam && limitParam && orderBy && isAsc) {
-      const page: number = parseInt(pageParam);
-      const limit: number = parseInt(limitParam);
-      const orderByField: string = orderBy.toString();
-      const isAscending: boolean = (isAsc === 'true') ? true : false;
-      const list = await this.shippingPriceService.getAll(page, limit, orderByField, isAscending);
-      return res.status(HttpStatus.OK).json(list);
-    } else {
-      const list = await this.shippingPriceService.getAll();
-      return res.status(HttpStatus.OK).json(list);
+    try {
+      if (pageParam && limitParam && orderBy && isAsc) {
+        const page: number = parseInt(pageParam);
+        const limit: number = parseInt(limitParam);
+        const orderByField: string = orderBy.toString();
+        const isAscending: boolean = (isAsc === 'true') ? true : false;
+        const list = await this.shippingPriceService.getAll(page, limit, orderByField, isAscending);
+        return res.status(HttpStatus.OK).json(list);
+      } else {
+        const list = await this.shippingPriceService.getAll();
+        return res.status(HttpStatus.OK).json(list);
+      }
+    } catch (error) {
+      new InternalServerErrorException(error);
     }
   };
 
@@ -64,7 +67,6 @@ export class ShippingPriceController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createShippingPrice(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
-    console.log("create-->shippingPriceDTO:", shippingPriceDTO);
     let objCreatedId: IShippingPrice;
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
@@ -75,7 +77,7 @@ export class ShippingPriceController {
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Created Successfully',
       shippingPrice: objCreatedId
-    });
+    })
   };
 
   // Delete user: /delete?id=5c9d45e705ea4843c8d0e8f7
@@ -84,24 +86,35 @@ export class ShippingPriceController {
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
-    const objDeleted = await this.shippingPriceService.delete(id);
+    let objDeleted;
+    try {
+      objDeleted = await this.shippingPriceService.delete(id);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Deleted Successfully',
       objDeleted
-    });
+    })
   };
 
 
   @Put('update')
   async updateProfile(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
+    if (!shippingPriceDTO.location) throw new BadRequestException('Param location not specified!');
     const query = { location: shippingPriceDTO.location };
-    const updatedObj = await this.shippingPriceService.update(query, shippingPriceDTO);
+    let updatedObj;
+    try {
+      updatedObj = await this.shippingPriceService.update(query, shippingPriceDTO);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Updated Successfully',
       updatedObj
-    });
+    })
   };
 
 

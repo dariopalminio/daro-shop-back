@@ -2,15 +2,17 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IProductService } from '../service/interface/product.service.interface';
 import { IProduct } from 'src/domain/model/product/product.interface';
 import { IRepository } from '../output-port/repository.interface';
-import { ProductItemDTO } from 'src/domain/model/product/product-item.dto';
-import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { ProductOfCatalog } from 'src/domain/model/product/product-of-catalog';
+import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from '../model/product/reservation';
 import { Sale } from '../model/product/sale';
+import { Product } from '../model/product/product';
 
 /**
  * Product Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Product' and Product collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity Root) and 
+ * its collections, as in this case the 'Product' and Products collection in database.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
@@ -39,7 +41,7 @@ export class ProductService implements IProductService<IProduct> {
   /**
    * Get Catalog
    */
-  async getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<FilteredProductsDTO> {
+  async getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
     const fieldsToExclude = {
       barcode: 0,
       type: 0,
@@ -59,8 +61,8 @@ export class ProductService implements IProductService<IProduct> {
     let queryQuilter;
     if (category.trim() === '') queryQuilter = { active: "true" };
       else queryQuilter = { category: category, active: "true" };
-    const products: ProductItemDTO[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
-    let filtered: FilteredProductsDTO = new FilteredProductsDTO();
+    const products: ProductOfCatalog[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
+    let filtered: PaginatedResult = new PaginatedResult();
     filtered.list = products;
     filtered.page = page;
     filtered.limit = limit;
@@ -211,5 +213,16 @@ export class ProductService implements IProductService<IProduct> {
     const updated: boolean = await this.updateById(productId, product);
     return updated;
   }
+
+  /**
+   * Factory method
+   * @param dto dto any object
+   * @returns  Product object instance
+   */
+     makeClassObjectFromAny(dto: any): Product {
+      let product: Product = new Product();
+      product.setFromAny(dto);
+      return product;
+    };
 
 };

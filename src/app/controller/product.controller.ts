@@ -11,8 +11,9 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
-import { FilteredProductsDTO } from 'src/domain/model/product/filtered-products.dto';
+import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { ProductDTO } from '../dto/product.dto';
 
 /**
  * Product controller
@@ -110,7 +111,7 @@ export class ProductController {
       throw new BadRequestException('Some parameter is wrong:' + error);
     }
     try {
-      const data: FilteredProductsDTO = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
+      const data: PaginatedResult = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -149,10 +150,10 @@ export class ProductController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() productToCreateDTO: Product) {
-    let newProduct: Product = new Product();
+  async create(@Res() res, @Body() productToCreateDTO: ProductDTO) {
+    let newProduct: Product;
     try {
-      newProduct.setFromAny(productToCreateDTO);
+      newProduct = this.productService.makeClassObjectFromAny(productToCreateDTO);
     } catch (error) {
       throw new BadRequestException('Product data malformed:' + error.message);
     }
@@ -192,16 +193,21 @@ export class ProductController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async update(@Res() res, @Body() productDTO: Product, @Query('id') id) {
+  async update(@Res() res, @Body() productDTO: ProductDTO, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
+    let modifiedProduct: Product;
+    try {
+      modifiedProduct = this.productService.makeClassObjectFromAny(productDTO);
+    } catch (error) {
+      throw new BadRequestException('Product data malformed:' + error.message);
+    }
     let updatedProduct: boolean;
     try {
-      updatedProduct = await this.productService.updateById(id, productDTO);
+      updatedProduct = await this.productService.updateById(id, modifiedProduct);
     } catch (error) {
       throw new InternalServerErrorException(error);
     };
     if (!updatedProduct) throw new NotFoundException('Product does not exist!');
-
     return res.status(HttpStatus.OK).json({
       message: 'Product Updated Successfully',
       updated: updatedProduct
@@ -210,16 +216,17 @@ export class ProductController {
 
   @Get('generate/sku')
   async generateSKU(@Res() res, @Query('type') typeParam, @Query('brand') brandParam, @Query('model') modelParam, @Query('color') colorParam, @Query('size') sizeParam) {
+    if (!typeParam) throw new BadRequestException("There is type empty attribute!")
+    if (!brandParam) throw new BadRequestException("There is brand empty attribute!")
+    if (!modelParam) throw new BadRequestException("There is model empty attribute!")
+    if (!colorParam) throw new BadRequestException("There is color empty attribute!")
+    if (!sizeParam) throw new BadRequestException("There is size empty attribute!")
     try {
       const type: string = typeParam.toString();
       const brand: string = brandParam.toString();
       const model: string = modelParam.toString();
       const color: string = colorParam.toString();
       const size: string = sizeParam.toString();
-
-      if (!type || !brand || !model || !color || !size)
-        throw new BadRequestException("There are an empty attribute!")
-
       const skuNew = await this.productService.generateSKU(type, brand, model, color, size);
       return res.status(HttpStatus.OK).json({ "sku": skuNew });
     } catch (error) {

@@ -35,6 +35,9 @@ export class Product extends Entity implements IProduct {
     reservations: Reservation[];
     sales: Sale[];
 
+    createdAt?: Date;
+    updatedAt?: Date;
+
     /**
     * Constructors
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
@@ -92,7 +95,9 @@ export class Product extends Entity implements IProduct {
         this.setIvaAmountOnPrice(prod.ivaAmountOnPrice);
         this.setGrossPrice(prod.grossPrice);
         this.setStock(prod.stock);
-        this.setActive(prod.active);
+        if (prod.active)
+            this.setActive(prod.active);
+        else this.active = true;
         if (prod.reservations)
             this.setReservations(prod.reservations);
         else this.reservations = [];
@@ -236,6 +241,13 @@ export class Product extends Entity implements IProduct {
         const isAnArray: boolean = Array.isArray(value);
         if (!isAnArray) throw new Error('Field sales has invalid format because is not array!');
         this.sales = value;
+    };
+
+    public setUpdatedAt(value: Date) {
+        if (value === undefined || !(value instanceof Date))
+            throw this.updatedAt = new Date();
+        else
+            this.updatedAt = value;
     };
 
 };

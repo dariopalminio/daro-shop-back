@@ -2,12 +2,12 @@ import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, Ht
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UserProfileDTO } from 'src/domain/model/profile/user-profile.dto.type';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { IProfile } from 'src/domain/model/profile/profile.interface';
 import { IProfileService } from 'src/domain/service/interface/profile.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { ProfileDTO } from '../dto/profile.dto';
 
 /**
  * Profile controller
@@ -52,16 +52,20 @@ export class ProfileController {
   // Get Products /user/all
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-    if (pageParam && limitParam && orderBy && isAsc) {
-      const page: number = parseInt(pageParam);
-      const limit: number = parseInt(limitParam);
-      const orderByField: string = orderBy.toString();
-      const isAscending: boolean = (isAsc === 'true') ? true : false;
-      const list = await this.profileService.getAll(page, limit, orderByField, isAscending);
-      return res.status(HttpStatus.OK).json(list);
-    } else {
-      const list = await this.profileService.getAll();
-      return res.status(HttpStatus.OK).json(list);
+    try {
+      if (pageParam && limitParam && orderBy && isAsc) {
+        const page: number = parseInt(pageParam);
+        const limit: number = parseInt(limitParam);
+        const orderByField: string = orderBy.toString();
+        const isAscending: boolean = (isAsc === 'true') ? true : false;
+        const list = await this.profileService.getAll(page, limit, orderByField, isAscending);
+        return res.status(HttpStatus.OK).json(list);
+      } else {
+        const list = await this.profileService.getAll();
+        return res.status(HttpStatus.OK).json(list);
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -69,7 +73,12 @@ export class ProfileController {
   @Get('/id/:userID')
   async getById(@Res() res, @Param('userID') userID) {
     if (!userID) throw new BadRequestException('Param userID not specified!');
-    const user = await this.profileService.getById(userID);
+    let user;
+    try {
+      user = await this.profileService.getById(userID);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
   };
@@ -78,30 +87,29 @@ export class ProfileController {
   @Get('/profile')
   async getByUserName(@Res() res, @Query('userName') userName) {
     if (!userName) throw new BadRequestException('Param userName not specified!');
-    const profile: IProfile = await this.profileService.getByUserName(userName);
-    if (!profile) throw new NotFoundException('User does not exist!');
-    return res.status(HttpStatus.OK).json(profile);
+    try {
+      const profile: IProfile = await this.profileService.getByUserName(userName);
+      if (!profile) throw new NotFoundException('User does not exist!');
+      return res.status(HttpStatus.OK).json(profile);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   };
 
   // Add User: /profiles/create
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() userRegisterDTO: IProfile) {
-    try {
-      this.validateProfile(userRegisterDTO);
-    } catch (error) {
-      new BadRequestException('Some field is missing: ' + error.message);
-    }
+  async create(@Res() res, @Body() userRegisterDTO: ProfileDTO) {
     let newProfile: IProfile;
     try {
       newProfile = await this.profileService.create(userRegisterDTO);
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!newProfile) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!newProfile) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
-      message: 'User Created Successfully',
+      message: 'Profile Created Successfully',
       profile: newProfile
     });
   };
@@ -112,37 +120,33 @@ export class ProfileController {
   @Delete('delete')
   async delete(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
-    const categoryDeleted = await this.profileService.delete(id);
+    let categoryDeleted;
+    try {
+      categoryDeleted = await this.profileService.delete(id);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
-      message: 'User Deleted Successfully',
+      message: 'Profile Deleted Successfully',
       categoryDeleted
     });
   };
 
 
   @Put('update')
-  async update(@Res() res, @Body() userProfileDTO: UserProfileDTO) {
-    const updatedUser = await this.profileService.updateProfile(userProfileDTO);
+  async update(@Res() res, @Body() profileDTO: ProfileDTO) {
+    let updatedUser: any;
+    try {
+      updatedUser = await this.profileService.updateProfile(profileDTO);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
-      message: 'User Updated Successfully',
-      updatedUser
+      message: 'Profile Updated Successfully',
+      updated: updatedUser
     });
   };
-
-/**
- * Validation of Profile
- * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
- * In the future move this validation to a validatable object!
- */
-  private validateProfile(profile: IProfile): boolean {
-    if (!profile.userName || !profile.email)
-      throw new Error('Some field (userName, email) is missing!');
-    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const hasClientEmail: boolean = expresionsRegularEmail.test(profile.email);
-    if (!hasClientEmail) throw new Error('Field email has invalid format!');
-    return true;
-  }
 
 };

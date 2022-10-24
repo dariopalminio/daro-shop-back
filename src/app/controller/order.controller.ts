@@ -27,16 +27,20 @@ export class OrderController {
 
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-    if (pageParam && limitParam && orderBy && isAsc) {
-      const page: number = parseInt(pageParam);
-      const limit: number = parseInt(limitParam);
-      const orderByField: string = orderBy.toString();
-      const isAscending: boolean = (isAsc === 'true') ? true : false;
-      const list = await this.orderService.getAll(page, limit, orderByField, isAscending);
-      return res.status(HttpStatus.OK).json(list);
-    } else {
-      const list = await this.orderService.getAll();
-      return res.status(HttpStatus.OK).json(list);
+    try {
+      if (pageParam && limitParam && orderBy && isAsc) {
+        const page: number = parseInt(pageParam);
+        const limit: number = parseInt(limitParam);
+        const orderByField: string = orderBy.toString();
+        const isAscending: boolean = (isAsc === 'true') ? true : false;
+        const list = await this.orderService.getAll(page, limit, orderByField, isAscending);
+        return res.status(HttpStatus.OK).json(list);
+      } else {
+        const list = await this.orderService.getAll();
+        return res.status(HttpStatus.OK).json(list);
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   };
 
@@ -44,20 +48,23 @@ export class OrderController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() orderToCreateDTO: OrderToCreateDTO) {
-    let order: Order;
+    let orderToCreate: Order;
     try {
-      order = new Order();
-      order.setFromAny(orderToCreateDTO);
+      orderToCreate = this.orderService.makeClassObjectFromAny(orderToCreateDTO);
     } catch (error) {
-      throw new BadRequestException('Order data malformed:' + error.message);
+      throw new BadRequestException('Order data malformed: ' + error.message);
     }
-
-    const objCreated = await this.orderService.create(order);
-    if (!objCreated) throw new NotFoundException('User does not exist or canot delete user!');
+    let objCreated: any;
+    try {
+      objCreated = await this.orderService.create(orderToCreate);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!objCreated) throw new NotFoundException('Could not be created!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Created Successfully',
       order: objCreated
-    });
+    })
   };
 
   @UseGuards(RolesGuard)
@@ -65,29 +72,33 @@ export class OrderController {
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
-    const objDeleted = await this.orderService.delete(id);
-    if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
+    let objDeleted: any;
+    try {
+      objDeleted = await this.orderService.delete(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    if (!objDeleted) throw new NotFoundException('Does not exist or canot be deleted!');
     return res.status(HttpStatus.OK).json({
       message: 'Order Deleted Successfully',
-      objDeleted
-    });
+      deleted: objDeleted
+    })
   };
 
   @Post('initialize')
   async initialize(@Res() res, @Body() orderToInitializeDTO: OrderToInitializeDTO) {
     let order: Order;
     try {
-      order = new Order();
-      order.setFromAny(orderToInitializeDTO);
+      order = this.orderService.makeClassObjectFromAny(orderToInitializeDTO);
     } catch (error) {
-      throw new BadRequestException('Order data malformed:' + error.message);
+      throw new BadRequestException('Order data malformed: ' + error.message);
     }
     try {
       const orderCreated = await this.orderService.initialize(order);
       return res.status(HttpStatus.OK).json({
         message: 'Order Initialized Successfully',
         order: orderCreated
-      });
+      })
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -101,7 +112,7 @@ export class OrderController {
       return res.status(HttpStatus.OK).json({
         message: 'Order Confirmed Successfully',
         orderId: orderId
-      });
+      })
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -115,7 +126,7 @@ export class OrderController {
       return res.status(HttpStatus.OK).json({
         message: 'Order Aborted Successfully',
         orderId: orderId
-      });
+      })
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -129,7 +140,7 @@ export class OrderController {
       return res.status(HttpStatus.OK).json({
         message: 'Order Paid Successfully',
         orderId: orderId
-      });
+      })
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

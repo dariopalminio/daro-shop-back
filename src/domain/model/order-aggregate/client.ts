@@ -28,6 +28,7 @@ export class Client {
         const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         const hasClientEmail: boolean = expresionsRegularEmail.test(email);
         if (!hasClientEmail) throw new Error('Field email has invalid format!');
+        this.email = email;
     }
 
 };

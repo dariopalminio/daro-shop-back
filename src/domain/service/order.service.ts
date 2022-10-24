@@ -16,7 +16,8 @@ import { IOrderItem } from '../model/order-aggregate/order-item.interface';
 /**
  * Order Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'Order' and Order collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity root) 
+ * and its collections, as in this case the 'Order' and Orders collection.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain objects or business logic and uses the domain model to implement use cases. 
@@ -230,6 +231,17 @@ export class OrderService implements IOrderService<IOrder> {
 
   async hasByQuery(query: any): Promise<boolean> {
     return await this.orderRepository.hasByQuery(query);
+  };
+
+  /**
+   * Factory method
+   * @param dto dto any object
+   * @returns  Order object instance
+   */
+  makeClassObjectFromAny(dto: any): Order {
+    let order: Order = new Order();
+    order.setFromAny(dto);
+    return order;
   };
 
 };

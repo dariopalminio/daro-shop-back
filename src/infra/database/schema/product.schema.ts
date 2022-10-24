@@ -17,7 +17,7 @@ export class Product {
     @Prop()
     barcode: String; //UPC - Universal Product Code (EAN, ISBN, GTIN, Part number)
 
-    @Prop({ required: true })
+    @Prop({ required: true, unique: true }) // implicitly has "index: true" because is unique
     name: String;
 
     @Prop()

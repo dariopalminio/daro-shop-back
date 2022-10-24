@@ -48,7 +48,7 @@ export class AuthTokensController {
             name: "auth",
             version: this.globalConfig.get<string>('VERSION'),
             date: new Date()
-        };
+        }
         return res.status(200).json(response);
     };
 
@@ -66,7 +66,7 @@ export class AuthTokensController {
             if (error.code == 400) throw new BadRequestException(error);
             if (error.code == 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        };
+        }
 
         if (!authResponse.access_token) return res.status(HttpStatus.UNAUTHORIZED).json(authResponse);
 
@@ -103,7 +103,7 @@ export class AuthTokensController {
             if (error.code == 400) throw new BadRequestException(error);
             if (error.code == 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        };
+        }
         return res.status(HttpStatus.OK).json(data);
     };
 
@@ -124,7 +124,7 @@ export class AuthTokensController {
             if (error.code == 400) throw new BadRequestException(error);
             if (error.code == 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        };
+        }
         return res.status(HttpStatus.OK).json(authResponse);
     };
 

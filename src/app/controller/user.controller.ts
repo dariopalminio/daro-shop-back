@@ -9,6 +9,8 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { UserDTO } from '../dto/user.dto';
+import { User } from 'src/domain/model/user/user';
 
 /**
  * Users controller
@@ -59,7 +61,12 @@ export class UserController {
   @Get('/id/:userID')
   async getById(@Res() res, @Param('userID') userID) {
     if (!userID) throw new BadRequestException('userID not specified!');
-    const user = await this.userService.getById(userID);
+    let user;
+    try {
+       user = await this.userService.getById(userID);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
   };
@@ -67,7 +74,13 @@ export class UserController {
   //Example http://localhost:3001/api/webshop/v1/users/username/dariopalminio@gmail.com
   @Get('/user')
   async getByUserName(@Res() res, @Query('userName') userName) {
-    const user = await this.userService.getByUserName(userName);
+    if (!userName) throw new BadRequestException('userName not specified!');
+    let user;
+    try {
+       user = await this.userService.getByUserName(userName);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
   };
@@ -76,15 +89,16 @@ export class UserController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async createUser(@Res() res, @Body() userRegisterDTO: IUser) {
+  async createUser(@Res() res, @Body() userToCreateDTO: UserDTO) {
+    let user: User;
     try {
-      this.validateUser(userRegisterDTO);
+      user = this.userService.makeClassObjectFromAny(userToCreateDTO);
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }
     let createdId: IUser;
     try {
-      createdId = await this.userService.create(userRegisterDTO);
+       createdId = await this.userService.create(user);
     } catch (error) {
       new InternalServerErrorException(error);
     }
@@ -92,7 +106,7 @@ export class UserController {
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
       user: createdId
-    });
+    })
   };
 
   // Delete user: /delete?id=5c9d45e705ea4843c8d0e8f7
@@ -101,38 +115,40 @@ export class UserController {
   @Delete('delete')
   async deleteUser(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
-    const categoryDeleted = await this.userService.delete(id);
+    let categoryDeleted: any;
+    try {
+       categoryDeleted = await this.userService.delete(id);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Deleted Successfully',
       categoryDeleted
-    });
+    })
   };
 
   // Update user: /update?id=5c9d45e705ea4843c8d0e8f7
   @Put('update')
-  async updateUser(@Res() res, @Body() user: IUser, @Query('id') id) {
+  async updateUser(@Res() res, @Body() userDTO: UserDTO, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
-    const updatedUser = await this.userService.updateById(id, user);
+    let user: User;
+    try {
+      user = this.userService.makeClassObjectFromAny(userDTO);
+    } catch (error) {
+      throw new BadRequestException('User data malformed:' + error.message);
+    }
+    let updatedUser: any;
+    try {
+       updatedUser = await this.userService.updateById(id, user);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'User Updated Successfully',
-      updatedUser
-    });
+      updated: updatedUser
+    })
   };
 
-/**
- * Validation of User
- * Note: Data should always be assumed to be bad until it’s been through some kind of validation process. 
- * In the future move this validation to a validatable object!
- */
-  private validateUser(userRegisterDTO: IUser): boolean {
-    if (!userRegisterDTO.userName || !userRegisterDTO.email || !userRegisterDTO.password
-      || !userRegisterDTO.firstName || !userRegisterDTO.lastName || !userRegisterDTO.roles)
-      throw new Error('Some field (userName, firstName, lastName, email, password) is missing!');
-    const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const hasClientEmail: boolean = expresionsRegularEmail.test(userRegisterDTO.email);
-    if (!hasClientEmail) throw new Error('Field email has invalid format!');
-    return true;
-  }
 };

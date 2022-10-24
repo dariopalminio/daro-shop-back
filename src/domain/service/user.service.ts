@@ -8,7 +8,8 @@ import { DomainError } from 'src/domain/error/domain-error';
 /**
  * User Service
  * 
- * The service represents the main behavior associated with a main domain object and its collections, as in this case the 'User' and User collection.
+ * The Domain Service represents the main behavior associated with a main domain object (Entity root) 
+ * and its collections, as in this case the 'User' and User collection.
  * 
  * Note: Service is where your business logic lives. This layer allows you to effectively decouple the processing logic from where the routes are defined.
  * The service provides access to the domain or business logic and uses the domain model to implement use cases. 
@@ -90,7 +91,7 @@ export class UserService implements IUserService<IUser> {
   };
 
   async updateById(id: string, user: IUser): Promise<boolean> {
-    const updated: boolean = await this.userRepository.updateById(id, {...user, updatedAt: new Date()});
+    const updated: boolean = await this.userRepository.updateById(id, { ...user, updatedAt: new Date() });
     return updated;
   };
 
@@ -106,7 +107,7 @@ export class UserService implements IUserService<IUser> {
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updated: boolean = await this.userRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    const updated: boolean = await this.userRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
     return updated;
   };
 
@@ -116,6 +117,17 @@ export class UserService implements IUserService<IUser> {
 
   async hasByQuery(query: any): Promise<boolean> {
     return await this.userRepository.hasByQuery(query);
+  };
+
+  /**
+   * Factory method
+   * @param dto dto any object
+   * @returns  user object instance
+   */
+  makeClassObjectFromAny(dto: any): User {
+    let user: User = new User();
+    user.setFromAny(dto);
+    return user;
   };
 
 };
