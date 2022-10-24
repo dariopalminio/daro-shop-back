@@ -1,5 +1,4 @@
 import { Entity } from '../entity';
-import { IUser } from './user.interface';
 
 /**
  * User domain object
@@ -10,7 +9,7 @@ import { IUser } from './user.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class User extends Entity implements IUser {
+export class User extends Entity {
 
     enable: boolean;
     userName: string;

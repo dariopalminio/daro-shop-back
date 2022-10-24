@@ -1,5 +1,4 @@
 import { Order } from 'src/domain/model/order-aggregate/order';
-import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
 
 /**
@@ -12,7 +11,7 @@ import { IPersistentAggregateService } from './persistent.aggregate.interface';
  */
 export interface IOrderService<T> extends IPersistentAggregateService<T> {
    
-    initialize(orderNew: IOrder): Promise<IOrder>;
+    initialize(orderNew: Order): Promise<Order>;
     confirm(orderId: string): Promise<boolean>;
     abort(orderId: string): Promise<boolean>;
     completePayment(orderId: string): Promise<boolean>;

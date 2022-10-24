@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUserService } from '../service/interface/user.service.interface';
-import { IUser } from 'src/domain/model/user/user.interface';
 import { User } from 'src/domain/model/user/user';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
@@ -17,28 +16,28 @@ import { DomainError } from 'src/domain/error/domain-error';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class UserService implements IUserService<IUser> {
+export class UserService implements IUserService<User> {
   constructor(
     @Inject('IUserRepository')
-    private readonly userRepository: IRepository<IUser>) {
+    private readonly userRepository: IRepository<User>) {
   }
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
-    const list: IUser[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
+    const list: User[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
-    const list: IUser[] = await this.userRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
+    const list: User[] = await this.userRepository.find(query, page, limit, orderByField, isAscending);
     return list;
   };
 
-  async getById(id: string): Promise<IUser> {
-    const entity: IUser = await this.userRepository.getById(id);
+  async getById(id: string): Promise<User> {
+    const entity: User = await this.userRepository.getById(id);
     return entity;
   };
 
-  async getUserJustRegister(userName: string): Promise<IUser> {
+  async getUserJustRegister(userName: string): Promise<User> {
     const fieldsToExclude = {
       password: 0,
       verificationCode: 0,
@@ -57,9 +56,9 @@ export class UserService implements IUserService<IUser> {
     return u2;
   };
 
-  async create(userRegisterDTO: IUser): Promise<IUser> {
+  async create(userRegisterDTO: User): Promise<User> {
     try {
-      let newUser: IUser = new User();
+      let newUser: User = new User();
       newUser.userName = userRegisterDTO.userName;
       newUser.email = userRegisterDTO.email;
       newUser.firstName = userRegisterDTO.firstName;
@@ -70,7 +69,7 @@ export class UserService implements IUserService<IUser> {
       newUser.enable = true;
       newUser.verificationCode = "";
 
-      const userNew: IUser = await this.userRepository.create(newUser);
+      const userNew: User = await this.userRepository.create(newUser);
       return userNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -90,18 +89,18 @@ export class UserService implements IUserService<IUser> {
     return deleted;
   };
 
-  async updateById(id: string, user: IUser): Promise<boolean> {
+  async updateById(id: string, user: User): Promise<boolean> {
     const updated: boolean = await this.userRepository.updateById(id, { ...user, updatedAt: new Date() });
     return updated;
   };
 
-  async getByUserName(userName: string): Promise<IUser> {
+  async getByUserName(userName: string): Promise<User> {
     const query = { userName: userName };
     const user = await this.userRepository.getByQuery(query);
     return user;
   };
 
-  async getByQuery(query: any): Promise<IUser> {
+  async getByQuery(query: any): Promise<User> {
     const entity = await this.userRepository.getByQuery(query);
     return entity;
   };

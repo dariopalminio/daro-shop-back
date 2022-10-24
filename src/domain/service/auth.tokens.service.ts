@@ -12,9 +12,9 @@ import { RequestRefreshToken } from '../model/auth/token/auth.request.refresh.to
 import { NewAdminTokenRequestType } from '../model/auth/token/auth.admin.dto';
 import { PayloadType } from '../model/auth/token/payload.type';
 import { IUserService } from './interface/user.service.interface';
-import { IUser } from '../model/user/user.interface';
 import { RolesEnum } from '../model/auth/reles.enum';
 import { LoginForm } from '../model/auth/login/login-form';
+import { User } from '../model/user/user';
 const bcrypt = require('bcrypt');
 
 /**
@@ -32,7 +32,7 @@ export class AuthTokensService implements IAuthTokensService {
 
   constructor(
     @Inject('IUserService')
-    private readonly userService: IUserService<IUser>,
+    private readonly userService: IUserService<User>,
     @Inject('IEmailSender')
     readonly sender: IEmailSender,
     @Inject('ITranslator')
@@ -140,7 +140,7 @@ export class AuthTokensService implements IAuthTokensService {
    */
   async login(loginForm: LoginForm): Promise<any> {
 
-    let user: IUser;
+    let user: User;
     try {
       user = await this.userService.getByQuery({ userName: loginForm.userName });
     } catch (error) {
@@ -185,7 +185,7 @@ export class AuthTokensService implements IAuthTokensService {
     if (!isClient)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "Is not a client!", { error: "Unauthorized. Client id or client secret are invalid!" });
 
-    let user: IUser;
+    let user: User;
     try {
       user = await this.userService.getByQuery({ userName: body.username });
     } catch (error) {

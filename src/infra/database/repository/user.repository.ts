@@ -2,16 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
-import { IUser } from '../../../domain/model/user/user.interface';
 import { User } from '../../../domain/model/user/user';
 import { UserDocument } from '../schema/user.schema';
-
 
 /**
  * User Mongo repository implementation
  */
 @Injectable()
-export class UserRepository implements IRepository<IUser> {
+export class UserRepository implements IRepository<User> {
 
     constructor(
         @InjectModel('User')
@@ -19,7 +17,7 @@ export class UserRepository implements IRepository<IUser> {
     ) { }
    
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
         let arrayDoc: UserDocument[];
 
         if (page && limit && orderByField) {
@@ -38,7 +36,7 @@ export class UserRepository implements IRepository<IUser> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IUser[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
         let arrayDoc: UserDocument[];
 
         if (page && limit && orderByField) {
@@ -74,28 +72,28 @@ export class UserRepository implements IRepository<IUser> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async getById(id: string, fieldsToExclude?: any): Promise<IUser> {
+    async getById(id: string, fieldsToExclude?: any): Promise<User> {
         if (fieldsToExclude) {
             const userDoc: UserDocument = await this.userModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: IUser = JSON.parse(JSON.stringify(userDoc));
+            const objCasted: User = JSON.parse(JSON.stringify(userDoc));
             return objCasted;
         }
         const userDoc: UserDocument = await this.userModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: IUser = JSON.parse(JSON.stringify(userDoc));
+        const objCasted: User = JSON.parse(JSON.stringify(userDoc));
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IUser> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<User> {
         if (fieldsToExclude) {
             const userDoc: UserDocument =  await this.userModel.findOne(query, fieldsToExclude);
-            const objCasted: IUser = JSON.parse(JSON.stringify(userDoc));
+            const objCasted: User = JSON.parse(JSON.stringify(userDoc));
             return objCasted;
         }
         const userDoc: UserDocument =  await this.userModel.findOne(query);
-        const objCasted: IUser = JSON.parse(JSON.stringify(userDoc));
+        const objCasted: User = JSON.parse(JSON.stringify(userDoc));
         return objCasted;
     }
 
@@ -111,9 +109,9 @@ export class UserRepository implements IRepository<IUser> {
         return true;
     }
 
-    async create(doc: IUser): Promise<IUser> {
+    async create(doc: User): Promise<User> {
         const docCreated: UserDocument = await this.userModel.create(doc);
-        const objCasted: IUser = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: User = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     }
 
@@ -146,7 +144,7 @@ export class UserRepository implements IRepository<IUser> {
     };
 
       
-    castArrayDocToArrayDomainEntity(schemaDocArray: UserDocument[]): IUser[] {
+    castArrayDocToArrayDomainEntity(schemaDocArray: UserDocument[]): User[] {
         let entityArray: User[] = [];
         schemaDocArray.forEach(element => entityArray.push(
             JSON.parse(JSON.stringify(element))

@@ -2,17 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
-import { IShippingPrice } from 'src/domain/model/shipping/shipping-price.interface';
 import { IRepository } from '../../../domain/output-port/repository.interface';
 import { ShippingPriceDocument } from '../schema/shipping-price.schema';
-
-
 
 /**
  * ShippingPrice Mongo repository implementation
  */
 @Injectable()
-export class ShippingPriceRepository implements IRepository<IShippingPrice> {
+export class ShippingPriceRepository implements IRepository<ShippingPrice> {
 
     constructor(
         @InjectModel('ShippingPrice')
@@ -20,7 +17,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
     ) { }
    
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ShippingPrice[]> {
         let arrayDoc: ShippingPriceDocument[];
 
         if (page && limit && orderByField) {
@@ -40,7 +37,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
         //return this.conversorArrayDocToCategory(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ShippingPrice[]> {
         let arrayDoc: ShippingPriceDocument[];
 
         if (page && limit && orderByField) {
@@ -76,28 +73,28 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async getById(id: string, fieldsToExclude?: any): Promise<IShippingPrice> {
+    async getById(id: string, fieldsToExclude?: any): Promise<ShippingPrice> {
         if (fieldsToExclude) {
             const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: IShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
             return objCasted;
         }
         const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: IShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IShippingPrice> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<ShippingPrice> {
         if (fieldsToExclude) {
             const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
-            const objCasted: IShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
             return objCasted;
         }
         const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
-        const objCasted: IShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
         return objCasted;
     }
 
@@ -113,9 +110,9 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
         return true;
     }
 
-    async create(doc: IShippingPrice): Promise<IShippingPrice> {
+    async create(doc: ShippingPrice): Promise<ShippingPrice> {
         const docCreated: ShippingPriceDocument = await this.shippingPriceModel.create(doc);
-        const objCasted: IShippingPrice = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     }
 
@@ -148,7 +145,7 @@ export class ShippingPriceRepository implements IRepository<IShippingPrice> {
     };
 
       
-    castArrayDocToArrayDomainEntity(entityDocArray: ShippingPriceDocument[]): IShippingPrice[] {
+    castArrayDocToArrayDomainEntity(entityDocArray: ShippingPriceDocument[]): ShippingPrice[] {
         let entitiesArray: ShippingPrice[] = [];
         entityDocArray.forEach(element => entitiesArray.push(
             JSON.parse(JSON.stringify(element))

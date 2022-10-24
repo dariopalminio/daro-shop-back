@@ -1,6 +1,5 @@
 import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards, BadRequestException } from '@nestjs/common';
 import { ICategoryService } from 'src/domain/service/interface/category.service.interface';
-import { ICategory } from 'src/domain/model/category/category.interface';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -8,6 +7,7 @@ import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { Category } from 'src/domain/model/category/category';
 
 /**
  * Category controller
@@ -20,7 +20,7 @@ export class CategoryController {
 
   constructor(
     @Inject('ICategoryService')
-    private readonly categoryService: ICategoryService<ICategory>,
+    private readonly categoryService: ICategoryService<Category>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -79,8 +79,8 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async createCategory(@Res() res, @Body() createCategoryDTO: ICategory) {
-    let newCat: ICategory;
+  async createCategory(@Res() res, @Body() createCategoryDTO: Category) {
+    let newCat: Category;
     try {
       newCat = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
@@ -116,7 +116,7 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async updateCategory(@Res() res, @Body() categoryDTO: ICategory, @Query('id') id) {
+  async updateCategory(@Res() res, @Body() categoryDTO: Category, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
     let updatedCategory: boolean;
     try {

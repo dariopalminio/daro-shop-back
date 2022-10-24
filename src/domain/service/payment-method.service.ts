@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IPaymentMethodService } from './interface/payment-method.service.interface';
-import { IPaymentMethod } from '../model/payment/payment-method.interface';
 import { PaymentMethod } from '../model/payment/payment-metod';
 
 
@@ -18,28 +17,28 @@ import { PaymentMethod } from '../model/payment/payment-metod';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class PaymentMethodService implements IPaymentMethodService<IPaymentMethod> {
+export class PaymentMethodService implements IPaymentMethodService<PaymentMethod> {
   constructor(
     @Inject('IPaymentMethodRepository')
-    private readonly paymentMethodRepo: IRepository<IPaymentMethod>,
+    private readonly paymentMethodRepo: IRepository<PaymentMethod>,
   ) { }
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
-    const list: IPaymentMethod[] = await this.paymentMethodRepo.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaymentMethod[]> {
+    const list: PaymentMethod[] = await this.paymentMethodRepo.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
-    const entity: IPaymentMethod[] = await this.paymentMethodRepo.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaymentMethod[]> {
+    const entity: PaymentMethod[] = await this.paymentMethodRepo.find(query, page, limit, orderByField, isAscending);
     return entity;
   };
 
-  async getById(id: string): Promise<IPaymentMethod> {
-    const user: IPaymentMethod = await this.paymentMethodRepo.getById(id);
+  async getById(id: string): Promise<PaymentMethod> {
+    const user: PaymentMethod = await this.paymentMethodRepo.getById(id);
     return user;
   };
 
-  async create(paymentMethod: IPaymentMethod): Promise<IPaymentMethod> {
+  async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
     try {
       let newObj: PaymentMethod = new PaymentMethod();
       newObj.key = paymentMethod.key;
@@ -49,7 +48,7 @@ export class PaymentMethodService implements IPaymentMethodService<IPaymentMetho
       newObj.active = paymentMethod.active;
       newObj.meta = paymentMethod.meta;
 
-      const entityNew: IPaymentMethod = await this.paymentMethodRepo.create(newObj);
+      const entityNew: PaymentMethod = await this.paymentMethodRepo.create(newObj);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -69,18 +68,18 @@ export class PaymentMethodService implements IPaymentMethodService<IPaymentMetho
     return deleted;
   };
 
-  async updateById(id: string, order: IPaymentMethod): Promise<boolean> {
+  async updateById(id: string, order: PaymentMethod): Promise<boolean> {
     const updated: boolean = await this.paymentMethodRepo.updateById(id, { ...order, updatedAt: new Date() });
     return updated;
   };
 
-  async getByUserName(userName: string): Promise<IPaymentMethod> {
+  async getByUserName(userName: string): Promise<PaymentMethod> {
     const query = { userName: userName };
     const user = await this.paymentMethodRepo.getByQuery(query);
     return user;
   };
 
-  async getByQuery(query: any): Promise<IPaymentMethod> {
+  async getByQuery(query: any): Promise<PaymentMethod> {
     const user = await this.paymentMethodRepo.getByQuery(query);
     return user;
   };

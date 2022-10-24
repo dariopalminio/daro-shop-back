@@ -1,4 +1,3 @@
-import { IProduct } from './product.interface';
 import { Reservation } from './reservation';
 import { Sale } from './sale';
 import { Entity } from '../entity';
@@ -11,7 +10,7 @@ import { Entity } from '../entity';
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
-export class Product extends Entity implements IProduct {
+export class Product extends Entity {
 
     sku: string;
     barcode: string;

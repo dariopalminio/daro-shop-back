@@ -1,12 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IProductService } from '../service/interface/product.service.interface';
-import { IProduct } from 'src/domain/model/product/product.interface';
-import { IRepository } from '../output-port/repository.interface';
 import { ProductOfCatalog } from 'src/domain/model/product/product-of-catalog';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from '../model/product/reservation';
 import { Sale } from '../model/product/sale';
 import { Product } from '../model/product/product';
+import { IRepository } from '../output-port/repository.interface';
 
 /**
  * Product Service
@@ -20,21 +19,21 @@ import { Product } from '../model/product/product';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class ProductService implements IProductService<IProduct> {
+export class ProductService implements IProductService<Product> {
 
   constructor(
     @Inject('IProductRepository')
-    private readonly productRepository: IRepository<IProduct>,
+    private readonly productRepository: IRepository<Product>,
   ) { }
 
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const list: IProduct[] = await this.productRepository.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
+    const list: Product[] = await this.productRepository.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const list: IProduct[] = await this.productRepository.find({ active: "true" }, page, limit, orderByField, isAscending);
+  async getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
+    const list: Product[] = await this.productRepository.find({ active: "true" }, page, limit, orderByField, isAscending);
     return list;
   };
 
@@ -70,17 +69,17 @@ export class ProductService implements IProductService<IProduct> {
     return filtered;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
-    const list: IProduct[] = await this.productRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
+    const list: Product[] = await this.productRepository.find(query, page, limit, orderByField, isAscending);
     return list;
   };
 
-  async getById(id: string): Promise<IProduct> {
-    const entity: IProduct = await this.productRepository.getById(id);
+  async getById(id: string): Promise<Product> {
+    const entity: Product = await this.productRepository.getById(id);
     return entity;
   };
 
-  async getDetailById(id: string): Promise<IProduct> {
+  async getDetailById(id: string): Promise<Product> {
     const fieldsToExclude = {
       netCost: 0,
       ivaAmountOnCost: 0,
@@ -89,12 +88,12 @@ export class ProductService implements IProductService<IProduct> {
       ivaAmountOnPrice: 0,
     };
 
-    const entity: IProduct = await this.productRepository.getById(id, fieldsToExclude);
+    const entity: Product = await this.productRepository.getById(id, fieldsToExclude);
     return entity;
   };
 
-  async create(product: IProduct): Promise<IProduct> {
-    const entityNew: Promise<IProduct> = this.productRepository.create(product);
+  async create(product: Product): Promise<Product> {
+    const entityNew: Promise<Product> = this.productRepository.create(product);
     return entityNew;
   };
 
@@ -103,12 +102,12 @@ export class ProductService implements IProductService<IProduct> {
     return deleted;
   };
 
-  async updateById(id: string, product: IProduct): Promise<boolean> {
+  async updateById(id: string, product: Product): Promise<boolean> {
     const updatedProduct: boolean = await this.productRepository.updateById(id, { ...product, updatedAt: new Date() });
     return updatedProduct;
   };
 
-  async getByQuery(query: any): Promise<IProduct> {
+  async getByQuery(query: any): Promise<Product> {
     const product = await this.productRepository.getByQuery(query);
     return product;
   };
@@ -163,7 +162,7 @@ export class ProductService implements IProductService<IProduct> {
     reserva.orderId = orderId;
     reserva.quantity = quantity;
     reserva.date = new Date();
-    let product: IProduct = await this.getById(productId);
+    let product: Product = await this.getById(productId);
     if (quantity > product.stock)
       throw new Error(`Insufficient stock. In orderId ${orderId} try to reserve quantity ${quantity} when there is ${product.stock} in stock`);
     product.stock -= reserva.quantity;
@@ -173,7 +172,7 @@ export class ProductService implements IProductService<IProduct> {
   }
 
   async revertStockReservation(productId: string, orderId: string): Promise<boolean> {
-    let product: IProduct = await this.getById(productId);
+    let product: Product = await this.getById(productId);
     const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
     if (reserveIndex === -1)
       throw new Error(`Not found ${orderId} in reservation list of product ${productId}`);
@@ -192,7 +191,7 @@ export class ProductService implements IProductService<IProduct> {
   }
 
   async moveReservationToSale(productId: string, orderId: string): Promise<boolean> {
-    let product: IProduct = await this.getById(productId);
+    let product: Product = await this.getById(productId);
     const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
     const reservation: Reservation = product.reservations[reserveIndex];
 

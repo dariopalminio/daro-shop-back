@@ -3,8 +3,8 @@ import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IPaymentMethodService } from 'src/domain/service/interface/payment-method.service.interface';
-import { IPaymentMethod } from 'src/domain/model/payment/payment-method.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 
 /**
  * Payment controller
@@ -17,7 +17,7 @@ export class PaymentMethodController {
 
   constructor(
     @Inject('IPaymentMethodService')
-    private readonly paymentMethodService: IPaymentMethodService<IPaymentMethod>,
+    private readonly paymentMethodService: IPaymentMethodService<PaymentMethod>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -53,7 +53,7 @@ export class PaymentMethodController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() paymentMethodDTO: IPaymentMethod) {
+  async create(@Res() res, @Body() paymentMethodDTO: PaymentMethod) {
     let objCreated;
     try {
       objCreated = await this.paymentMethodService.create(paymentMethodDTO);

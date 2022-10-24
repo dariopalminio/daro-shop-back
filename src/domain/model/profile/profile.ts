@@ -1,6 +1,5 @@
 import { Entity } from "../entity";
 import { IAddress } from "./address.interface";
-import { IProfile } from "./profile.interface";
 
 /**
  * Profile domain object
@@ -11,7 +10,7 @@ import { IProfile } from "./profile.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Profile extends Entity implements IProfile {
+export class Profile extends Entity {
 
     userId: string;
     enable: boolean;
@@ -52,8 +51,26 @@ export class Profile extends Entity implements IProfile {
         }
     };
 
+    /**
+    * Set all attributes from variable can be of any type 'any'.
+    * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
+    * @param usr any is used to tell TypeScript that a variable can be of any type
+    */
+    public setFromAny(usr: any) {
+        this.setUserId(usr.userId);
+        this.setUserName(usr.userName);
+        this.setFirstName(usr.firstName);
+        this.setLastName(usr.lastName);
+        this.setEmail(usr.email);
+        this.setDocType(usr.docType);
+        this.setDocument(usr.document);
+        this.setTelephone(usr.telephone);
+        this.setLanguage(usr.language);
+        this.setAddresses(usr.addresses);
+    };
+
     public setUserId(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field userId has invalid format because is undefined or is not string!');
         }
         this.userId = value;
@@ -63,21 +80,21 @@ export class Profile extends Entity implements IProfile {
      * Setter method with Attributes/Properties Validation
      */
     public setEnable(value: boolean) {
-        if (value === undefined || typeof value !== "boolean"){
+        if (value === undefined || typeof value !== "boolean") {
             throw new Error('Field enable has invalid format because is undefined or is not boolean type!');
         }
         this.enable = value;
     };
 
     public setUserName(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field userName has invalid format because is undefined or is not string!');
         }
         this.userName = value;
     };
 
     public setFirstName(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field firstName has invalid format because is undefined or is not string!');
         }
         this.firstName = value;
@@ -85,7 +102,7 @@ export class Profile extends Entity implements IProfile {
 
 
     public setLastName(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field lastName has invalid format because is undefined or is not string!');
         }
         this.lastName = value;
@@ -112,28 +129,28 @@ export class Profile extends Entity implements IProfile {
     };
 
     public setDocType(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field docType has invalid format because is undefined or is not string!');
         }
         this.docType = value;
     };
 
     public setDocument(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field document has invalid format because is undefined or is not string!');
         }
         this.document = value;
     };
 
     public setTelephone(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field telephone has invalid format because is undefined or is not string!');
         }
         this.telephone = value;
     };
 
     public setLanguage(value: string) {
-        if (value === undefined || (typeof value !== 'string')){
+        if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field language has invalid format because is undefined or is not string!');
         }
         this.language = value;

@@ -3,7 +3,6 @@ import {
   NotFoundException, UseGuards, InternalServerErrorException, BadRequestException
 } from '@nestjs/common';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import { IUser } from 'src/domain/model/user/user.interface';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
@@ -23,7 +22,7 @@ export class UserController {
 
   constructor(
     @Inject('IUserService')
-    private readonly userService: IUserService<IUser>,
+    private readonly userService: IUserService<User>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -96,7 +95,7 @@ export class UserController {
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }
-    let createdId: IUser;
+    let createdId: User;
     try {
        createdId = await this.userService.create(user);
     } catch (error) {

@@ -2,10 +2,10 @@ import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, U
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Address } from 'src/domain/model/profile/address';
 import { IShippingPriceService } from 'src/domain/service/interface/shipping-price.service.interface';
-import { IShippingPrice } from 'src/domain/model/shipping/shipping-price.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 
 /**
  * ShippingPrice controller
@@ -18,7 +18,7 @@ export class ShippingPriceController {
 
   constructor(
     @Inject('IShippingPriceService')
-    private readonly shippingPriceService: IShippingPriceService<IShippingPrice>,
+    private readonly shippingPriceService: IShippingPriceService<ShippingPrice>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -66,8 +66,8 @@ export class ShippingPriceController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async createShippingPrice(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
-    let objCreatedId: IShippingPrice;
+  async createShippingPrice(@Res() res, @Body() shippingPriceDTO: ShippingPrice) {
+    let objCreatedId: ShippingPrice;
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
     } catch (error) {
@@ -101,7 +101,7 @@ export class ShippingPriceController {
 
 
   @Put('update')
-  async updateProfile(@Res() res, @Body() shippingPriceDTO: IShippingPrice) {
+  async updateProfile(@Res() res, @Body() shippingPriceDTO: ShippingPrice) {
     if (!shippingPriceDTO.location) throw new BadRequestException('Param location not specified!');
     const query = { location: shippingPriceDTO.location };
     let updatedObj;

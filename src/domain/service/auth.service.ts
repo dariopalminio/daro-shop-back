@@ -10,7 +10,6 @@ import { StartRecoveryDataDTO } from 'src/domain/model/auth/recovery/start-recov
 import { VerificationCodeDataDTO } from 'src/domain/model/auth/register/verification-code-data.dto.type';
 import { RecoveryUpdateDataDTO } from 'src/domain/model/auth/recovery/recovery-update-data.dto.type';
 import { LogoutFormDTO } from 'src/domain/model/auth/login/logout-form.dto';
-import { IUser } from 'src/domain/model/user/user.interface';
 import { ITranslator } from 'src/domain/output-port/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';;
@@ -38,7 +37,7 @@ export class AuthService implements IAuthService {
 
   constructor(
     @Inject('IUserService')
-    private readonly userService: IUserService<IUser>,
+    private readonly userService: IUserService<User>,
     @Inject('IEmailSender')
     readonly sender: IEmailSender,
     @Inject('ITranslator')
@@ -74,7 +73,7 @@ export class AuthService implements IAuthService {
     const passwordCrypted: string = await bcrypt.hash(userRegisterData.password, salt);
 
     // Create new user in user database
-    let newObj: IUser = new User();
+    let newObj: User = new User();
     newObj.userName = userRegisterData.email; //userName is email
     newObj.firstName = userRegisterData.firstName;
     newObj.lastName = userRegisterData.lastName;
@@ -82,13 +81,13 @@ export class AuthService implements IAuthService {
     newObj.password = passwordCrypted;
     newObj.roles = [RolesEnum.USER];
 
-    let userNew: IUser;
+    let userNew: User;
     try {
       userNew = await this.userService.create(newObj);
     } catch (error) {
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Error al registrar usuario' });
     }
-    let userCreated: IUser;
+    let userCreated: User;
     if (userNew) {
       try {
         userCreated = await this.userService.getUserJustRegister(userRegisterData.email);
@@ -181,7 +180,7 @@ export class AuthService implements IAuthService {
    */
   async confirmAccount(verificationCodeData: VerificationCodeDataDTO, lang: string): Promise<any> {
 
-    let user: IUser = null;
+    let user: User = null;
     try {
       user = await this.verificateToken(verificationCodeData.token);
     } catch (error) {
@@ -309,7 +308,7 @@ export class AuthService implements IAuthService {
    */
   async recoveryUpdatePassword(recoveryUpdateDataDTO: RecoveryUpdateDataDTO, lang: string): Promise<any> {
 
-    let user: IUser = null;
+    let user: User = null;
 
     try {
       user = await this.verificateToken(recoveryUpdateDataDTO.token);
@@ -370,7 +369,7 @@ export class AuthService implements IAuthService {
    * @param token 
    * @returns 
    */
-  private async verificateToken(token: string): Promise<IUser> {
+  private async verificateToken(token: string): Promise<User> {
 
     //Validate if token exist
     if (!token) throw Error(await this.i18n.translate('auth.ERROR.INVALID_VERIFICATION_CODE_PARAM',));
@@ -383,7 +382,7 @@ export class AuthService implements IAuthService {
     if (!validEmail(decodedEmail)) throw Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
 
     //Verificate code
-    let user: IUser = await this.userService.getByQuery({
+    let user: User = await this.userService.getByQuery({
       userName: decodedEmail,
       verificationCode: decodedCode,
     });

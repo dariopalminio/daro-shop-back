@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
-import { IShippingPrice } from '../model/shipping/shipping-price.interface';
 import { ShippingPrice } from '../model/shipping/shipping-price';
 import { Address } from '../model/profile/address';
 
@@ -18,40 +17,40 @@ import { Address } from '../model/profile/address';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class ShippingPriceService implements IShippingPriceService<IShippingPrice> {
+export class ShippingPriceService implements IShippingPriceService<ShippingPrice> {
   constructor(
     @Inject('IShippingPriceRepository')
-    private readonly shippingPriceRepository: IRepository<IShippingPrice>) {
+    private readonly shippingPriceRepository: IRepository<ShippingPrice>) {
   }
 
   getPriceByAddress(address: Address): Promise<any> {
     return this.getByQuery({location: address.state});
   }
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
-    const list: IShippingPrice[] = await this.shippingPriceRepository.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ShippingPrice[]> {
+    const list: ShippingPrice[] = await this.shippingPriceRepository.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IShippingPrice[]> {
-    const list: IShippingPrice[] = await this.shippingPriceRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ShippingPrice[]> {
+    const list: ShippingPrice[] = await this.shippingPriceRepository.find(query, page, limit, orderByField, isAscending);
     return list;
   };
 
-  async getById(id: string): Promise<IShippingPrice> {
-    const entity: IShippingPrice = await this.shippingPriceRepository.getById(id);
+  async getById(id: string): Promise<ShippingPrice> {
+    const entity: ShippingPrice = await this.shippingPriceRepository.getById(id);
     return entity;
   };
 
-  async create(shippingPriceRegisterDTO: IShippingPrice): Promise<IShippingPrice> {
+  async create(shippingPriceRegisterDTO: ShippingPrice): Promise<ShippingPrice> {
     try {
-      let newObj: IShippingPrice = new ShippingPrice();
+      let newObj: ShippingPrice = new ShippingPrice();
       newObj.location = shippingPriceRegisterDTO.location;
       newObj.description = shippingPriceRegisterDTO.description;
       newObj.price = shippingPriceRegisterDTO.price;
       newObj.money = shippingPriceRegisterDTO.money;
       
-      const entityNew: IShippingPrice = await this.shippingPriceRepository.create(newObj);
+      const entityNew: ShippingPrice = await this.shippingPriceRepository.create(newObj);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -71,12 +70,12 @@ export class ShippingPriceService implements IShippingPriceService<IShippingPric
     return deleted;
   };
 
-  async updateById(id: string, user: IShippingPrice): Promise<boolean> {
+  async updateById(id: string, user: ShippingPrice): Promise<boolean> {
     const updated: boolean = await this.shippingPriceRepository.updateById(id, user);
     return updated;
   };
 
-  async getByQuery(query: any): Promise<IShippingPrice> {
+  async getByQuery(query: any): Promise<ShippingPrice> {
     const entity = await this.shippingPriceRepository.getByQuery(query);
     return entity;
   };

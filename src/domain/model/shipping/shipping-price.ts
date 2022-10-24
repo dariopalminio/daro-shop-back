@@ -1,5 +1,4 @@
 import { Entity } from "../entity";
-import { IShippingPrice } from "./shipping-price.interface";
 
 /**
  * ShippingPrice domain object (Entity root)
@@ -11,7 +10,7 @@ import { IShippingPrice } from "./shipping-price.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class ShippingPrice extends Entity implements IShippingPrice {
+export class ShippingPrice extends Entity {
 
     location: string;
     price: number;

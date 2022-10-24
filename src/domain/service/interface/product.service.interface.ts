@@ -1,5 +1,4 @@
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
-import { IProduct } from 'src/domain/model/product/product.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Product } from 'src/domain/model/product/product';
 
@@ -16,10 +15,10 @@ import { Product } from 'src/domain/model/product/product';
  */
 export interface IProductService<T> extends IPersistentAggregateService<T>{
     
-    getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]>;
+    getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]>;
     generateSKU(type: string, brand: string, model: string, color: string, size: string ): Promise<string>;
     getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult>;
-    getDetailById(id: string): Promise<IProduct>;
+    getDetailById(id: string): Promise<Product>;
     addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean>;
     revertStockReservation(productId: string, orderId: string): Promise<boolean>;
     moveReservationToSale(productId: string, orderId: string): Promise<boolean>;

@@ -1,5 +1,3 @@
-import { IOrder } from './order.interface';
-import { IOrderItem } from './order-item.interface';
 import { Address } from '../profile/address';
 import { Client } from './client';
 import { Entity } from '../entity';
@@ -15,10 +13,10 @@ import { OrderItem } from './order-item';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Order extends Entity implements IOrder {
+export class Order extends Entity {
 
     client: Client;
-    orderItems: IOrderItem[];
+    orderItems: OrderItem[];
     count: number;
     includesShipping: boolean; //if is false then includes pick up in store
     shippingAddress: Address;
@@ -34,7 +32,7 @@ export class Order extends Entity implements IOrder {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
-    public constructor(client: Client, orderItems: IOrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
+    public constructor(client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
     public constructor(...argumentsArray: any[]) {
         super();
         if (argumentsArray.length > 8) throw new Error('Number of constructor arguments exceeded.');
@@ -86,7 +84,7 @@ export class Order extends Entity implements IOrder {
         if (items === undefined || items === null || (!Array.isArray(items)) || items.length === 0) {
             throw new Error('This order has no product items. An order must have at least one item.');
         }
-        let newItemsArray: IOrderItem[] = [];
+        let newItemsArray: OrderItem[] = [];
         for (let i = 0; i < items.length; i++) {
             const orderItem: OrderItem = new OrderItem(items[i].productId, items[i].imageUrl, items[i].name, items[i].grossPrice, items[i].quantity, items[i].amount);
             newItemsArray.push(orderItem);
@@ -103,7 +101,7 @@ export class Order extends Entity implements IOrder {
         this.client = value;
     };
 
-    public setOrderItems(value: IOrderItem[]) {
+    public setOrderItems(value: OrderItem[]) {
         if (value === undefined || value === null)
             throw new Error('Field orderItems has invalid format because is undefined or null!');
         if (!Array.isArray(value)) {

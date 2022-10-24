@@ -2,16 +2,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IOrderService } from './interface/order.service.interface';
-import { IOrder } from '../model/order-aggregate/order.interface';
 import { Order } from '../model/order-aggregate/order';
 import { IProductService } from './interface/product.service.interface';
-import { IProduct } from '../model/product/product.interface';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
-import { IShippingPrice } from '../model/shipping/shipping-price.interface';
 import { OrderItem } from '../model/order-aggregate/order-item';
 import { OrderStatus } from '../model/order-aggregate/order-status.enum';
 import { ResponseCode } from '../model/service/response.code.enum';
-import { IOrderItem } from '../model/order-aggregate/order-item.interface';
+import { ShippingPrice } from '../model/shipping/shipping-price';
+import { Product } from '../model/product/product';
 
 /**
  * Order Service
@@ -25,32 +23,32 @@ import { IOrderItem } from '../model/order-aggregate/order-item.interface';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class OrderService implements IOrderService<IOrder> {
+export class OrderService implements IOrderService<Order> {
   constructor(
     @Inject('IOrderRepository')
-    private readonly orderRepository: IRepository<IOrder>,
+    private readonly orderRepository: IRepository<Order>,
     @Inject('IShippingPriceService')
-    private readonly shippingPriceService: IShippingPriceService<IShippingPrice>,
+    private readonly shippingPriceService: IShippingPriceService<ShippingPrice>,
     @Inject('IProductService')
-    private readonly productService: IProductService<IProduct>,
+    private readonly productService: IProductService<Product>,
   ) { }
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
-    const list: IOrder[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Order[]> {
+    const list: Order[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
-    const entity: IOrder[] = await this.orderRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Order[]> {
+    const entity: Order[] = await this.orderRepository.find(query, page, limit, orderByField, isAscending);
     return entity;
   };
 
-  async getById(id: string): Promise<IOrder> {
-    const user: IOrder = await this.orderRepository.getById(id);
+  async getById(id: string): Promise<Order> {
+    const user: Order = await this.orderRepository.getById(id);
     return user;
   };
 
-  async create(orderNew: IOrder): Promise<IOrder> {
+  async create(orderNew: Order): Promise<Order> {
     try {
       let newObj: Order = new Order();
       newObj.client = orderNew.client;
@@ -62,7 +60,7 @@ export class OrderService implements IOrderService<IOrder> {
       newObj.shippingPrice = orderNew.shippingPrice;
       newObj.total = orderNew.total;
 
-      const entityNew: IOrder = await this.orderRepository.create(newObj);
+      const entityNew: Order = await this.orderRepository.create(newObj);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -80,7 +78,7 @@ export class OrderService implements IOrderService<IOrder> {
   /**
    * Create & initialize an order
    */
-  async initialize(orderParam: IOrder): Promise<IOrder> {
+  async initialize(orderParam: Order): Promise<Order> {
 
     let newObj: Order = new Order();
     newObj.client = orderParam.client;
@@ -94,8 +92,8 @@ export class OrderService implements IOrderService<IOrder> {
 
     //Calculate amounts
     for (let i = 0; i < orderParam.orderItems.length; i++) {
-      const item: IOrderItem = orderParam.orderItems[i];
-      const product: IProduct = await this.productService.getById(item.productId);
+      const item: OrderItem = orderParam.orderItems[i];
+      const product: Product = await this.productService.getById(item.productId);
       if (orderParam.orderItems[i].quantity > product.stock)
         throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });
       const newAmount: number = product.grossPrice * item.quantity;
@@ -123,7 +121,7 @@ export class OrderService implements IOrderService<IOrder> {
     newObj.total = Number((subTotalVal + 0.0 + newObj.shippingPrice).toFixed(2));
 
     try {
-      const entityNew: IOrder = await this.orderRepository.create(newObj);
+      const entityNew: Order = await this.orderRepository.create(newObj);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -141,11 +139,11 @@ export class OrderService implements IOrderService<IOrder> {
   async confirm(orderId: string): Promise<boolean> {
     //you must reserve quantity in the products of each order items and set status to CONFIRMED
     try {
-      const order: IOrder = await this.getById(orderId);
+      const order: Order = await this.getById(orderId);
 
       //validate that the stock is sufficient to full order
       for (let i = 0; i < order.orderItems.length; i++) {
-        let product: IProduct = await this.productService.getById(order.orderItems[i].productId);
+        let product: Product = await this.productService.getById(order.orderItems[i].productId);
         if (order.orderItems[i].quantity > product.stock)
           throw new Error(`Insufficient stock for order ${orderId}.`);
       }
@@ -166,7 +164,7 @@ export class OrderService implements IOrderService<IOrder> {
 
   async abort(orderId: string): Promise<boolean> {
     try {
-      const order: IOrder = await this.getById(orderId);
+      const order: Order = await this.getById(orderId);
 
       //revert reservations in products indicated in order
       for (let i = 0; i < order.orderItems.length; i++) {
@@ -185,7 +183,7 @@ export class OrderService implements IOrderService<IOrder> {
   async completePayment(orderId: string): Promise<boolean> {
     //you must register the sale effectively discounting the stock
     try {
-      const order: IOrder = await this.getById(orderId);
+      const order: Order = await this.getById(orderId);
 
       for (let i = 0; i < order.orderItems.length; i++) {
         await this.productService.moveReservationToSale(order.orderItems[i].productId, orderId);
@@ -204,18 +202,18 @@ export class OrderService implements IOrderService<IOrder> {
     return deleted;
   };
 
-  async updateById(id: string, order: IOrder): Promise<boolean> {
+  async updateById(id: string, order: Order): Promise<boolean> {
     const updated: boolean = await this.orderRepository.updateById(id, { ...order, updatedAt: new Date() });
     return updated;
   };
 
-  async getByUserName(userName: string): Promise<IOrder> {
+  async getByUserName(userName: string): Promise<Order> {
     const query = { userName: userName };
     const user = await this.orderRepository.getByQuery(query);
     return user;
   };
 
-  async getByQuery(query: any): Promise<IOrder> {
+  async getByQuery(query: any): Promise<Order> {
     const user = await this.orderRepository.getByQuery(query);
     return user;
   };

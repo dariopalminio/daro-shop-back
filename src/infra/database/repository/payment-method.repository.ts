@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
 import { PaymentMethodDocument } from '../schema/payment-method.schema';
-import { IPaymentMethod } from 'src/domain/model/payment/payment-method.interface';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 
 
@@ -11,14 +10,14 @@ import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
  * PaymentMethod Mongo repository implementation
  */
 @Injectable()
-export class PaymentMethodRepository implements IRepository<IPaymentMethod> {
+export class PaymentMethodRepository implements IRepository<PaymentMethod> {
 
     constructor(
         @InjectModel('PaymentMethod')
         private readonly entityModel: Model<PaymentMethodDocument>,
     ) { }
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaymentMethod[]> {
         let arrayDoc: PaymentMethodDocument[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
@@ -39,7 +38,7 @@ export class PaymentMethodRepository implements IRepository<IPaymentMethod> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IPaymentMethod[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaymentMethod[]> {
         let arrayDoc: PaymentMethodDocument[];
 
         if (page && limit && orderByField) {
@@ -79,21 +78,21 @@ export class PaymentMethodRepository implements IRepository<IPaymentMethod> {
         return arrayDoc;
     };
     
-    async getById(id: string, fieldsToExclude?: any): Promise<IPaymentMethod> {
+    async getById(id: string, fieldsToExclude?: any): Promise<PaymentMethod> {
         const entryDoc: PaymentMethodDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: IPaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IPaymentMethod> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<PaymentMethod> {
         if (fieldsToExclude) {
             const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: IPaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+            const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
             return objCasted;
         }
         const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query);
-        const objCasted: IPaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
         return objCasted;
     }
 
@@ -109,9 +108,9 @@ export class PaymentMethodRepository implements IRepository<IPaymentMethod> {
         return true;
     }
 
-    async create(paymentMethod: IPaymentMethod): Promise<IPaymentMethod> {
+    async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
         const docCreated: PaymentMethodDocument = await this.entityModel.create(paymentMethod);
-        const objCasted: IPaymentMethod = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     };
 
@@ -130,7 +129,7 @@ export class PaymentMethodRepository implements IRepository<IPaymentMethod> {
         return !!docDeleted; //doc is not null
     };
 
-    castArrayDocToArrayDomainEntity(schemaDocArray: PaymentMethodDocument[]): IPaymentMethod[] {
+    castArrayDocToArrayDomainEntity(schemaDocArray: PaymentMethodDocument[]): PaymentMethod[] {
         let entitiesArray: PaymentMethod[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
             JSON.parse(JSON.stringify(element))

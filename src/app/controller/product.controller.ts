@@ -5,7 +5,6 @@ import {
 
 import { IProductService } from 'src/domain/service/interface/product.service.interface';
 import { Product } from 'src/domain/model/product/product';
-import { IProduct } from 'src/domain/model/product/product.interface';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -26,7 +25,7 @@ export class ProductController {
 
   constructor(
     @Inject('IProductService')
-    private readonly productService: IProductService<IProduct>,
+    private readonly productService: IProductService<Product>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -157,7 +156,7 @@ export class ProductController {
     } catch (error) {
       throw new BadRequestException('Product data malformed:' + error.message);
     }
-    let productCreatedId: IProduct;
+    let productCreatedId: Product;
     try {
       productCreatedId = await this.productService.create(newProduct);
     } catch (error) {

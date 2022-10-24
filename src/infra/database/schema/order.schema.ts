@@ -1,7 +1,7 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
 import { Client } from 'src/domain/model/order-aggregate/client';
-import { IOrderItem } from 'src/domain/model/order-aggregate/order-item.interface';
+import { OrderItem } from 'src/domain/model/order-aggregate/order-item';
 import { Address } from 'src/domain/model/profile/address';
 
 export type OrderDocument = Order & Document;
@@ -15,7 +15,7 @@ export class Order {
     client: Client;
     
     @Prop({ required: true })
-    orderItems: IOrderItem[];
+    orderItems: OrderItem[];
 
     @Prop({ required: true })
     count: number;

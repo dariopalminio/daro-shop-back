@@ -4,21 +4,20 @@ import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
 import { Order } from '../../../domain/model/order-aggregate/order';
 import { OrderDocument } from '../schema/order.schema';
-import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
 
 
 /**
  * Order Mongo repository implementation
  */
 @Injectable()
-export class OrderRepository implements IRepository<IOrder> {
+export class OrderRepository implements IRepository<Order> {
 
     constructor(
         @InjectModel('Order')
         private readonly entityModel: Model<OrderDocument>,
     ) { }
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Order[]> {
         let arrayDoc: OrderDocument[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
@@ -39,7 +38,7 @@ export class OrderRepository implements IRepository<IOrder> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IOrder[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Order[]> {
         let arrayDoc: OrderDocument[];
 
         if (page && limit && orderByField) {
@@ -79,21 +78,21 @@ export class OrderRepository implements IRepository<IOrder> {
         return arrayDoc;
     };
     
-    async getById(id: string, fieldsToExclude?: any): Promise<IOrder> {
+    async getById(id: string, fieldsToExclude?: any): Promise<Order> {
         const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: IOrder = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IOrder> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<Order> {
         if (fieldsToExclude) {
             const entryDoc: OrderDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: IOrder = JSON.parse(JSON.stringify(entryDoc));
+            const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
             return objCasted;
         }
         const entryDoc: OrderDocument = await this.entityModel.findOne(query);
-        const objCasted: IOrder = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
         return objCasted;
     }
 
@@ -109,9 +108,9 @@ export class OrderRepository implements IRepository<IOrder> {
         return true;
     }
 
-    async create(order: IOrder): Promise<IOrder> {
+    async create(order: Order): Promise<Order> {
         const docCreated: OrderDocument = await this.entityModel.create(order);
-        const objCasted: IOrder = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Order = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     };
 
@@ -130,7 +129,7 @@ export class OrderRepository implements IRepository<IOrder> {
         return !!docDeleted; //doc is not null
     };
 
-    castArrayDocToArrayDomainEntity(schemaDocArray: OrderDocument[]): IOrder[] {
+    castArrayDocToArrayDomainEntity(schemaDocArray: OrderDocument[]): Order[] {
         let entitiesArray: Order[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
             JSON.parse(JSON.stringify(element))

@@ -2,17 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Profile } from 'src/domain/model/profile/profile';
-import { IProfile } from 'src/domain/model/profile/profile.interface';
 import { IRepository } from '../../../domain/output-port/repository.interface';
 import { ProfileDocument } from '../schema/profile.schema';
-
-
 
 /**
  * Profile Mongo repository implementation
  */
 @Injectable()
-export class ProfileRepository implements IRepository<IProfile> {
+export class ProfileRepository implements IRepository<Profile> {
 
     constructor(
         @InjectModel('Profile')
@@ -20,7 +17,7 @@ export class ProfileRepository implements IRepository<IProfile> {
     ) { }
    
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Profile[]> {
         let arrayDoc: ProfileDocument[];
 
         if (page && limit && orderByField) {
@@ -40,7 +37,7 @@ export class ProfileRepository implements IRepository<IProfile> {
         //return this.conversorArrayDocToCategory(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Profile[]> {
         let arrayDoc: ProfileDocument[];
 
         if (page && limit && orderByField) {
@@ -76,28 +73,28 @@ export class ProfileRepository implements IRepository<IProfile> {
         return this.castArrayDocToUser(arrayDoc);
     };
 
-    async getById(id: string, fieldsToExclude?: any): Promise<IProfile> {
+    async getById(id: string, fieldsToExclude?: any): Promise<Profile> {
         if (fieldsToExclude) {
             const profileDoc: ProfileDocument = await this.profileModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: IProfile = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
             return objCasted;
         }
         const profileDoc: ProfileDocument = await this.profileModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: IProfile = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IProfile> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<Profile> {
         if (fieldsToExclude) {
             const profileDoc: ProfileDocument =  await this.profileModel.findOne(query, fieldsToExclude);
-            const objCasted: IProfile = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
             return objCasted;
         }
         const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
-        const objCasted: IProfile = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
         return objCasted;
     }
 
@@ -113,9 +110,9 @@ export class ProfileRepository implements IRepository<IProfile> {
         return true;
     }
 
-    async create(doc: IProfile): Promise<IProfile> {
+    async create(doc: Profile): Promise<Profile> {
         const docCreated: ProfileDocument = await this.profileModel.create(doc);
-        const objCasted: IProfile = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Profile = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     }
 
@@ -148,7 +145,7 @@ export class ProfileRepository implements IRepository<IProfile> {
     };
 
       
-    castArrayDocToUser(schemaDocArray: ProfileDocument[]): IProfile[] {
+    castArrayDocToUser(schemaDocArray: ProfileDocument[]): Profile[] {
         let entityArray: Profile[] = [];
         schemaDocArray.forEach(element => entityArray.push(
             JSON.parse(JSON.stringify(element))

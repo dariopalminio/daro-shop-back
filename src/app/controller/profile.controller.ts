@@ -4,10 +4,10 @@ import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
-import { IProfile } from 'src/domain/model/profile/profile.interface';
 import { IProfileService } from 'src/domain/service/interface/profile.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ProfileDTO } from '../dto/profile.dto';
+import { Profile } from 'src/domain/model/profile/profile';
 
 /**
  * Profile controller
@@ -20,7 +20,7 @@ export class ProfileController {
 
   constructor(
     @Inject('IProfileService')
-    private readonly profileService: IProfileService<IProfile>,
+    private readonly profileService: IProfileService<Profile>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }
@@ -88,7 +88,7 @@ export class ProfileController {
   async getByUserName(@Res() res, @Query('userName') userName) {
     if (!userName) throw new BadRequestException('Param userName not specified!');
     try {
-      const profile: IProfile = await this.profileService.getByUserName(userName);
+      const profile: Profile = await this.profileService.getByUserName(userName);
       if (!profile) throw new NotFoundException('User does not exist!');
       return res.status(HttpStatus.OK).json(profile);
     } catch (error) {
@@ -100,10 +100,16 @@ export class ProfileController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() userRegisterDTO: ProfileDTO) {
-    let newProfile: IProfile;
+  async create(@Res() res, @Body() profileDTO: ProfileDTO) {
+    let profile: Profile;
     try {
-      newProfile = await this.profileService.create(userRegisterDTO);
+      profile = this.profileService.makeEntityFromAny(profileDTO);
+    } catch (error) {
+      throw new BadRequestException('Profile data malformed:' + error.message);
+    }
+    let newProfile: Profile;
+    try {
+      newProfile = await this.profileService.create(profile);
     } catch (error) {
       new InternalServerErrorException(error);
     }
@@ -136,9 +142,15 @@ export class ProfileController {
 
   @Put('update')
   async update(@Res() res, @Body() profileDTO: ProfileDTO) {
+    let profile: Profile;
+    try {
+      profile = this.profileService.makeEntityFromAny(profileDTO);
+    } catch (error) {
+      throw new BadRequestException('Profile data malformed:' + error.message);
+    }
     let updatedUser: any;
     try {
-      updatedUser = await this.profileService.updateProfile(profileDTO);
+      updatedUser = await this.profileService.updateProfile(profile);
     } catch (error) {
       new InternalServerErrorException(error);
     }

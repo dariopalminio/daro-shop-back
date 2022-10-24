@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from '../output-port/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IProfile } from '../model/profile/profile.interface';
 import { IProfileService } from './interface/profile.service.interface';
 import { Profile } from '../model/profile/profile';
 
@@ -17,30 +16,30 @@ import { Profile } from '../model/profile/profile';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class ProfileService implements IProfileService<IProfile> {
+export class ProfileService implements IProfileService<Profile> {
   constructor(
     @Inject('IProfileRepository')
-    private readonly profileRepository: IRepository<IProfile>) {
+    private readonly profileRepository: IRepository<Profile>) {
   }
 
-  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
-    const list: IProfile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);
+  async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Profile[]> {
+    const list: Profile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProfile[]> {
-    const list: IProfile[] = await this.profileRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Profile[]> {
+    const list: Profile[] = await this.profileRepository.find(query, page, limit, orderByField, isAscending);
     return list;
   };
 
-  async getById(id: string): Promise<IProfile> {
-    const entity: IProfile = await this.profileRepository.getById(id);
+  async getById(id: string): Promise<Profile> {
+    const entity: Profile = await this.profileRepository.getById(id);
     return entity;
   };
 
-  async create(userRegisterDTO: IProfile): Promise<IProfile> {
+  async create(userRegisterDTO: Profile): Promise<Profile> {
     try {
-      let newProf: IProfile = new Profile();
+      let newProf: Profile = new Profile();
       newProf.userId = userRegisterDTO.userId;
       newProf.userName = userRegisterDTO.userName;
       newProf.email = userRegisterDTO.email;
@@ -52,7 +51,7 @@ export class ProfileService implements IProfileService<IProfile> {
       newProf.language = userRegisterDTO.language,
       newProf.addresses = userRegisterDTO.addresses,
       newProf.enable = true;
-      const entityNew: IProfile = await this.profileRepository.create(newProf);
+      const entityNew: Profile = await this.profileRepository.create(newProf);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -70,18 +69,18 @@ export class ProfileService implements IProfileService<IProfile> {
     return deleted;
   };
 
-  async updateById(id: string, profile: IProfile): Promise<boolean> {
+  async updateById(id: string, profile: Profile): Promise<boolean> {
     const updated: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
     return updated;
   };
 
-  async getByUserName(userName: string): Promise<IProfile> {
+  async getByUserName(userName: string): Promise<Profile> {
     const query = {userName: userName};
     const user = await this.profileRepository.getByQuery(query);
     return user;
   };
 
-  async getByQuery(query: any): Promise<IProfile> {
+  async getByQuery(query: any): Promise<Profile> {
     const entity = await this.profileRepository.getByQuery(query);
     return entity;
   };
@@ -106,5 +105,15 @@ export class ProfileService implements IProfileService<IProfile> {
     return await this.profileRepository.hasByQuery(query);
   };
 
+    /**
+   * Factory method
+   * @param dto dto any object
+   * @returns  profile object instance
+   */
+     makeEntityFromAny(dto: any): Profile {
+      let entity: Profile = new Profile();
+      entity.setFromAny(dto);
+      return entity;
+    };
 
 };

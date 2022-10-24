@@ -1,6 +1,5 @@
 
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
-import { IUser } from 'src/domain/model/user/user.interface';
 import { User } from 'src/domain/model/user/user';
 
 /**
@@ -14,7 +13,7 @@ import { User } from 'src/domain/model/user/user';
  * Application layer controllers use services only through these interfaces (input port).
  */
 export interface IUserService<T> extends IPersistentAggregateService<T> {
-    getByUserName(userName: string): Promise<IUser>;
-    getUserJustRegister(userName: string): Promise<IUser>;
+    getByUserName(userName: string): Promise<User>;
+    getUserJustRegister(userName: string): Promise<User>;
     makeEntityFromAny(dto: any): User;
 };

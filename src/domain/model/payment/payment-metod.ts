@@ -1,5 +1,4 @@
 import { Entity } from "../entity";
-import { IPaymentMethod } from "./payment-method.interface";
 
 /**
  * PaymentMethod domain object
@@ -10,7 +9,7 @@ import { IPaymentMethod } from "./payment-method.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class PaymentMethod extends Entity implements IPaymentMethod {
+export class PaymentMethod extends Entity {
 
     key: string;
     name: string;

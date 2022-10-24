@@ -1,5 +1,5 @@
+import { Profile } from 'src/domain/model/profile/profile';
 import { IPersistentAggregateService } from './persistent.aggregate.interface';
-import { IProfile } from 'src/domain/model/profile/profile.interface';
 
 /**
  * Profile Service Interface
@@ -12,6 +12,7 @@ import { IProfile } from 'src/domain/model/profile/profile.interface';
  * Application layer controllers use services only through these interfaces (input port).
  */
 export interface IProfileService<T> extends IPersistentAggregateService<T> {
-    getByUserName(userName: string): Promise<IProfile>;
+    getByUserName(userName: string): Promise<Profile>;
     updateProfile(userProfileDTO: any): Promise<boolean>;
+    makeEntityFromAny(dto: any): Profile;
 };

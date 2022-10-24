@@ -3,7 +3,6 @@ import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IOrderService } from 'src/domain/service/interface/order.service.interface';
-import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
 import { Order } from 'src/domain/model/order-aggregate/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
@@ -20,7 +19,7 @@ export class OrderController {
 
   constructor(
     @Inject('IOrderService')
-    private readonly orderService: IOrderService<IOrder>,
+    private readonly orderService: IOrderService<Order>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) { }

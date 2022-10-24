@@ -1,11 +1,10 @@
-import { IOrderItem } from './order-item.interface';
 
 /**
  * OrderItem Value Object
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */
-export class OrderItem implements IOrderItem {
+export class OrderItem {
 
     productId: string;
     imageUrl: string;

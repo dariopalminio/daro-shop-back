@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IRepository } from '../../../domain/output-port/repository.interface';
-import { IProduct } from '../../../domain/model/product/product.interface';
 import { Product } from '../../../domain/model/product/product';
 import { ProductDocument } from '../schema/product.schema';
 
@@ -12,14 +11,14 @@ export const CATEGORY_REPO_TOKEN = 'CategoryRepositoryImplementation'; //ModelTo
  * Product Mongo repository implementation
  */
 @Injectable()
-export class ProductRepository implements IRepository<IProduct> {
+export class ProductRepository implements IRepository<Product> {
 
     constructor(
         @InjectModel('Product')
         private readonly productModel: Model<ProductDocument>,
     ) { }
 
-    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
+    async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
         let arrayDoc: ProductDocument[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
@@ -36,7 +35,7 @@ export class ProductRepository implements IRepository<IProduct> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     };
 
-    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<IProduct[]> {
+    async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
         let arrayDoc: ProductDocument[];
 
         if (page && limit && orderByField) {
@@ -101,27 +100,27 @@ export class ProductRepository implements IRepository<IProduct> {
      * getById
      * If it does not find it, it returns null
      */
-    async getById(id: string, fieldsToExclude?: any): Promise<IProduct> {
+    async getById(id: string, fieldsToExclude?: any): Promise<Product> {
         if (fieldsToExclude) {
             const prodDoc: ProductDocument = await this.productModel.findById(id, fieldsToExclude).exec();
-            const objCasted: IProduct = JSON.parse(JSON.stringify(prodDoc));
+            const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
             return objCasted;
         }
         const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
-        const objCasted: IProduct = JSON.parse(JSON.stringify(prodDoc));
+        const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<IProduct> {
+    async getByQuery(query: any, fieldsToExclude?: any): Promise<Product> {
 
         if (fieldsToExclude) {
             const prodDoc: ProductDocument = await this.productModel.findOne(query, fieldsToExclude);
-            const objCasted: IProduct = JSON.parse(JSON.stringify(prodDoc));
+            const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
             return objCasted;
         }
 
         const prodDoc: ProductDocument = await this.productModel.findOne(query);
-        const objCasted: IProduct = JSON.parse(JSON.stringify(prodDoc));
+        const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
         return objCasted;
     }
 
@@ -137,9 +136,9 @@ export class ProductRepository implements IRepository<IProduct> {
         return true;
     }
 
-    async create(prod: Product): Promise<IProduct> {
+    async create(prod: Product): Promise<Product> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
-        const objCasted: IProduct = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Product = JSON.parse(JSON.stringify(docCreated));
         return objCasted;
     }
     
@@ -158,8 +157,8 @@ export class ProductRepository implements IRepository<IProduct> {
         return !!docDeleted; //doc is not null
     };
 
-    castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): IProduct[] {
-        let domainEntityArray: IProduct[] = [];
+    castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): Product[] {
+        let domainEntityArray: Product[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(
             JSON.parse(JSON.stringify(element))
         ));

@@ -1,9 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ICategory } from 'src/domain/model/category/category.interface';
-import { CategoryDTO } from 'src/domain/model/category/category.dto';
 import { IRepository } from '../output-port/repository.interface';
 import { ICategoryService } from '../service/interface/category.service.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
+import { Category } from '../model/category/category';
 
 /**
  * Category Service
@@ -17,33 +16,33 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class CategoryService implements ICategoryService<ICategory> {
+export class CategoryService implements ICategoryService<Category> {
 
   constructor(
     @Inject('ICategoryRepository')
-    private readonly categoryRepository: IRepository<ICategory>,
+    private readonly categoryRepository: IRepository<Category>,
   ) { }
 
 
   // Get all category
-  async getAll(): Promise<ICategory[]> {
-    const list: ICategory[] = await this.categoryRepository.getAll();
+  async getAll(): Promise<Category[]> {
+    const list: Category[] = await this.categoryRepository.getAll();
     return list;
   };
 
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ICategory[]>{
-    const entity: ICategory[] = await this.categoryRepository.find(query, page, limit, orderByField, isAscending);
+  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Category[]>{
+    const entity: Category[] = await this.categoryRepository.find(query, page, limit, orderByField, isAscending);
     return entity;
   };
 
   // Get a single category
-  async getById(id: string): Promise<ICategory> {
-    const category: ICategory = await this.categoryRepository.getById(id);
+  async getById(id: string): Promise<Category> {
+    const category: Category = await this.categoryRepository.getById(id);
     return category;
   };
 
-  async create(categoryDTO: CategoryDTO): Promise<ICategory> {
-    const entityNew: Promise<ICategory> = this.categoryRepository.create(categoryDTO);
+  async create(entity: Category): Promise<Category> {
+    const entityNew: Promise<Category> = this.categoryRepository.create(entity);
     return entityNew;
   };
 
@@ -54,12 +53,12 @@ export class CategoryService implements ICategoryService<ICategory> {
   };
 
   // Put a single category
-  async updateById(id: string, category: ICategory): Promise<boolean> {
+  async updateById(id: string, category: Category): Promise<boolean> {
     const updatedProduct: boolean = await this.categoryRepository.updateById(id, category);
     return updatedProduct;
   };
 
-  async getByQuery(query: any): Promise<ICategory> {
+  async getByQuery(query: any): Promise<Category> {
     const cat =  await this.categoryRepository.getByQuery(query);
     return cat;
   };
@@ -79,7 +78,7 @@ export class CategoryService implements ICategoryService<ICategory> {
 
   async search(queryFilter?: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
     const filter = queryFilter? queryFilter : {};
-    const cats: ICategory[] = await this.categoryRepository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
+    const cats: Category[] = await this.categoryRepository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
     let filtered: PaginatedResult = new PaginatedResult();
     filtered.list = cats;
     filtered.page = page;
