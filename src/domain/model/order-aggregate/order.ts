@@ -11,6 +11,7 @@ import { OrderItem } from './order-item';
  * Note: The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
  * The domain object (Entity) does not have any dependency on the other components except those of other atomic domain 
  * components part of model such as a 'Value Object'.
+ * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
@@ -45,39 +46,46 @@ export class Order extends Entity implements IOrder {
             if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
             this.setOrderItemsFromAny(argumentsArray[1]); //orderItems
             if (isNaN(argumentsArray[2])) throw new Error('Casting error: quantity field is not a number!');
-            this.count = argumentsArray[2]; //count
-            this.includesShipping = argumentsArray[3]; //includesShipping
+            this.setCount(argumentsArray[2]); //count
+            this.setIncludesShipping(argumentsArray[3]); //includesShipping
             let shippingAddress: Address = new Address();
             shippingAddress.setFromAny(argumentsArray[4]); //shippingAddress
             if (this.includesShipping) shippingAddress.validateFullAddress();
-            this.shippingAddress = shippingAddress;
-            this.subTotal = argumentsArray[5];
-            this.shippingPrice = argumentsArray[6];
-            this.total = argumentsArray[7];
+            this.setShippingAddress(shippingAddress);
+            this.setSubTotal(argumentsArray[5]);
+            this.setShippingPrice(argumentsArray[6]);
+            this.setTotal(argumentsArray[7]);
         }
     };
 
+    /**
+     * Set all attributes from variable can be of any type 'any'.
+     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
+     * @param prod any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     */
     public setFromAny(orderPlain: any) {
         const hasAnArray: boolean = Array.isArray(orderPlain.orderItems);
         if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
         let clientObject: Client = new Client();
         clientObject.setFromAny(orderPlain.client);
-        this.client = clientObject;
-        this.includesShipping = orderPlain.includesShipping;
+        this.setClient(clientObject);
+        this.setIncludesShipping(orderPlain.includesShipping);
         let shippingAddress: Address = new Address();
         shippingAddress.setFromAny(orderPlain.shippingAddress);
         if (this.includesShipping) shippingAddress.validateFullAddress();
-        this.shippingAddress = shippingAddress;
-        this.subTotal = orderPlain.subTotal;
-        this.shippingPrice = orderPlain.shippingPrice;
-        this.total = orderPlain.total;
+        this.setShippingAddress(shippingAddress);
+        this.setSubTotal(orderPlain.subTotal);
+        this.setShippingPrice(orderPlain.shippingPrice);
+        this.setTotal(orderPlain.total);
         this.setOrderItemsFromAny(orderPlain.orderItems);
-        this.count = orderPlain.count;
+        this.setCount(orderPlain.count);
         if (isNaN(orderPlain.count)) throw new Error('Casting error: quantity field is not a number!');
     };
 
-    public setOrderItemsFromAny(items: Array<any>) {
-        if (!items || items.length === 0) throw new Error('This order has no product items. An order must have at least one item.');
+    private setOrderItemsFromAny(items: Array<any>) {
+        if (items === undefined || items === null || (!Array.isArray(items)) || items.length === 0) {
+            throw new Error('This order has no product items. An order must have at least one item.');
+        }
         let newItemsArray: IOrderItem[] = [];
         for (let i = 0; i < items.length; i++) {
             const orderItem: OrderItem = new OrderItem(items[i].productId, items[i].imageUrl, items[i].name, items[i].grossPrice, items[i].quantity, items[i].amount);
@@ -85,6 +93,76 @@ export class Order extends Entity implements IOrder {
         }
         this.orderItems = newItemsArray;
     }
+
+    /**
+     * Setter method with Attributes/Properties Validation
+     */
+    public setClient(value: Client) {
+        if (value === undefined || value === null)
+            throw new Error('Field client has invalid format because is undefined or null!');
+        this.client = value;
+    };
+
+    public setOrderItems(value: IOrderItem[]) {
+        if (value === undefined || value === null)
+            throw new Error('Field orderItems has invalid format because is undefined or null!');
+        if (!Array.isArray(value)) {
+            throw new Error('Field orderItems is not an array.');
+        }
+        this.orderItems = value;
+    };
+
+    public setCount(value: number) {
+        if (value === undefined)
+            throw new Error('Field count has invalid format because is undefined or null!');
+        if (Number.isNaN(value) || value < 0)
+            throw new Error('Field count has invalid format because is is not number type or is minor that zero!');
+        this.count = value;
+    };
+
+    public setIncludesShipping(value: boolean) {
+        if (value === undefined)
+            throw new Error('Field includesShipping has invalid format because is undefined or null!');
+        if (typeof value !== "boolean")
+            throw new Error('Field includesShipping has invalid format because is not boolean type!');
+        this.includesShipping = value;
+    };
+
+    public setShippingAddress(value: Address) {
+        if (value === undefined || value === null)
+            throw new Error('Field shippingAddress has invalid format because is undefined or null!');
+        this.shippingAddress = value;
+    };
+
+    public setSubTotal(value: number) {
+        if (value === undefined)
+            throw new Error('Field subTotal has invalid format because is undefined or null!');
+        if (Number.isNaN(value) || value < 0)
+            throw new Error('Field subTotal has invalid format because is is not number type or is minor that zero!');
+        this.subTotal = value;
+    };
+
+    public setShippingPrice(value: number) {
+        if (value === undefined)
+            throw new Error('Field shippingPrice has invalid format because is undefined or null!');
+        if (Number.isNaN(value) || value < 0)
+            throw new Error('Field shippingPrice has invalid format because is is not number type or is minor that zero!');
+        this.shippingPrice = value;
+    };
+
+    public setTotal(value: number) {
+        if (value === undefined)
+            throw new Error('Field total has invalid format because is undefined or null!');
+        if (Number.isNaN(value) || value < 0)
+            throw new Error('Field total has invalid format because is is not number type or is minor that zero!');
+        this.total = value;
+    };
+
+    public setStatus(value: string) {
+        if (value === undefined || (typeof value !== 'string'))
+            throw new Error('Field status has invalid format because is undefined or is not string!');
+        this.status = value;
+    };
 
 };
 

@@ -9,6 +9,7 @@ import { Entity } from '../entity';
  * Note: The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
  * The domain object (Entity) does not have any dependency on the other components except those of other atomic domain 
  * components part of model such as a 'Value Object'.
+ * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
 export class Product extends Entity implements IProduct {
 
@@ -75,6 +76,11 @@ export class Product extends Entity implements IProduct {
         }
     };
 
+    /**
+     * Set all attributes from variable can be of any type 'any'.
+     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
+     * @param prod any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     */
     public setFromAny(prod: any) {
         this.setSku(prod.sku);
         this.setBarcode(prod.barcode);
@@ -106,27 +112,30 @@ export class Product extends Entity implements IProduct {
         else this.sales = [];
     };
 
+    /**
+     * Setter method with Attributes/Properties Validation
+     */
     public setSku(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field sku has invalid format because is undefined or is not string!');
         this.sku = value;
     };
 
     public setBarcode(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field barcode has invalid format because is undefined or is not string!');
         this.barcode = value;
     };
 
     public setName(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field has invalid format because is undefined or is not string!');
         if (value.trim() === '') throw new Error('Field name has invalid because is empty string. A product must have a name!');
         this.name = value;
     };
 
     public setDescription(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field description has invalid format because is undefined or is not string!');
         this.description = value;
     };
@@ -138,43 +147,43 @@ export class Product extends Entity implements IProduct {
     };
 
     public setCategory(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field category has invalid format because is undefined or is not string!');
         this.category = value;
     };
 
     public setType(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field type has invalid format because is undefined or is not string!');
         this.type = value;
     };
 
     public setBrand(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field brand has invalid format because is undefined or is not string!');
         this.brand = value;
     };
 
     public setColor(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field color has invalid format because is undefined or is not string!');
         this.color = value;
     };
 
     public setModel(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field model has invalid format because is undefined or is not string!');
         this.model = value;
     };
 
     public setGender(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field gender has invalid format because is undefined or is not string!');
         this.gender = value;
     };
 
     public setSize(value: string) {
-        if (value === undefined || (typeof value[0] !== 'string'))
+        if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field size has invalid format because is undefined or is not string!');
         this.size = value;
     };
