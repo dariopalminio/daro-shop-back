@@ -1,9 +1,10 @@
 import { Entity } from '../entity';
 
 /**
- * User domain object
+ * User domain object as Entity
  * 
- * Note: The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
+ * Note: An object primarily defined by its identity is called an Entity.
+ * The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
  * The domain object does not have any dependency on the other components except those of other atomic domain components part of model.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
@@ -26,32 +27,32 @@ export class User extends Entity {
     * Constructors 
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
-     public constructor();
-     public constructor(usr: any);
-     public constructor(
+    public constructor();
+    public constructor(usr: any);
+    public constructor(
         enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[],
         verified: boolean, verificationCode: string
-     );
-     public constructor(...argumentsArray: any[]) {
-         super();
-         if (argumentsArray.length > 9) {
-             throw new Error('Number of constructor arguments exceeded.');
-         }
-         if (argumentsArray.length === 1) {
-             this.setFromAny(argumentsArray[0]);
-         }
-         if (argumentsArray.length > 1) {
-             this.setEnable(argumentsArray[0]);
-             this.setUserName(argumentsArray[1]);
-             this.setFirstName(argumentsArray[2]);
-             this.setLastName(argumentsArray[3]);
-             this.setEmail(argumentsArray[4]);
-             this.setPassword(argumentsArray[5]);
-             this.setRoles(argumentsArray[6]);
-             this.setVerified(argumentsArray[7]);
-             this.setVerificationCode(argumentsArray[8]);
-         }
-     };
+    );
+    public constructor(...argumentsArray: any[]) {
+        super();
+        if (argumentsArray.length > 9) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
+            this.setEnable(argumentsArray[0]);
+            this.setUserName(argumentsArray[1]);
+            this.setFirstName(argumentsArray[2]);
+            this.setLastName(argumentsArray[3]);
+            this.setEmail(argumentsArray[4]);
+            this.setPassword(argumentsArray[5]);
+            this.setRoles(argumentsArray[6]);
+            this.setVerified(argumentsArray[7]);
+            this.setVerificationCode(argumentsArray[8]);
+        }
+    };
 
     /**
      * Set all attributes from variable can be of any type 'any'.
@@ -87,10 +88,16 @@ export class User extends Entity {
 
     /**
      * Setter method with Attributes/Properties Validation
+     * To limit the length of a user's name. Let's say that it can be no longer than 100 characters, and it must be at least 2 characters.
      */
     public setUserName(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || value === null || (typeof value !== 'string'))
             throw new Error('Field userName has invalid format because is undefined or is not string!');
+
+        if (value.length <= 2 || value.length > 100) {
+            throw new Error('User must be greater than 2 chars and less than 100.')
+        }
+
         this.userName = value;
     };
 

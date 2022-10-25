@@ -5,7 +5,8 @@ import { Entity } from '../entity';
 /**
  * Product domain object (Entity root)
  * 
- * Note: The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
+ * Note: An object primarily defined by its identity is called an Entity.
+ * The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
  * The domain object (Entity) does not have any dependency on the other components except those of other atomic domain 
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 

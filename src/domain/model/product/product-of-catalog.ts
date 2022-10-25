@@ -1,5 +1,5 @@
 /**
- * ProductOfCatalog Value Object (Product Item for Catalog)
+ * ProductOfCatalog Compound Value Object (Product Item for Catalog)
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */

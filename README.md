@@ -169,4 +169,6 @@ Nest is [MIT licensed](LICENSE).
 - Node Style Guide: https://github.com/felixge/node-style-guide
 - Naming cheatsheet NestJS: https://narhakobyan.github.io/awesome-nest-boilerplate/docs/naming-cheatsheet.html#should
 - API Guide: https://github.com/byrondover/api-guidelines/blob/master/Guidelines.md#errors
+- DDD article: https://bazaglia.com/clean-architecture-with-typescript-ddd-onion/
+- DDD Code example: https://github.com/bazaglia/shopping-cart
 

@@ -1,24 +1,25 @@
 /**
- * Login Form domain object
+ * RegisterForm value object
  * 
- * Note: The 'domain object' represents core domain model or domain entities. It can have state and business behaviour.
- * The domain object does not have any dependency on the other components except those of other atomic domain components part of model.
- * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
- * create use cases for each behavior of the domain object, it is up to you.
+ * Note: A Value Object is an immutable type with out id and that is distinguishable only by the state of its properties.
+ * Try not to modify the values ​​once it's created or instantiated (to be immutable) and instead replace the entire object.
+ * The Value Object can define helper methods (or extensions methods) that assist with such operations. 
+ * Generally, validation of Value Objects should not take place in their constructor. Constructors as a rule should not include logic, 
+ * but should simply assign values.
  */
- export class RegisterForm {
+export class RegisterForm {
 
-    constructor(userName: string, firstName: string, lastName: string, email: string, password: string) {
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    };
+  userName: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 
-    userName: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    email: string;
+  constructor(userName: string, firstName: string, lastName: string, email: string, password: string) {
+    this.userName = userName;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
   };
+};
