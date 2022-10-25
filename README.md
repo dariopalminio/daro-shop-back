@@ -1,8 +1,19 @@
 
-## Description
+## Folder structure
 
-  <p><a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable backend server-side applications.</p>
-  <p><a href="https://nestjs.com/" target="_blank">NestJs</a> framework for building backend.</p>
+.
+└── src
+    ├── app # Layer that exposes application to external world and users, and configure and launch the application module(s)
+    │     ├── middleware # called before the route handler or controllers
+    │     ├── filter
+    │     ├── guard # Authorizator that determine whether a given request will be handled by the route handler or not
+    │     ├── dto # Data Transfer Objects 
+    │     └── controller # API Controllers responsible for handling incoming requests and returning responses to the client (routing)
+    ├── domain # Layer for the domain to Business Logic
+    │     ├── service # Layer that composes application use cases 
+    │     └── model # Business domain classes and everything that composes domain model (Entities and Value Objects)
+    │
+    └── infra # Layer for communication with what is external of application and infrastructure
 
 ## Stack
 
@@ -171,4 +182,6 @@ Nest is [MIT licensed](LICENSE).
 - API Guide: https://github.com/byrondover/api-guidelines/blob/master/Guidelines.md#errors
 - DDD article: https://bazaglia.com/clean-architecture-with-typescript-ddd-onion/
 - DDD Code example: https://github.com/bazaglia/shopping-cart
+- The Clean Architecture: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
 
