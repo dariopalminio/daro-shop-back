@@ -3,7 +3,7 @@ import {
   NotFoundException, UseGuards, InternalServerErrorException, BadRequestException
 } from '@nestjs/common';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';

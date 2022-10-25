@@ -5,7 +5,7 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from '../model/product/reservation';
 import { Sale } from '../model/product/sale';
 import { Product } from '../model/product/product';
-import { IRepository } from '../output-port/repository.interface';
+import { IRepository } from '../infra-interface/repository.interface';
 
 /**
  * Product Service

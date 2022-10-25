@@ -1,4 +1,4 @@
-import { IGlobalConfig } from '../../../domain/output-port/global-config.interface';
+import { IGlobalConfig } from '../../../domain/infra-interface/global-config.interface';
 import { GlobalConfigImpl } from 'infra/config/global-config-impl';
 import { Test, TestingModule } from '@nestjs/testing';
 

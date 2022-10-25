@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUserService } from '../service/interface/user.service.interface';
 import { User } from 'src/domain/model/user/user';
-import { IRepository } from '../output-port/repository.interface';
+import { IRepository } from '../infra-interface/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 
 /**

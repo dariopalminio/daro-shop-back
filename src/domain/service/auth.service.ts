@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IAuthService } from '../service/interface/auth.service.interface';
 import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import IEmailSender from '../output-port/email-sender.interface';
+import IEmailSender from '../infra-interface/email-sender.interface';
 import { validEmail } from '../helper/validators.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from '../helper/token.helper';
 import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
@@ -10,9 +10,9 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { ITranslator } from 'src/domain/output-port/translator.interface';
+import { ITranslator } from 'src/domain/infra-interface/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';;
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';;
 import { DomainError } from 'src/domain/error/domain-error';
 import { User } from '../model/user/user';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';

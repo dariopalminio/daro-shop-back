@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { Reflector } from '@nestjs/core';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
 import extractTokenFromHeader from '../helper/token.helper';
 
 /**

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../output-port/repository.interface';
+import { IRepository } from '../infra-interface/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
 import { ShippingPrice } from '../model/shipping/shipping-price';

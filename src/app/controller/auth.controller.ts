@@ -8,7 +8,7 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from '../../../domain/service/product.service'; 
-import { IRepository } from '../../../domain/output-port/repository.interface';
+import { IRepository } from '../../../domain/infra-interface/repository.interface';
 import { IProduct } from '../../../domain/model/product/product.interface';
 
 // Mocking repository

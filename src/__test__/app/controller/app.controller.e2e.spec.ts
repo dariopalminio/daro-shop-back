@@ -3,11 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { HttpModule } from '@nestjs/axios';
 import { AppController } from '../../../app/controller/app.controller';
-import { TranslatorNestjsI18nImpl } from 'infra/i18n/translator-nestjs-i18n-impl';
-import { I18nModuleConfig } from 'infra/i18n/i18n-module-config';
-import { GlobalConfigImpl } from 'infra/config/global-config-impl';
-import { IGlobalConfig } from '../../../domain/output-port/global-config.interface';
-import { ITranslator } from '../../../domain/output-port/translator.interface';
+import { TranslatorNestjsI18nImpl } from '../../../infra/i18n/translator-nestjs-i18n-impl';
+import { I18nModuleConfig } from '../../../infra/i18n/i18n-module-config';
+import { GlobalConfigImpl } from '../../../infra/config/global-config-impl';
+import { IGlobalConfig } from '../../../domain/infra-interface/global-config.interface';
+import { ITranslator } from '../../../domain/infra-interface/translator.interface';
 import { TerminusModule } from '@nestjs/terminus';
 
 describe('E2E test, AppController status test', () => {

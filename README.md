@@ -11,6 +11,8 @@
     │     └── controller # API Controllers responsible for handling incoming requests and returning responses to the client (routing)
     ├── domain # Layer for the domain to Business Logic
     │     ├── service # Layer that composes application use cases 
+    │     │    └── interface # input-port used by app layer
+    │     ├── infra-interface # output-port to infrastructure interfaces
     │     └── model # Business domain classes and everything that composes domain model (Entities and Value Objects)
     │
     └── infra # Layer for communication with what is external of application and infrastructure

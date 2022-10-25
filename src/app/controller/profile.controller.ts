@@ -1,5 +1,5 @@
 import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';

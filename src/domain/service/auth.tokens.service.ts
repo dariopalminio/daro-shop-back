@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import IEmailSender from '../output-port/email-sender.interface';
-import { ITranslator } from 'src/domain/output-port/translator.interface';
+import IEmailSender from '../infra-interface/email-sender.interface';
+import { ITranslator } from 'src/domain/infra-interface/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
-import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
+import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
 import { TokensType } from 'src/domain/model/auth/token/tokens.type';

@@ -2,7 +2,7 @@ import Ajv from "ajv"; //https://ajv.js.org/guide/getting-started.html
 import { Type } from "@sinclair/typebox";
 import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
-import { ITranslator } from 'src/domain/output-port/translator.interface';
+import { ITranslator } from 'src/domain/infra-interface/translator.interface';
 
 /**
  * Ensure your data is valid using an JSON Schema or JSON Type Definition
