@@ -22,8 +22,8 @@ export class User extends Entity {
     verified: boolean;
     verificationCode: string;
     startVerificationCode: Date;
-    createdAt?: Date;
     updatedAt?: Date;
+    createdAt?: Date;
     
     /**
     * Constructors 
@@ -33,10 +33,10 @@ export class User extends Entity {
     public constructor(unmarshalled: any);
     public constructor(id: string,
         enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[],
-        verified: boolean, verificationCode: string
+        verified: boolean, verificationCode: string, updatedAt?: Date, createdAt?: Date
     );
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 10) {
+        if (argumentsArray.length > 12) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -57,6 +57,12 @@ export class User extends Entity {
             this.setRoles(argumentsArray[7]);
             this.setVerified(argumentsArray[8]);
             this.setVerificationCode(argumentsArray[9]);
+            if (argumentsArray[10]) {
+                this.updatedAt=(argumentsArray[10]);
+            }
+            if (argumentsArray[11]) {
+                this.createdAt=(argumentsArray[11]);
+            }
         }
     };
 
@@ -188,6 +194,12 @@ export class User extends Entity {
             throw new Error('Field startVerificationCode has invalid format because is undefined or is not Date!');
         else
             this.startVerificationCode = value;
+    };
+
+    public setUpdatedAt(updatedAt: Date) {
+        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+        this.updatedAt = updatedAt;
     };
 
 };

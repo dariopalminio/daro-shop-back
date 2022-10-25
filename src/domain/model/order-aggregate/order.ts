@@ -24,8 +24,8 @@ export class Order extends Entity {
     shippingPrice: number;
     total: number;
     status: string;
-    createdAt?: Date;
     updatedAt?: Date;
+    createdAt?: Date;
 
     /**
      * Constructors
@@ -34,9 +34,10 @@ export class Order extends Entity {
     public constructor();
     public constructor(unmarshalled: any);
     public constructor(id: string,
-        client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
+        client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, 
+        total: number, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 9) {
+        if (argumentsArray.length > 11) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -63,6 +64,12 @@ export class Order extends Entity {
             this.setSubTotal(argumentsArray[6]);
             this.setShippingPrice(argumentsArray[7]);
             this.setTotal(argumentsArray[8]);
+            if (argumentsArray[9]) {
+                this.updatedAt=(argumentsArray[9]);
+            }
+            if (argumentsArray[10]) {
+                this.createdAt=(argumentsArray[10]);
+            }
         }
     };
 
@@ -179,6 +186,12 @@ export class Order extends Entity {
         if (value === undefined || (typeof value !== 'string'))
             throw new Error('Field status has invalid format because is undefined or is not string!');
         this.status = value;
+    };
+
+    public setUpdatedAt(updatedAt: Date) {
+        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+        this.updatedAt = updatedAt;
     };
 
 };

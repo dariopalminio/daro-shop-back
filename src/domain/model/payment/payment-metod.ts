@@ -18,8 +18,8 @@ export class PaymentMethod extends Entity {
     image: string;
     active: boolean;
     meta: any;
-    createdAt?: Date;
     updatedAt?: Date;
+    createdAt?: Date;
 
     /**
      * Constructors 
@@ -70,6 +70,12 @@ export class PaymentMethod extends Entity {
         if (unmarshalled.createdAt) {
             this.createdAt=(unmarshalled.createdAt);
         }
+    };
+
+    public setUpdatedAt(updatedAt: Date) {
+        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+        this.updatedAt = updatedAt;
     };
 
 };

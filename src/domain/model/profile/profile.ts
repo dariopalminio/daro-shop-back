@@ -24,8 +24,8 @@ export class Profile extends Entity {
     telephone: string;
     language: string;
     addresses: IAddress[];
-    createdAt?: Date;
     updatedAt?: Date;
+    createdAt?: Date;
     
     /**
     * Constructors 
@@ -33,12 +33,12 @@ export class Profile extends Entity {
     */
     public constructor();
     public constructor(unmarshalled: any);
-    public constructor(
+    public constructor(id: string,
         userId: string, enable: boolean, userName: string, firstName: string, lastName: string, email: string, docType: string,
-        document: string, telephone: string, language: string, addresses: IAddress[]
+        document: string, telephone: string, language: string, addresses: IAddress[], updatedAt?: Date, createdAt?: Date
     );
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 11) {
+        if (argumentsArray.length > 14) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -61,6 +61,12 @@ export class Profile extends Entity {
             this.setTelephone(argumentsArray[9]);
             this.setLanguage(argumentsArray[10]);
             this.setAddresses(argumentsArray[11]);
+            if (argumentsArray[12]) {
+                this.updatedAt=(argumentsArray[12]);
+            }
+            if (argumentsArray[13]) {
+                this.createdAt=(argumentsArray[13]);
+            }
         }
     };
 
@@ -173,6 +179,12 @@ export class Profile extends Entity {
             throw new Error('Field language has invalid format because is undefined or is not string!');
         }
         this.language = value;
+    };
+
+    public setUpdatedAt(updatedAt: Date) {
+        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+        this.updatedAt = updatedAt;
     };
 
 };

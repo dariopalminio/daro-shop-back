@@ -35,8 +35,8 @@ export class Product extends Entity {
     active: boolean;
     reservations: Reservation[];
     sales: Sale[];
-    createdAt?: Date;
     updatedAt?: Date;
+    createdAt?: Date;
 
     /**
     * Constructors
@@ -47,9 +47,9 @@ export class Product extends Entity {
     public constructor(id: string,
         sku: string, barcode: string, name: string, description: string, images: string[], category: string, type: string, brand: string,
         color: string, model: string, gender: string, size: string, netCost: number, ivaAmountOnCost: number, grossCost: number, netPrice: number,
-        ivaAmountOnPrice: number, grossPrice: number, stock: number, active: boolean);
+        ivaAmountOnPrice: number, grossPrice: number, stock: number, active: boolean, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 21) {
+        if (argumentsArray.length > 23) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -83,6 +83,12 @@ export class Product extends Entity {
             this.setActive(argumentsArray[20]);
             this.reservations = [];
             this.sales = [];
+            if (argumentsArray[21]) {
+                this.updatedAt=(argumentsArray[21]);
+            }
+            if (argumentsArray[22]) {
+                this.createdAt=(argumentsArray[22]);
+            }
         }
     };
 
@@ -268,11 +274,10 @@ export class Product extends Entity {
         this.sales = value;
     };
 
-    public setUpdatedAt(value: Date) {
-        if (value === undefined || !(value instanceof Date))
-            throw this.updatedAt = new Date();
-        else
-            this.updatedAt = value;
+    public setUpdatedAt(updatedAt: Date) {
+        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+        this.updatedAt = updatedAt;
     };
 
 };
