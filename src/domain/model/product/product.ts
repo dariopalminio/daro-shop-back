@@ -43,13 +43,19 @@ export class Product extends Entity {
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
+    public constructor(productAny: any); 
     public constructor(sku: string, barcode: string, name: string, description: string, images: string[], category: string, type: string, brand: string,
         color: string, model: string, gender: string, size: string, netCost: number, ivaAmountOnCost: number, grossCost: number, netPrice: number,
         ivaAmountOnPrice: number, grossPrice: number, stock: number, active: boolean);
     public constructor(...argumentsArray: any[]) {
         super();
-        if (argumentsArray.length > 20) throw new Error('Number of constructor arguments exceeded.');
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 20) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
             this.setSku(argumentsArray[0]);
             this.setBarcode(argumentsArray[1]);
             this.setName(argumentsArray[2]);

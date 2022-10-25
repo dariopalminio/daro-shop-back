@@ -1,4 +1,4 @@
-export class StartConfirmEmailDataDTO {
+export class StartConfirmEmailData {
     name: string;
     userName: string;
     email: string;

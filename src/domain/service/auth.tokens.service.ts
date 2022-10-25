@@ -5,11 +5,11 @@ import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
-import { TokensDTO } from 'src/domain/model/auth/token/tokens.dto';
+import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import jwt from "jsonwebtoken";
-import { AuthClientDTO } from '../model/auth/token/auth.client.dto';
-import { RequestRefreshToken } from '../model/auth/token/auth.request.refresh.token.dto';
-import { NewAdminTokenRequestType } from '../model/auth/token/auth.admin.dto';
+import { AuthClientType } from '../model/auth/token/auth.client.type';
+import { RequestRefreshTokenType } from '../model/auth/token/auth.request.refresh.token.type';
+import { NewAdminTokenRequestType } from '../model/auth/token/auth.admin.type';
 import { PayloadType } from '../model/auth/token/payload.type';
 import { IUserService } from './interface/user.service.interface';
 import { RolesEnum } from '../model/auth/reles.enum';
@@ -55,9 +55,9 @@ export class AuthTokensService implements IAuthTokensService {
    * @param payload profile data
    * @returns 
    */
-  createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensDTO {
+  createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType {
 
-    let tokens: TokensDTO = {
+    let tokens: TokensType = {
       access_token: "",
       expires_in: 0,
       refresh_expires_in: 0,
@@ -170,7 +170,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: user.email
     };
 
-    const tokens: TokensDTO = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
 
     return tokens;
   };
@@ -214,7 +214,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: user.email
     };
 
-    const tokens: TokensDTO = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
 
     return tokens;
   };
@@ -222,7 +222,7 @@ export class AuthTokensService implements IAuthTokensService {
   /**
    * Obtain app accsess token from a service account
    */
-  async getAppToken(authClientDTO: AuthClientDTO): Promise<any> {
+  async getAppToken(authClientDTO: AuthClientType): Promise<any> {
 
     //grant_type=client_credentials
     try {
@@ -248,7 +248,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: authClientDTO.client_id
     };
 
-    const tokens: TokensDTO = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
 
     return tokens;
   };
@@ -260,7 +260,7 @@ export class AuthTokensService implements IAuthTokensService {
    * if the user's access_token get expired and user want to keep login. How can I get newly 
    * updated access_token with this function.
    */
-  async getRefreshToken(body: RequestRefreshToken): Promise<any> {
+  async getRefreshToken(body: RequestRefreshTokenType): Promise<any> {
 
     try {
       if (!body)
@@ -292,7 +292,7 @@ export class AuthTokensService implements IAuthTokensService {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: "Refresh token malformed!" });
     };
 
-    const tokens: TokensDTO = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
 
     return tokens;
   };

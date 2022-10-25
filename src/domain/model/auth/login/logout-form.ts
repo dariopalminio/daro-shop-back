@@ -1,4 +1,4 @@
-export type LogoutFormDTO = {
+export type LogoutForm = {
     id: string;
     adminToken: string;
   };

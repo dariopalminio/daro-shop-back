@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 /**
  * Category DTO
@@ -8,18 +8,10 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class CategoryDTO {
+ export class VerificationCodeDTO {
 
-    @IsOptional()
-    @IsString()
-    _id: string;
-
-    @IsString()
     @IsNotEmpty()
-    name: string;
-
     @IsString()
-    @IsNotEmpty()
-    description: string;
+    token: string;
 
 };

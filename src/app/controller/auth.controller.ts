@@ -1,13 +1,13 @@
 import {
   Controller, Get, Res, Post, Headers, Delete, Put, Body, Param, Query, Inject,
-  HttpStatus, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards
+  HttpStatus, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards, NotFoundException
 } from '@nestjs/common';
 import { IAuthService } from 'src/domain/service/interface/auth.service.interface';
-import { StartConfirmEmailDataDTO } from 'src/domain/model/auth/register/start-confirm-email-data.dto';
-import { StartRecoveryDataDTO } from 'src/domain/model/auth/recovery/start-recovery-data.dto.type';
-import { VerificationCodeDataDTO } from 'src/domain/model/auth/register/verification-code-data.dto.type';
-import { RecoveryUpdateDataDTO } from 'src/domain/model/auth/recovery/recovery-update-data.dto.type';
-import { LogoutFormDTO } from 'src/domain/model/auth/login/logout-form.dto';
+import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
+import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
+import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
+import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
+import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
@@ -16,6 +16,8 @@ import { Roles } from '../guard/roles.decorator';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { UserRegisterDTO } from '../dto/user-register.dto';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
+import { VerificationCodeDTO } from '../dto/verification-code.dto';
+import { StartConfirmEmailDTO } from '../dto/start-confirm-email.dto';
 
 /**
  * Auth controller
@@ -52,11 +54,11 @@ export class AuthController {
   @Post('register')
   async register(@Res() res, @Body() userRegisterDTO: UserRegisterDTO): Promise<any> {
     const { userName, firstName, lastName, email, password } = userRegisterDTO;
-    const registerForm: RegisterForm = new RegisterForm( userName, firstName, lastName, email, password );;
+    const registerForm: RegisterForm = new RegisterForm(userName, firstName, lastName, email, password);;
     console.log("register controller init");
     let result;
     try {
-      console.log("Controller register-->userRegisterDTO:",registerForm);
+      console.log("Controller register-->userRegisterDTO:", registerForm);
       result = await this.authService.register(registerForm);
       console.log("register controller:", result);
     } catch (error) {
@@ -78,44 +80,72 @@ export class AuthController {
   };
 
   @Post('register/confirm/start')
-  async sendStartEmailConfirm(@Headers() headers, @Res() res, @Body() startConfirmEmailData: StartConfirmEmailDataDTO) {
-    const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
-    return res.status(result.status).json(result);
+  async sendStartEmailConfirm(@Headers() headers, @Res() res, @Body() startConfirmEmailData: StartConfirmEmailDTO) {
+    try {
+      const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
+      return res.status(result.status).json(result);
+    } catch (error) {
+      if (error.code && error.code === 400) throw new BadRequestException(error);
+      if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
+      if (error.code && error.code === 404) throw new NotFoundException(error.data);
+      throw new InternalServerErrorException(error);
+    }
   };
 
   @Post('register/confirm')
-  async confirmAccount(@Headers() headers, @Res() res, @Body() verificationCodeData: VerificationCodeDataDTO): Promise<any> {
-    const confirmed: any = await this.authService.confirmAccount(verificationCodeData, this.getLang(headers));
-    return res.status(HttpStatus.OK).json(confirmed);
+  async confirmAccount(@Headers() headers, @Res() res, @Body() verificationCodeDataDTO: VerificationCodeDTO): Promise<any> {
+    let confirmed: any;
+    try {
+      confirmed = await this.authService.confirmAccount(verificationCodeDataDTO, this.getLang(headers));
+      return res.status(HttpStatus.OK).json(confirmed);
+    } catch (error) {
+      if (error.code && error.code === 400) throw new BadRequestException(error);
+      if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
+      throw new InternalServerErrorException(error);
+    }
   };
 
   @Post('logout')
-  async logout(@Res() res, @Body() logoutFormDTO: LogoutFormDTO) {
+  async logout(@Res() res, @Body() logoutFormDTO: LogoutForm) {
     let authResponse: boolean;
     try {
       authResponse = await this.authService.logout(logoutFormDTO);
       if (authResponse === true)
         return res.status(HttpStatus.OK).json({});
     } catch (error) {
-      if (error.code == 400) throw new BadRequestException(error);
-      if (error.code == 401) throw new UnauthorizedException(error.data);
+      if (error.code && error.code === 400) throw new BadRequestException(error);
+      if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
       throw new InternalServerErrorException(error);
     };
     throw new InternalServerErrorException();
   };
 
   @Post('recovery/start')
-  async sendEmailToRecoveryPass(@Headers() headers, @Res() res, @Body() startRecoveryDataDTO: StartRecoveryDataDTO) {
-    console.log("sendEmailToRecoveryPass getLang:", this.getLang(headers));
-    console.log("sendEmailToRecoveryPass startRecoveryDataDTO:", startRecoveryDataDTO);
-    const authResponse: any = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
-    return res.status(authResponse.status).json(authResponse);
+  async sendEmailToRecoveryPass(@Headers() headers, @Res() res, @Body() startRecoveryDataDTO: StartRecoveryDataType) {
+    //console.log("sendEmailToRecoveryPass getLang:", this.getLang(headers));
+    //console.log("sendEmailToRecoveryPass startRecoveryDataDTO:", startRecoveryDataDTO);
+    let authResponse: any;
+    try {
+      authResponse = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
+      return res.status(authResponse.status).json(authResponse);
+    } catch (error) {
+      if (error.code && error.code === 400) throw new BadRequestException(error);
+      if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
+      if (error.code && error.code === 404) throw new NotFoundException(error.data);
+      throw new InternalServerErrorException(error);
+    }
   };
 
   @Post('recovery/update')
-  async recoveryUpdatePassword(@Headers() headers, @Res() res, @Body() recoveryUpdateDataDTO: RecoveryUpdateDataDTO) {
-    const data: any = await this.authService.recoveryUpdatePassword(recoveryUpdateDataDTO, this.getLang(headers));
-    return res.status(HttpStatus.OK).json(data);
+  async recoveryUpdatePassword(@Headers() headers, @Res() res, @Body() recoveryUpdateDataDTO: RecoveryUpdateDataType) {
+    try {
+      const data: any = await this.authService.recoveryUpdatePassword(recoveryUpdateDataDTO, this.getLang(headers));
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      if (error.code && error.code === 400) throw new BadRequestException(error);
+      if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
+      throw new InternalServerErrorException(error);
+    }
   };
 
   private getLang(headers: any): string {

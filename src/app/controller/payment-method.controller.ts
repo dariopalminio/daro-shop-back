@@ -5,6 +5,7 @@ import { RolesGuard } from '../guard/roles.guard';
 import { IPaymentMethodService } from 'src/domain/service/interface/payment-method.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
+import { PaymentMethodDTO } from '../dto/payment-method.dto';
 
 /**
  * Payment controller
@@ -53,16 +54,22 @@ export class PaymentMethodController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async create(@Res() res, @Body() paymentMethodDTO: PaymentMethod) {
+  async create(@Res() res, @Body() paymentMethodDTO: PaymentMethodDTO) {
+    let paymentMethod: PaymentMethod;
+    try {
+      paymentMethod = new PaymentMethod(paymentMethodDTO);
+    } catch (error) {
+      throw new BadRequestException('Payment Method data malformed:' + error.message);
+    }
     let objCreated;
     try {
-      objCreated = await this.paymentMethodService.create(paymentMethodDTO);
+      objCreated = await this.paymentMethodService.create(paymentMethod);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-    if (!objCreated) throw new NotFoundException('Does not exist or canot delete!');
+    if (!objCreated) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
-      message: 'Order Created Successfully',
+      message: 'Payment Method Created Successfully',
       order: objCreated
     })
   };
@@ -75,9 +82,32 @@ export class PaymentMethodController {
     const objDeleted = await this.paymentMethodService.delete(id);
     if (!objDeleted) throw new NotFoundException('Does not exist or canot delete!');
     return res.status(HttpStatus.OK).json({
-      message: 'Order Deleted Successfully',
+      message: 'Payment Method Deleted Successfully',
       deleted: objDeleted
     })
   };
+
+  @Put('update')
+  async update(@Res() res, @Body() paymentMethodDTO: PaymentMethodDTO) {
+    let paymentMethod: PaymentMethod;
+    try {
+      paymentMethod = new PaymentMethod(paymentMethodDTO);
+    } catch (error) {
+      throw new BadRequestException('Payment Method data malformed:' + error.message);
+    }
+    const query = { key: paymentMethod.key };
+    let updatedObj;
+    try {
+      updatedObj = await this.paymentMethodService.update(query, paymentMethod);
+    } catch (error) {
+      new InternalServerErrorException(error);
+    }
+    if (!updatedObj) throw new NotFoundException('Payment Method does not exist!');
+    return res.status(HttpStatus.OK).json({
+      message: 'Payment Method Updated Successfully',
+      updated: updatedObj
+    })
+  };
+
 
 };

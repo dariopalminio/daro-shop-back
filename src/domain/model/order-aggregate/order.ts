@@ -32,11 +32,17 @@ export class Order extends Entity {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
+    public constructor(orderAny: any);
     public constructor(client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
     public constructor(...argumentsArray: any[]) {
         super();
-        if (argumentsArray.length > 8) throw new Error('Number of constructor arguments exceeded.');
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 8) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
             let clientObject: Client = new Client();
             clientObject.setFromAny(argumentsArray[0]); //client
             this.client = clientObject;
@@ -46,8 +52,7 @@ export class Order extends Entity {
             if (isNaN(argumentsArray[2])) throw new Error('Casting error: quantity field is not a number!');
             this.setCount(argumentsArray[2]); //count
             this.setIncludesShipping(argumentsArray[3]); //includesShipping
-            let shippingAddress: Address = new Address();
-            shippingAddress.setFromAny(argumentsArray[4]); //shippingAddress
+            let shippingAddress: Address = new Address(argumentsArray[4]);
             if (this.includesShipping) shippingAddress.validateFullAddress();
             this.setShippingAddress(shippingAddress);
             this.setSubTotal(argumentsArray[5]);

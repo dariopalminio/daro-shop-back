@@ -22,17 +22,35 @@ export class ShippingPrice extends Entity {
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
+    public constructor(shippingPriceAny: any);
     public constructor(location: string, price: number, money: string, description: string
     );
     public constructor(...argumentsArray: any[]) {
         super();
-        if (argumentsArray.length > 11) throw new Error('Number of constructor arguments exceeded.');
+        if (argumentsArray.length > 11) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
         if (argumentsArray.length > 0) {
             this.setLocation(argumentsArray[0]);
             this.setPrice(argumentsArray[1]);
             this.setMoney(argumentsArray[2]);
             this.setDescription(argumentsArray[3]);
         }
+    };
+
+    /**
+     * Set all attributes from variable can be of any type 'any'.
+     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
+     * @param shippingPriceAny any is used to tell TypeScript that a variable can be of any type
+     */
+    public setFromAny(shippingPriceAny: any) {
+        this.setLocation(shippingPriceAny.location);
+        this.setPrice(shippingPriceAny.price);
+        this.setMoney(shippingPriceAny.money);
+        this.setDescription(shippingPriceAny.description);
     };
 
     public setLocation(value: string) {

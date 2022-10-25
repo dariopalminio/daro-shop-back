@@ -25,11 +25,17 @@ export class PaymentMethod extends Entity {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
+    public constructor(payMethodAny: any); 
     public constructor(key: string, name: string, description: string, image: string, active: boolean, meta: any, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
         super();
-        if (argumentsArray.length > 8) throw new Error('Number of constructor arguments exceeded.');
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 8) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
             this.key=(argumentsArray[0]);
             this.name=(argumentsArray[1]);
             this.description=(argumentsArray[2]);
@@ -42,6 +48,21 @@ export class PaymentMethod extends Entity {
             if (argumentsArray[7]) {
                 this.createdAt=(argumentsArray[7]);
             }
+        }
+    };
+
+    public setFromAny(payMethodAny: any) {
+        this.key=(payMethodAny.key);
+        this.name=(payMethodAny.name);
+        this.description=(payMethodAny.description);
+        this.image=(payMethodAny.image);
+        this.active=(payMethodAny.active);
+        this.meta=(payMethodAny.meta);
+        if (payMethodAny.updatedAt) {
+            this.createdAt=(payMethodAny.updatedAt);
+        }
+        if (payMethodAny.createdAt) {
+            this.createdAt=(payMethodAny.createdAt);
         }
     };
 

@@ -1,10 +1,10 @@
 
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
-import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.dto';
-import { AuthClientDTO } from 'src/domain/model/auth/token/auth.client.dto';
-import { RequestRefreshToken } from 'src/domain/model/auth/token/auth.request.refresh.token.dto';
+import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
+import { AuthClientType } from 'src/domain/model/auth/token/auth.client.type';
+import { RequestRefreshTokenType } from 'src/domain/model/auth/token/auth.request.refresh.token.type';
 import { PayloadType } from 'src/domain/model/auth/token/payload.type';
-import { TokensDTO } from 'src/domain/model/auth/token/tokens.dto';
+import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 
 /**
  * Auth Tokens Interface
@@ -17,10 +17,10 @@ import { TokensDTO } from 'src/domain/model/auth/token/tokens.dto';
 export interface IAuthTokensService {
     test(): void;
     login(loginForm: LoginForm): Promise<any>;
-    getAppToken(authClientDTO: AuthClientDTO): Promise<any>;
+    getAppToken(authClientDTO: AuthClientType): Promise<any>;
     getAdminToken(body: NewAdminTokenRequestType): Promise<any>;
-    getRefreshToken(body: RequestRefreshToken): Promise<any>;
+    getRefreshToken(body: RequestRefreshTokenType): Promise<any>;
     getPEMPublicKey(): string;
-    createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensDTO;
+    createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType;
     
 };

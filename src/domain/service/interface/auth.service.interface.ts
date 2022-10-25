@@ -1,9 +1,9 @@
 
-import { StartConfirmEmailDataDTO } from 'src/domain/model/auth/register/start-confirm-email-data.dto';
-import { StartRecoveryDataDTO } from 'src/domain/model/auth/recovery/start-recovery-data.dto.type';
-import { VerificationCodeDataDTO } from 'src/domain/model/auth/register/verification-code-data.dto.type';
-import { LogoutFormDTO } from '../../../domain/model/auth/login/logout-form.dto';
-import { RecoveryUpdateDataDTO } from '../../../domain/model/auth/recovery/recovery-update-data.dto.type';
+import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
+import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
+import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
+import { LogoutForm } from '../../model/auth/login/logout-form';
+import { RecoveryUpdateDataType } from '../../model/auth/recovery/recovery-update-data.type';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 
 /**
@@ -17,10 +17,10 @@ import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 export interface IAuthService {
 
     register (userRegisterData: RegisterForm): Promise<any>;
-    sendStartEmailConfirm(startConfirmEmailMessage: StartConfirmEmailDataDTO, lang:string): Promise<any>;
-    confirmAccount(verificationCodeData: VerificationCodeDataDTO, lang:string): Promise<any>;
-    logout(logoutFormDTO: LogoutFormDTO): Promise<boolean>;
-    sendEmailToRecoveryPass(startRecoveryDataDTO: StartRecoveryDataDTO, lang:string): Promise<any>;
-    recoveryUpdatePassword(recoveryUpdateDataDTO: RecoveryUpdateDataDTO, lang:string): Promise<any>;
+    sendStartEmailConfirm(startConfirmEmailMessage: StartConfirmEmailData, lang:string): Promise<any>;
+    confirmAccount(verificationCodeData: VerificationCodeDataType, lang:string): Promise<any>;
+    logout(logoutForm: LogoutForm): Promise<boolean>;
+    sendEmailToRecoveryPass(startRecoveryData: StartRecoveryDataType, lang:string): Promise<any>;
+    recoveryUpdatePassword(recoveryUpdateData: RecoveryUpdateDataType, lang:string): Promise<any>;
     
 };

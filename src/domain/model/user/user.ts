@@ -23,6 +23,37 @@ export class User extends Entity {
     startVerificationCode: Date;
 
     /**
+    * Constructors 
+    * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
+    */
+     public constructor();
+     public constructor(usr: any);
+     public constructor(
+        enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[],
+        verified: boolean, verificationCode: string
+     );
+     public constructor(...argumentsArray: any[]) {
+         super();
+         if (argumentsArray.length > 9) {
+             throw new Error('Number of constructor arguments exceeded.');
+         }
+         if (argumentsArray.length === 1) {
+             this.setFromAny(argumentsArray[0]);
+         }
+         if (argumentsArray.length > 1) {
+             this.setEnable(argumentsArray[0]);
+             this.setUserName(argumentsArray[1]);
+             this.setFirstName(argumentsArray[2]);
+             this.setLastName(argumentsArray[3]);
+             this.setEmail(argumentsArray[4]);
+             this.setPassword(argumentsArray[5]);
+             this.setRoles(argumentsArray[6]);
+             this.setVerified(argumentsArray[7]);
+             this.setVerificationCode(argumentsArray[8]);
+         }
+     };
+
+    /**
      * Set all attributes from variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
      * @param usr any is used to tell TypeScript that a variable can be of any type

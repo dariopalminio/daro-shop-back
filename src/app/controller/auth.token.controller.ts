@@ -5,10 +5,10 @@ import {
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
-import { AuthClientDTO } from 'src/domain/model/auth/token/auth.client.dto';
-import { RequestRefreshToken } from 'src/domain/model/auth/token/auth.request.refresh.token.dto';
+import { AuthClientType } from 'src/domain/model/auth/token/auth.client.type';
+import { RequestRefreshTokenType } from 'src/domain/model/auth/token/auth.request.refresh.token.type';
 import { IAuthTokensService } from 'src/domain/service/interface/auth.tokens.service.interface';
-import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.dto';
+import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
 import { UserLoginDTO } from '../dto/user-login.dto';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
 
@@ -78,16 +78,16 @@ export class AuthTokensController {
      * POST[SAT] Obtain app accsess token from a service account
      */
     @Post('app')
-    async getAppToken(@Headers() headers, @Res() res, @Body() authClientDTO: AuthClientDTO) {
+    async getAppToken(@Headers() headers, @Res() res, @Body() authClientDTO: AuthClientType) {
         let authResponse: any;
         console.log('authClientDTO:', authClientDTO);
         try {
             authResponse = await this.authTokensService.getAppToken(authClientDTO);
         } catch (error) {
-            if (error.code == 400) throw new BadRequestException(error);
-            if (error.code == 401) throw new UnauthorizedException(error.data);
+            if (error.code && error.code === 400) throw new BadRequestException(error);
+            if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        };
+          }
         return res.status(HttpStatus.OK).json(authResponse);
     };
 
@@ -100,10 +100,10 @@ export class AuthTokensController {
         try {
             data = await this.authTokensService.getAdminToken(body);
         } catch (error) {
-            if (error.code == 400) throw new BadRequestException(error);
-            if (error.code == 401) throw new UnauthorizedException(error.data);
+            if (error.code && error.code === 400) throw new BadRequestException(error);
+            if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        }
+          }
         return res.status(HttpStatus.OK).json(data);
     };
 
@@ -116,15 +116,15 @@ export class AuthTokensController {
        * Use Refresh Tokens
      */
     @Post('refresh')
-    async getRefreshToken(@Headers() headers, @Res() res, @Body() body: RequestRefreshToken) {
+    async getRefreshToken(@Headers() headers, @Res() res, @Body() body: RequestRefreshTokenType) {
         let authResponse: any;
         try {
             authResponse = await this.authTokensService.getRefreshToken(body);
         } catch (error) {
-            if (error.code == 400) throw new BadRequestException(error);
-            if (error.code == 401) throw new UnauthorizedException(error.data);
+            if (error.code && error.code === 400) throw new BadRequestException(error);
+            if (error.code && error.code === 401) throw new UnauthorizedException(error.data);
             throw new InternalServerErrorException(error);
-        }
+          }
         return res.status(HttpStatus.OK).json(authResponse);
     };
 

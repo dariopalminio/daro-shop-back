@@ -49,7 +49,7 @@ export class OrderController {
   async create(@Res() res, @Body() orderToCreateDTO: OrderToCreateDTO) {
     let orderToCreate: Order;
     try {
-      orderToCreate = this.orderService.makeEntityFromAny(orderToCreateDTO);
+      orderToCreate = new Order(orderToCreateDTO);
     } catch (error) {
       throw new BadRequestException('Order data malformed: ' + error.message);
     }
@@ -88,7 +88,7 @@ export class OrderController {
   async initialize(@Res() res, @Body() orderToInitializeDTO: OrderToInitializeDTO) {
     let order: Order;
     try {
-      order = this.orderService.makeEntityFromAny(orderToInitializeDTO);
+      order = new Order(orderToInitializeDTO);
     } catch (error) {
       throw new BadRequestException('Order data malformed: ' + error.message);
     }

@@ -1,5 +1,5 @@
 //import { ApiProperty } from '@nestjs/swagger';
 
-export type VerificationCodeDataDTO = {
+export type VerificationCodeDataType = {
     token: string;
 };

@@ -29,14 +29,20 @@ export class Profile extends Entity {
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
+    public constructor(profileAny: any);
     public constructor(
         userId: string, enable: boolean, userName: string, firstName: string, lastName: string, email: string, docType: string,
         document: string, telephone: string, language: string, addresses: IAddress[]
     );
     public constructor(...argumentsArray: any[]) {
         super();
-        if (argumentsArray.length > 11) throw new Error('Number of constructor arguments exceeded.');
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 11) {
+            throw new Error('Number of constructor arguments exceeded.');
+        }
+        if (argumentsArray.length === 1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
             this.setUserId(argumentsArray[0]);
             this.setEnable(argumentsArray[1]);
             this.setUserName(argumentsArray[2]);
@@ -54,19 +60,19 @@ export class Profile extends Entity {
     /**
     * Set all attributes from variable can be of any type 'any'.
     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
-    * @param usr any is used to tell TypeScript that a variable can be of any type
+    * @param profileAny any is used to tell TypeScript that a variable can be of any type
     */
-    public setFromAny(usr: any) {
-        this.setUserId(usr.userId);
-        this.setUserName(usr.userName);
-        this.setFirstName(usr.firstName);
-        this.setLastName(usr.lastName);
-        this.setEmail(usr.email);
-        this.setDocType(usr.docType);
-        this.setDocument(usr.document);
-        this.setTelephone(usr.telephone);
-        this.setLanguage(usr.language);
-        this.setAddresses(usr.addresses);
+    public setFromAny(profileAny: any) {
+        this.setUserId(profileAny.userId);
+        this.setUserName(profileAny.userName);
+        this.setFirstName(profileAny.firstName);
+        this.setLastName(profileAny.lastName);
+        this.setEmail(profileAny.email);
+        this.setDocType(profileAny.docType);
+        this.setDocument(profileAny.document);
+        this.setTelephone(profileAny.telephone);
+        this.setLanguage(profileAny.language);
+        this.setAddresses(profileAny.addresses);
     };
 
     public setUserId(value: string) {

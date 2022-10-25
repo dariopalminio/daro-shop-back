@@ -15,10 +15,16 @@ export class Address implements IAddress {
     department: string;
 
     public constructor();
+    public constructor(addrsAny: any); 
     public constructor(country: string, state: string, city: string, neighborhood: string, street: string, department: string);
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 5) throw new Error('Number of constructor arguments exceeded (country, state, city, neighborhood, street, department)');
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 5) {
+            throw new Error('Number of constructor arguments exceeded (country, state, city, neighborhood, street, department)');
+        }
+        if (argumentsArray.length ===1) {
+            this.setFromAny(argumentsArray[0]);
+        }
+        if (argumentsArray.length > 1) {
             this.setCountry(argumentsArray[0]); //country
             this.setState(argumentsArray[1]); //state
             this.setCity(argumentsArray[2]); //city

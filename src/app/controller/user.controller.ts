@@ -91,20 +91,20 @@ export class UserController {
   async createUser(@Res() res, @Body() userToCreateDTO: UserDTO) {
     let user: User;
     try {
-      user = this.userService.makeEntityFromAny(userToCreateDTO);
+      user = new User(userToCreateDTO);
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }
-    let createdId: User;
+    let created: User;
     try {
-       createdId = await this.userService.create(user);
+       created = await this.userService.create(user);
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!createdId) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!created) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'User Created Successfully',
-      user: createdId
+      user: created
     })
   };
 
@@ -133,7 +133,7 @@ export class UserController {
     if (!id) throw new BadRequestException('id not specified!');
     let user: User;
     try {
-      user = this.userService.makeEntityFromAny(userDTO);
+      user = new User(userDTO);
     } catch (error) {
       throw new BadRequestException('User data malformed:' + error.message);
     }

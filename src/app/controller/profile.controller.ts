@@ -42,7 +42,7 @@ export class ProfileController {
       isSuccess: true,
       status: HttpStatus.OK,
       message: "Hello World from product user " + this.globalConfig.get<string>('VERSION') + "!",
-      name: "user",
+      name: "profile",
       version: this.globalConfig.get<string>('VERSION'),
       date: new Date()
     };
@@ -79,7 +79,7 @@ export class ProfileController {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-    if (!user) throw new NotFoundException('User does not exist!');
+    if (!user) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json(user);
   };
 
@@ -89,7 +89,7 @@ export class ProfileController {
     if (!userName) throw new BadRequestException('Param userName not specified!');
     try {
       const profile: Profile = await this.profileService.getByUserName(userName);
-      if (!profile) throw new NotFoundException('User does not exist!');
+      if (!profile) throw new NotFoundException('Profile does not exist!');
       return res.status(HttpStatus.OK).json(profile);
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -103,7 +103,7 @@ export class ProfileController {
   async create(@Res() res, @Body() profileDTO: ProfileDTO) {
     let profile: Profile;
     try {
-      profile = this.profileService.makeEntityFromAny(profileDTO);
+      profile = new Profile(profileDTO);
     } catch (error) {
       throw new BadRequestException('Profile data malformed:' + error.message);
     }
@@ -113,7 +113,7 @@ export class ProfileController {
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!newProfile) throw new NotFoundException('User does not exist!');
+    if (!newProfile) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'Profile Created Successfully',
       profile: newProfile
@@ -132,7 +132,7 @@ export class ProfileController {
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!categoryDeleted) throw new NotFoundException('Profile does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
       message: 'Profile Deleted Successfully',
       categoryDeleted
@@ -144,7 +144,7 @@ export class ProfileController {
   async update(@Res() res, @Body() profileDTO: ProfileDTO) {
     let profile: Profile;
     try {
-      profile = this.profileService.makeEntityFromAny(profileDTO);
+      profile = new Profile(profileDTO);
     } catch (error) {
       throw new BadRequestException('Profile data malformed:' + error.message);
     }
@@ -154,7 +154,7 @@ export class ProfileController {
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!updatedUser) throw new NotFoundException('User does not exist!');
+    if (!updatedUser) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'Profile Updated Successfully',
       updated: updatedUser

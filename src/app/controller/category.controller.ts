@@ -8,6 +8,7 @@ import { Roles } from '../guard/roles.decorator';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { Category } from 'src/domain/model/category/category';
+import { CategoryDTO } from '../dto/category.dto';
 
 /**
  * Category controller
@@ -79,10 +80,16 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async createCategory(@Res() res, @Body() createCategoryDTO: Category) {
+  async createCategory(@Res() res, @Body() createCategoryDTO: CategoryDTO) {
+    let category: Category;
+    try {
+      category = new Category(createCategoryDTO);
+    } catch (error) {
+      throw new BadRequestException('Category data malformed: ' + error.message);
+    }
     let newCat: Category;
     try {
-      newCat = await this.categoryService.create(createCategoryDTO);
+      newCat = await this.categoryService.create(category);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -116,15 +123,21 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles('admin', 'manage-account')
   @Put('update')
-  async updateCategory(@Res() res, @Body() categoryDTO: Category, @Query('id') id) {
+  async updateCategory(@Res() res, @Body() categoryDTO: CategoryDTO, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
+    let category: Category;
+    try {
+      category = new Category(categoryDTO);
+    } catch (error) {
+      throw new BadRequestException('Category data malformed: ' + error.message);
+    }
     let updatedCategory: boolean;
     try {
-      updatedCategory = await this.categoryService.updateById(id, categoryDTO);
+      updatedCategory = await this.categoryService.updateById(id, category);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     };
-    if (!updatedCategory) throw new NotFoundException('Category does not exist!');
+    if (!updatedCategory) throw new NotFoundException('Problem in creation. Category does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'Category Updated Successfully',
       updated: updatedCategory

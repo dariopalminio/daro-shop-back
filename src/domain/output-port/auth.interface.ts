@@ -1,13 +1,13 @@
-import { AuthClientDTO } from 'src/domain/model/auth/token/auth.client.dto';
-import { RequestRefreshToken } from 'src/domain/model/auth/token/auth.request.refresh.token.dto';
-import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.dto';
+import { AuthClientType } from 'src/domain/model/auth/token/auth.client.type';
+import { RequestRefreshTokenType } from 'src/domain/model/auth/token/auth.request.refresh.token.type';
+import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
   
 export interface IAuth {
 
     getAdminToken(body: NewAdminTokenRequestType): Promise<any>;
     getAdminStringToken(): Promise<string>;
-    getAppToken(authClientDTO: AuthClientDTO): Promise<any>;
-    getRefreshToken(body: RequestRefreshToken): Promise<any>;
+    getAppToken(authClientDTO: AuthClientType): Promise<any>;
+    getRefreshToken(body: RequestRefreshTokenType): Promise<any>;
 
     register(
         username: string,

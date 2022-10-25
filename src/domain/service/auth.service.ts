@@ -4,12 +4,12 @@ import { IUserService } from 'src/domain/service/interface/user.service.interfac
 import IEmailSender from '../output-port/email-sender.interface';
 import { validEmail } from '../helper/validators.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from '../helper/token.helper';
-import { StartConfirmEmailDataDTO } from 'src/domain/model/auth/register/start-confirm-email-data.dto';
-import { ParamsRegisterStart } from 'src/domain/model/auth/register/params-register-start.type';
-import { StartRecoveryDataDTO } from 'src/domain/model/auth/recovery/start-recovery-data.dto.type';
-import { VerificationCodeDataDTO } from 'src/domain/model/auth/register/verification-code-data.dto.type';
-import { RecoveryUpdateDataDTO } from 'src/domain/model/auth/recovery/recovery-update-data.dto.type';
-import { LogoutFormDTO } from 'src/domain/model/auth/login/logout-form.dto';
+import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
+import { ParamsRegisterStart } from 'src/domain/model/auth/register/params-register-start';
+import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
+import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
+import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
+import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
 import { ITranslator } from 'src/domain/output-port/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 import { IGlobalConfig } from 'src/domain/output-port/global-config.interface';;
@@ -17,7 +17,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { User } from '../model/user/user';
 import { IAuthTokensService } from './interface/auth.tokens.service.interface';
 import { PayloadType } from '../model/auth/token/payload.type';
-import { TokensDTO } from '../model/auth/token/tokens.dto';
+import { TokensType } from '../model/auth/token/tokens.type';
 import { RolesEnum } from '../model/auth/reles.enum';
 import { RegisterForm } from '../model/auth/register/register-form';
 const bcrypt = require('bcrypt');
@@ -110,7 +110,7 @@ export class AuthService implements IAuthService {
       email: userCreated.email
     };
 
-    const tokens: TokensDTO = this.authTokensService.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.authTokensService.createTokens(payload, 86400, 86400 * 2);
 
     return tokens;
   };
@@ -122,7 +122,7 @@ export class AuthService implements IAuthService {
    * @param startConfirmEmailData 
    * @returns 
    */
-  async sendStartEmailConfirm(startConfirmEmailData: StartConfirmEmailDataDTO, locale: string): Promise<any> {
+  async sendStartEmailConfirm(startConfirmEmailData: StartConfirmEmailData, locale: string): Promise<any> {
 
     // Data validation
     try {
@@ -134,12 +134,16 @@ export class AuthService implements IAuthService {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
     };
 
+    let user;
     try {
-
       // Get user
-      let user = await this.userService.getByQuery({ userName: startConfirmEmailData.userName });
+      user = await this.userService.getByQuery({ userName: startConfirmEmailData.userName });
       if (!user) throw new Error(await this.i18n.translate('auth.ERROR.USER_NOT_FOUND',));
+    } catch (error) {
+      throw new DomainError(ResponseCode.NOT_FOUND, error.message, error);
+    };
 
+    try {
       // Generate new verification code
       const newVerificationCode = generateToken();
       user.verificationCode = newVerificationCode;
@@ -178,7 +182,7 @@ export class AuthService implements IAuthService {
    * @param verificationCodeData 
    * @returns 
    */
-  async confirmAccount(verificationCodeData: VerificationCodeDataDTO, lang: string): Promise<any> {
+  async confirmAccount(verificationCodeData: VerificationCodeDataType, lang: string): Promise<any> {
 
     let user: User = null;
     try {
@@ -218,7 +222,6 @@ export class AuthService implements IAuthService {
    * @returns 
    */
   private async sendSuccessfulEmailConfirm(name: string, email: string, lang: string): Promise<any> {
-
     try {
       //set params to template
       const paramsRegisterEnd = { name: name, company: this.globalConfig.get<string>('COMPANY_NAME') };
@@ -228,7 +231,7 @@ export class AuthService implements IAuthService {
       const emailResponse: any = this.sender.sendEmailWithTemplate(subject, email, "register-end", paramsRegisterEnd, lang);
       return emailResponse;
     } catch (error) {
-      throw error;
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
     };
   };
 
@@ -237,16 +240,14 @@ export class AuthService implements IAuthService {
    * @param logoutFormDTO 
    * @returns 
    */
-  async logout(logoutFormDTO: LogoutFormDTO): Promise<boolean> {
-
-    const userAuthId: string = logoutFormDTO.id;
+  async logout(logoutForm: LogoutForm): Promise<boolean> {
+    const userAuthId: string = logoutForm.id;
     try {
       if (!userAuthId)
         throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: error });
     };
-
     return true;
   };
 
@@ -256,23 +257,29 @@ export class AuthService implements IAuthService {
    * @param startRecoveryDataDTO 
    * @returns 
    */
-  async sendEmailToRecoveryPass(startRecoveryDataDTO: StartRecoveryDataDTO, lang: string): Promise<any> {
+  async sendEmailToRecoveryPass(startRecoveryData: StartRecoveryDataType, lang: string): Promise<any> {
     console.log("sendEmailToRecoveryPass lang:", lang);
     try {
-      if (!validEmail(startRecoveryDataDTO.email)) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
-      if (!startRecoveryDataDTO.recoveryPageLink) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_LINK',));
+      if (!validEmail(startRecoveryData.email)) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
+      if (!startRecoveryData.recoveryPageLink) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_LINK',));
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, "Can not Send Email To Recovery Pass.", error);
     };
 
+
+    //generate verification code
+    const newVerificationCode = generateToken();
+
+    let user: User;
+    //save verification code
     try {
-      //generate verification code
-      const newVerificationCode = generateToken();
-
-      //save verification code
-      let user = await this.userService.getByQuery({ userName: startRecoveryDataDTO.userName });
+      user = await this.userService.getByQuery({ userName: startRecoveryData.userName });
       if (!user) throw new Error("User not found!");
+    } catch (error) {
+      throw new DomainError(ResponseCode.NOT_FOUND, error.message, error);
+    };
 
+    try {
       user.verificationCode = newVerificationCode;
       user.startVerificationCode = new Date();
 
@@ -280,15 +287,15 @@ export class AuthService implements IAuthService {
       if (!updatedOk) throw new Error(await this.i18n.translate('auth.ERROR.COULD_NOT_SAVE_VERIFICATION_CODE',));
 
       //send email with link and verification code
-      const token: string = encodeToken(startRecoveryDataDTO.email, newVerificationCode);
-      const recoveryPageLink = createTokenLink(startRecoveryDataDTO.recoveryPageLink, token);
+      const token: string = encodeToken(startRecoveryData.email, newVerificationCode);
+      const recoveryPageLink = createTokenLink(startRecoveryData.recoveryPageLink, token);
 
       //set params to email template
       const params = { recoverylink: recoveryPageLink, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //send email
       const subject: string = await this.i18n.translate('auth.RECOVERY_START_EMAIL.SUBJECT',
         { args: { company: this.globalConfig.get<string>('COMPANY_NAME') }, });
-      const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startRecoveryDataDTO.email, "recovery-start", params, lang);
+      const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startRecoveryData.email, "recovery-start", params, lang);
       return {
         isSuccess: true,
         status: ResponseCode.OK,
@@ -306,19 +313,19 @@ export class AuthService implements IAuthService {
    * @param recoveryUpdateDataDTO 
    * @returns 
    */
-  async recoveryUpdatePassword(recoveryUpdateDataDTO: RecoveryUpdateDataDTO, lang: string): Promise<any> {
+  async recoveryUpdatePassword(recoveryUpdateData: RecoveryUpdateDataType, lang: string): Promise<any> {
 
     let user: User = null;
 
     try {
-      user = await this.verificateToken(recoveryUpdateDataDTO.token);
+      user = await this.verificateToken(recoveryUpdateData.token);
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, "Token data undefined. Can not obtain token.", error);
     }
 
     // hash contraseña
     const salt = await bcrypt.genSalt(10);
-    const newPasswordEncrypted: string = await bcrypt.hash(recoveryUpdateDataDTO.password, salt);
+    const newPasswordEncrypted: string = await bcrypt.hash(recoveryUpdateData.password, salt);
 
     //Update in database
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
@@ -372,14 +379,18 @@ export class AuthService implements IAuthService {
   private async verificateToken(token: string): Promise<User> {
 
     //Validate if token exist
-    if (!token) throw Error(await this.i18n.translate('auth.ERROR.INVALID_VERIFICATION_CODE_PARAM',));
+    if (!token) {
+      throw Error(await this.i18n.translate('auth.ERROR.INVALID_VERIFICATION_CODE_PARAM',));
+    }
 
     const partsArray = decodeToken(token);
     const decodedEmail = partsArray[0];
     const decodedCode = partsArray[1];
 
     //Validate email
-    if (!validEmail(decodedEmail)) throw Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
+    if (!validEmail(decodedEmail)) {
+      throw Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
+    }
 
     //Verificate code
     let user: User = await this.userService.getByQuery({

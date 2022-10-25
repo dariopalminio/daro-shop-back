@@ -6,6 +6,7 @@ import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
+import { ShippingPriceDTO } from '../dto/shipping-price.dto';
 
 /**
  * ShippingPrice controller
@@ -66,14 +67,20 @@ export class ShippingPriceController {
   @UseGuards(RolesGuard)
   @Roles(RolesEnum.ADMIN)
   @Post('create')
-  async createShippingPrice(@Res() res, @Body() shippingPriceDTO: ShippingPrice) {
+  async createShippingPrice(@Res() res, @Body() shippingPriceDTO: ShippingPriceDTO) {
+    let shippingPrice: ShippingPrice;
+    try {
+      shippingPrice = new ShippingPrice(shippingPriceDTO);
+    } catch (error) {
+      throw new BadRequestException('ShippingPrice data malformed:' + error.message);
+    }
     let objCreatedId: ShippingPrice;
     try {
-      objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
+      objCreatedId = await this.shippingPriceService.create(shippingPrice);
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!objCreatedId) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!objCreatedId) throw new NotFoundException('Problems saving!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Created Successfully',
       shippingPrice: objCreatedId
@@ -92,7 +99,7 @@ export class ShippingPriceController {
     } catch (error) {
       new InternalServerErrorException(error);
     }
-    if (!objDeleted) throw new NotFoundException('User does not exist or canot delete user!');
+    if (!objDeleted) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Deleted Successfully',
       objDeleted
@@ -101,19 +108,24 @@ export class ShippingPriceController {
 
 
   @Put('update')
-  async updateProfile(@Res() res, @Body() shippingPriceDTO: ShippingPrice) {
-    if (!shippingPriceDTO.location) throw new BadRequestException('Param location not specified!');
+  async update(@Res() res, @Body() shippingPriceDTO: ShippingPriceDTO) {
+    let shippingPrice: ShippingPrice;
+    try {
+      shippingPrice = new ShippingPrice(ShippingPriceDTO);
+    } catch (error) {
+      throw new BadRequestException('ShippingPrice data malformed:' + error.message);
+    }
     const query = { location: shippingPriceDTO.location };
     let updatedObj;
     try {
-      updatedObj = await this.shippingPriceService.update(query, shippingPriceDTO);
+      updatedObj = await this.shippingPriceService.update(query, shippingPrice);
     } catch (error) {
       new InternalServerErrorException(error);
     }
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({
       message: 'Shipping Price Updated Successfully',
-      updatedObj
+      updated: updatedObj
     })
   };
 
