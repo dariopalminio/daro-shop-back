@@ -1,6 +1,6 @@
 
 ## Folder structure
-
+```bash
 .
 └── src
     ├── app # Layer that exposes application to external world and users, and configure and launch the application module(s)
@@ -14,6 +14,8 @@
     │     └── model # Business domain classes and everything that composes domain model (Entities and Value Objects)
     │
     └── infra # Layer for communication with what is external of application and infrastructure
+
+```
 
 ## Stack
 
