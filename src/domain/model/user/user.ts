@@ -22,59 +22,71 @@ export class User extends Entity {
     verified: boolean;
     verificationCode: string;
     startVerificationCode: Date;
-
+    createdAt?: Date;
+    updatedAt?: Date;
+    
     /**
     * Constructors 
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
-    public constructor(usr: any);
-    public constructor(
+    public constructor(unmarshalled: any);
+    public constructor(id: string,
         enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[],
         verified: boolean, verificationCode: string
     );
     public constructor(...argumentsArray: any[]) {
-        super();
-        if (argumentsArray.length > 9) {
+        if (argumentsArray.length > 10) {
             throw new Error('Number of constructor arguments exceeded.');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-            this.setEnable(argumentsArray[0]);
-            this.setUserName(argumentsArray[1]);
-            this.setFirstName(argumentsArray[2]);
-            this.setLastName(argumentsArray[3]);
-            this.setEmail(argumentsArray[4]);
-            this.setPassword(argumentsArray[5]);
-            this.setRoles(argumentsArray[6]);
-            this.setVerified(argumentsArray[7]);
-            this.setVerificationCode(argumentsArray[8]);
+            super(argumentsArray[0]); //id
+            this.setEnable(argumentsArray[1]);
+            this.setUserName(argumentsArray[2]);
+            this.setFirstName(argumentsArray[3]);
+            this.setLastName(argumentsArray[4]);
+            this.setEmail(argumentsArray[5]);
+            this.setPassword(argumentsArray[6]);
+            this.setRoles(argumentsArray[7]);
+            this.setVerified(argumentsArray[8]);
+            this.setVerificationCode(argumentsArray[9]);
         }
     };
 
     /**
-     * Set all attributes from variable can be of any type 'any'.
+     * Set all attributes from Unmarshalled variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
-     * @param usr any is used to tell TypeScript that a variable can be of any type
+     * @param usr Unmarshalled or any is used to tell TypeScript that a variable can be of any type
      */
-    public setFromAny(usr: any) {
-        this.setUserName(usr.userName);
-        this.setFirstName(usr.firstName);
-        this.setLastName(usr.lastName);
-        this.setEmail(usr.email);
-        this.setPassword(usr.password);
-        this.setRoles(usr.roles);
-        if (usr.verified)
-            this.setVerified(usr.verified);
+    public setFromAny(unmarshalled: any) {
+        this.setUserName(unmarshalled.userName);
+        this.setFirstName(unmarshalled.firstName);
+        this.setLastName(unmarshalled.lastName);
+        this.setEmail(unmarshalled.email);
+        this.setPassword(unmarshalled.password);
+        this.setRoles(unmarshalled.roles);
+        if (unmarshalled.verified)
+            this.setVerified(unmarshalled.verified);
         else this.verified = false;
-        if (usr.verificationCode)
-            this.setVerificationCode(usr.verificationCode);
+        if (unmarshalled.verificationCode)
+            this.setVerificationCode(unmarshalled.verificationCode);
         else this.verificationCode = 'none$none.none-none*none';
-        if (usr.enable)
-            this.setEnable(usr.enable);
+        if (unmarshalled.enable)
+            this.setEnable(unmarshalled.enable);
         else this.enable = false;
+        if (unmarshalled.updatedAt) {
+            this.updatedAt=(unmarshalled.updatedAt);
+        }
+        if (unmarshalled.createdAt) {
+            this.createdAt=(unmarshalled.createdAt);
+        }
     };
 
     /**

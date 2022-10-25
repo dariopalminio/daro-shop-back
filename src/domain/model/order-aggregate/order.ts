@@ -32,32 +32,37 @@ export class Order extends Entity {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
-    public constructor(orderAny: any);
-    public constructor(client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
+    public constructor(unmarshalled: any);
+    public constructor(id: string,
+        client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, total: number);
     public constructor(...argumentsArray: any[]) {
-        super();
-        if (argumentsArray.length > 8) {
+        if (argumentsArray.length > 9) {
             throw new Error('Number of constructor arguments exceeded.');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
+            super(argumentsArray[0]); //id
             let clientObject: Client = new Client();
-            clientObject.setFromAny(argumentsArray[0]); //client
+            clientObject.setFromAny(argumentsArray[1]); //client
             this.client = clientObject;
-            const hasAnArray: boolean = Array.isArray(argumentsArray[1]); //orderItems
+            const hasAnArray: boolean = Array.isArray(argumentsArray[2]); //orderItems
             if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
-            this.setOrderItemsFromAny(argumentsArray[1]); //orderItems
-            if (isNaN(argumentsArray[2])) throw new Error('Casting error: quantity field is not a number!');
-            this.setCount(argumentsArray[2]); //count
-            this.setIncludesShipping(argumentsArray[3]); //includesShipping
-            let shippingAddress: Address = new Address(argumentsArray[4]);
+            this.setOrderItemsFromAny(argumentsArray[2]); //orderItems
+            if (isNaN(argumentsArray[3])) throw new Error('Casting error: quantity field is not a number!');
+            this.setCount(argumentsArray[3]); //count
+            this.setIncludesShipping(argumentsArray[4]); //includesShipping
+            let shippingAddress: Address = new Address(argumentsArray[5]);
             if (this.includesShipping) shippingAddress.validateFullAddress();
             this.setShippingAddress(shippingAddress);
-            this.setSubTotal(argumentsArray[5]);
-            this.setShippingPrice(argumentsArray[6]);
-            this.setTotal(argumentsArray[7]);
+            this.setSubTotal(argumentsArray[6]);
+            this.setShippingPrice(argumentsArray[7]);
+            this.setTotal(argumentsArray[8]);
         }
     };
 
@@ -66,23 +71,32 @@ export class Order extends Entity {
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
      * @param prod any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
-    public setFromAny(orderPlain: any) {
-        const hasAnArray: boolean = Array.isArray(orderPlain.orderItems);
+    public setFromAny(unmarshalled: any) {
+        const hasAnArray: boolean = Array.isArray(unmarshalled.orderItems);
         if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
         let clientObject: Client = new Client();
-        clientObject.setFromAny(orderPlain.client);
+        clientObject.setFromAny(unmarshalled.client);
         this.setClient(clientObject);
-        this.setIncludesShipping(orderPlain.includesShipping);
+        this.setIncludesShipping(unmarshalled.includesShipping);
         let shippingAddress: Address = new Address();
-        shippingAddress.setFromAny(orderPlain.shippingAddress);
+        shippingAddress.setFromAny(unmarshalled.shippingAddress);
         if (this.includesShipping) shippingAddress.validateFullAddress();
         this.setShippingAddress(shippingAddress);
-        this.setSubTotal(orderPlain.subTotal);
-        this.setShippingPrice(orderPlain.shippingPrice);
-        this.setTotal(orderPlain.total);
-        this.setOrderItemsFromAny(orderPlain.orderItems);
-        this.setCount(orderPlain.count);
-        if (isNaN(orderPlain.count)) throw new Error('Casting error: quantity field is not a number!');
+        this.setSubTotal(unmarshalled.subTotal);
+        this.setShippingPrice(unmarshalled.shippingPrice);
+        this.setTotal(unmarshalled.total);
+        this.setOrderItemsFromAny(unmarshalled.orderItems);
+        this.setCount(unmarshalled.count);
+        if (isNaN(unmarshalled.count)) throw new Error('Casting error: quantity field is not a number!');
+        if (unmarshalled.status) {
+            this.setStatus(unmarshalled.status);
+        }
+        if (unmarshalled.updatedAt) {
+            this.updatedAt=(unmarshalled.updatedAt);
+        }
+        if (unmarshalled.createdAt) {
+            this.createdAt=(unmarshalled.createdAt);
+        }
     };
 
     private setOrderItemsFromAny(items: Array<any>) {

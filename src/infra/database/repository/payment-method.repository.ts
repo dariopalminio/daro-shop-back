@@ -81,18 +81,18 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
     async getById(id: string, fieldsToExclude?: any): Promise<PaymentMethod> {
         const entryDoc: PaymentMethodDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<PaymentMethod> {
         if (fieldsToExclude) {
             const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+            const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
             return objCasted;
         }
         const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query);
-        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
         return objCasted;
     }
 
@@ -110,7 +110,7 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
 
     async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
         const docCreated: PaymentMethodDocument = await this.entityModel.create(paymentMethod);
-        const objCasted: PaymentMethod = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     };
 
@@ -132,7 +132,7 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
     castArrayDocToArrayDomainEntity(schemaDocArray: PaymentMethodDocument[]): PaymentMethod[] {
         let entitiesArray: PaymentMethod[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
-            JSON.parse(JSON.stringify(element))
+            new PaymentMethod(JSON.parse(JSON.stringify(element)))
         ));
         return entitiesArray;
     };

@@ -81,7 +81,7 @@ export class UserRepository implements IRepository<User> {
         }
         const userDoc: UserDocument = await this.userModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: User = JSON.parse(JSON.stringify(userDoc));
+        const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
@@ -89,11 +89,11 @@ export class UserRepository implements IRepository<User> {
     async getByQuery(query: any, fieldsToExclude?: any): Promise<User> {
         if (fieldsToExclude) {
             const userDoc: UserDocument =  await this.userModel.findOne(query, fieldsToExclude);
-            const objCasted: User = JSON.parse(JSON.stringify(userDoc));
+            const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
             return objCasted;
         }
         const userDoc: UserDocument =  await this.userModel.findOne(query);
-        const objCasted: User = JSON.parse(JSON.stringify(userDoc));
+        const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
         return objCasted;
     }
 
@@ -111,7 +111,8 @@ export class UserRepository implements IRepository<User> {
 
     async create(doc: User): Promise<User> {
         const docCreated: UserDocument = await this.userModel.create(doc);
-        const objCasted: User = JSON.parse(JSON.stringify(docCreated));
+        //const objCasted: User = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: User = new User(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     }
 
@@ -147,7 +148,7 @@ export class UserRepository implements IRepository<User> {
     castArrayDocToArrayDomainEntity(schemaDocArray: UserDocument[]): User[] {
         let entityArray: User[] = [];
         schemaDocArray.forEach(element => entityArray.push(
-            JSON.parse(JSON.stringify(element))
+            new User(JSON.parse(JSON.stringify(element)))
         ));
         return entityArray;
     };

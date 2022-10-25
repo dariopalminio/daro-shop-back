@@ -82,7 +82,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         }
         const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
@@ -90,11 +90,11 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     async getByQuery(query: any, fieldsToExclude?: any): Promise<ShippingPrice> {
         if (fieldsToExclude) {
             const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
-            const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
             return objCasted;
         }
         const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
-        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
         return objCasted;
     }
 
@@ -112,7 +112,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
 
     async create(doc: ShippingPrice): Promise<ShippingPrice> {
         const docCreated: ShippingPriceDocument = await this.shippingPriceModel.create(doc);
-        const objCasted: ShippingPrice = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     }
 
@@ -148,7 +148,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     castArrayDocToArrayDomainEntity(entityDocArray: ShippingPriceDocument[]): ShippingPrice[] {
         let entitiesArray: ShippingPrice[] = [];
         entityDocArray.forEach(element => entitiesArray.push(
-            JSON.parse(JSON.stringify(element))
+            new ShippingPrice(JSON.parse(JSON.stringify(element)))
         ));
         return entitiesArray;
     };

@@ -82,19 +82,18 @@ export class ProfileRepository implements IRepository<Profile> {
         }
         const profileDoc: ProfileDocument = await this.profileModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(profileDoc)));
         return objCasted;
-        //return this.conversorDocToCategory(catDoc);
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<Profile> {
         if (fieldsToExclude) {
             const profileDoc: ProfileDocument =  await this.profileModel.findOne(query, fieldsToExclude);
-            const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: Profile =  new Profile(JSON.parse(JSON.stringify(profileDoc)));
             return objCasted;
         }
         const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
-        const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
+        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(profileDoc)));
         return objCasted;
     }
 
@@ -112,7 +111,7 @@ export class ProfileRepository implements IRepository<Profile> {
 
     async create(doc: Profile): Promise<Profile> {
         const docCreated: ProfileDocument = await this.profileModel.create(doc);
-        const objCasted: Profile = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     }
 
@@ -148,7 +147,7 @@ export class ProfileRepository implements IRepository<Profile> {
     castArrayDocToUser(schemaDocArray: ProfileDocument[]): Profile[] {
         let entityArray: Profile[] = [];
         schemaDocArray.forEach(element => entityArray.push(
-            JSON.parse(JSON.stringify(element))
+            new Profile(JSON.parse(JSON.stringify(element)))
         ));
         return entityArray;
     };

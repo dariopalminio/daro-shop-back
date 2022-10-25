@@ -43,7 +43,9 @@ export class UserService implements IUserService<User> {
       verificationCode: 0,
     };
 
-    const u = await this.getByUserName(userName);
+    const usr: User = await this.getByUserName(userName);
+    ////(id: string,enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[], verified: boolean, verificationCode: string)
+    /*
     const u2 = new User();
 
     u2._id = u._id;
@@ -54,6 +56,8 @@ export class UserService implements IUserService<User> {
     u2.roles = u.roles;
     u2.verified = u.verified;
     return u2;
+    */
+    return usr;
   };
 
   async create(userRegisterDTO: User): Promise<User> {

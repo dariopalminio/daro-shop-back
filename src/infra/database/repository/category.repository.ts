@@ -86,18 +86,18 @@ export class CategoryRepository implements IRepository<Category> {
     async getById(id: string, fieldsToExclude?: any): Promise<Category> {
         const catDoc: CategoryDocument = await this.categoryModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: Category = JSON.parse(JSON.stringify(catDoc));
+        const objCasted: Category = new Category(JSON.parse(JSON.stringify(catDoc)));
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<Category> {
         if (fieldsToExclude) {
             const catDoc: CategoryDocument = await this.categoryModel.findOne(query, fieldsToExclude);
-            const objCasted: Category = JSON.parse(JSON.stringify(catDoc));
+            const objCasted: Category = new Category(JSON.parse(JSON.stringify(catDoc)));
             return objCasted;
         }
         const catDoc: CategoryDocument = await this.categoryModel.findOne(query);
-        const objCasted: Category = JSON.parse(JSON.stringify(catDoc));
+        const objCasted: Category = new Category(JSON.parse(JSON.stringify(catDoc)));
         return objCasted;
     }
 
@@ -115,7 +115,7 @@ export class CategoryRepository implements IRepository<Category> {
 
     async create(doc: Category): Promise<Category> {
         const docCreated: CategoryDocument = await this.categoryModel.create(doc);
-        const objCasted: Category = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Category = new Category(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     }
     
@@ -137,7 +137,7 @@ export class CategoryRepository implements IRepository<Category> {
     castArrayDocToArrayDomainEntity(schemaDocArray: CategoryDocument[]): Category[] {
         let domainEntityArray: Category[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(
-            JSON.parse(JSON.stringify(element))
+            new Category(JSON.parse(JSON.stringify(element)))
         ));
         return domainEntityArray;
     };

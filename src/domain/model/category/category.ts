@@ -15,25 +15,29 @@ export class Category extends Entity {
     description: string;
 
     public constructor();
-    public constructor(addrsAny: any); 
-    public constructor(name: string, description: string);
+    public constructor(unmarshalled: any);
+    public constructor(id: string, name: string, description: string);
     public constructor(...argumentsArray: any[]) {
-        super();
-        if (argumentsArray.length > 2) {
+        if (argumentsArray.length > 3) {
             throw new Error('Number of constructor arguments exceeded');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-        this.name = argumentsArray[0];
-        this.description = argumentsArray[1];
+            super(argumentsArray[0]); //id
+            this.name = argumentsArray[1];
+            this.description = argumentsArray[2];
         }
     };
 
-    public setFromAny(addrsAny: any) {
-        this.name = addrsAny.name;
-        this.description = addrsAny.description;
+    public setFromAny(unmarshalled: any) {
+        this.name = unmarshalled.name;
+        this.description = unmarshalled.description;
     };
 
 };

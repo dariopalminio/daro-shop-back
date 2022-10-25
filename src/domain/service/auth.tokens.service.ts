@@ -160,7 +160,7 @@ export class AuthTokensService implements IAuthTokensService {
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
 
     const payload: PayloadType = {
-      id: user._id,
+      id: user.getId(),
       typ: "Bearer",
       roles: user.roles,
       email_verified: user.verified,
@@ -204,7 +204,7 @@ export class AuthTokensService implements IAuthTokensService {
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User is not Admin!", { error: "Unauthorized!" });
 
     const payload: PayloadType = {
-      id: user._id,
+      id: user.getId(),
       typ: "Bearer",
       roles: user.roles,
       email_verified: user.verified,

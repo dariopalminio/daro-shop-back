@@ -24,56 +24,68 @@ export class Profile extends Entity {
     telephone: string;
     language: string;
     addresses: IAddress[];
-
+    createdAt?: Date;
+    updatedAt?: Date;
+    
     /**
     * Constructors 
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
-    public constructor(profileAny: any);
+    public constructor(unmarshalled: any);
     public constructor(
         userId: string, enable: boolean, userName: string, firstName: string, lastName: string, email: string, docType: string,
         document: string, telephone: string, language: string, addresses: IAddress[]
     );
     public constructor(...argumentsArray: any[]) {
-        super();
         if (argumentsArray.length > 11) {
             throw new Error('Number of constructor arguments exceeded.');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-            this.setUserId(argumentsArray[0]);
-            this.setEnable(argumentsArray[1]);
-            this.setUserName(argumentsArray[2]);
-            this.setFirstName(argumentsArray[3]);
-            this.setLastName(argumentsArray[4]);
-            this.setEmail(argumentsArray[5]);
-            this.setDocType(argumentsArray[6]);
-            this.setDocument(argumentsArray[7]);
-            this.setTelephone(argumentsArray[8]);
-            this.setLanguage(argumentsArray[9]);
-            this.setAddresses(argumentsArray[10]);
+            super(argumentsArray[0]); //id
+            this.setUserId(argumentsArray[1]);
+            this.setEnable(argumentsArray[2]);
+            this.setUserName(argumentsArray[3]);
+            this.setFirstName(argumentsArray[4]);
+            this.setLastName(argumentsArray[5]);
+            this.setEmail(argumentsArray[6]);
+            this.setDocType(argumentsArray[7]);
+            this.setDocument(argumentsArray[8]);
+            this.setTelephone(argumentsArray[9]);
+            this.setLanguage(argumentsArray[10]);
+            this.setAddresses(argumentsArray[11]);
         }
     };
 
     /**
-    * Set all attributes from variable can be of any type 'any'.
+    * Set all attributes from Unmarshalled variable can be of any type 'any'.
     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
     * @param profileAny any is used to tell TypeScript that a variable can be of any type
     */
-    public setFromAny(profileAny: any) {
-        this.setUserId(profileAny.userId);
-        this.setUserName(profileAny.userName);
-        this.setFirstName(profileAny.firstName);
-        this.setLastName(profileAny.lastName);
-        this.setEmail(profileAny.email);
-        this.setDocType(profileAny.docType);
-        this.setDocument(profileAny.document);
-        this.setTelephone(profileAny.telephone);
-        this.setLanguage(profileAny.language);
-        this.setAddresses(profileAny.addresses);
+    public setFromAny(unmarshalled: any) {
+        this.setUserId(unmarshalled.userId);
+        this.setUserName(unmarshalled.userName);
+        this.setFirstName(unmarshalled.firstName);
+        this.setLastName(unmarshalled.lastName);
+        this.setEmail(unmarshalled.email);
+        this.setDocType(unmarshalled.docType);
+        this.setDocument(unmarshalled.document);
+        this.setTelephone(unmarshalled.telephone);
+        this.setLanguage(unmarshalled.language);
+        this.setAddresses(unmarshalled.addresses);
+        if (unmarshalled.updatedAt) {
+            this.updatedAt=(unmarshalled.updatedAt);
+        }
+        if (unmarshalled.createdAt) {
+            this.createdAt=(unmarshalled.createdAt);
+        }
     };
 
     public setUserId(value: string) {

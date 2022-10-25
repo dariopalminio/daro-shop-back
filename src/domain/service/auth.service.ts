@@ -100,7 +100,7 @@ export class AuthService implements IAuthService {
     }
 
     const payload: PayloadType = {
-      id: userCreated._id,
+      id: userCreated.getId(),
       typ: "Bearer",
       roles: userCreated.roles,
       email_verified: userCreated.verified,
@@ -195,7 +195,7 @@ export class AuthService implements IAuthService {
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
     user.verified = true;
     user.verificationCode = discardVerificationCode; //verification code to invalidate future uses
-    const updatedOk: boolean = await this.userService.updateById(user._id, user);
+    const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
 
     if (!updatedOk) {
       console.log("Can not update email verified in data base for user:", user);
@@ -283,7 +283,7 @@ export class AuthService implements IAuthService {
       user.verificationCode = newVerificationCode;
       user.startVerificationCode = new Date();
 
-      const updatedOk: boolean = await this.userService.updateById(user._id, user);
+      const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
       if (!updatedOk) throw new Error(await this.i18n.translate('auth.ERROR.COULD_NOT_SAVE_VERIFICATION_CODE',));
 
       //send email with link and verification code
@@ -331,7 +331,7 @@ export class AuthService implements IAuthService {
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
     user.verificationCode = discardVerificationCode; //set verification code to invalidate future uses
     user.password = newPasswordEncrypted;
-    const updatedOk: boolean = await this.userService.updateById(user._id, user);
+    const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
 
     if (!updatedOk) {
       console.log("Can not to reset verification code in data base for user:", user);

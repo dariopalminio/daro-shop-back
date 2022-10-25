@@ -26,44 +26,49 @@ export class PaymentMethod extends Entity {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
-    public constructor(payMethodAny: any); 
-    public constructor(key: string, name: string, description: string, image: string, active: boolean, meta: any, updatedAt?: Date, createdAt?: Date);
+    public constructor(unmarshalled: any); 
+    public constructor(id: string, 
+        key: string, name: string, description: string, image: string, active: boolean, meta: any, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
-        super();
-        if (argumentsArray.length > 8) {
+        if (argumentsArray.length > 9) {
             throw new Error('Number of constructor arguments exceeded.');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-            this.key=(argumentsArray[0]);
-            this.name=(argumentsArray[1]);
-            this.description=(argumentsArray[2]);
-            this.image=(argumentsArray[3]);
-            this.active=(argumentsArray[4]);
-            this.meta=(argumentsArray[5]);
-            if (argumentsArray[6]) {
-                this.updatedAt=(argumentsArray[6]);
-            }
+            super(argumentsArray[0]); //id
+            this.key=(argumentsArray[1]);
+            this.name=(argumentsArray[21]);
+            this.description=(argumentsArray[3]);
+            this.image=(argumentsArray[4]);
+            this.active=(argumentsArray[5]);
+            this.meta=(argumentsArray[6]);
             if (argumentsArray[7]) {
-                this.createdAt=(argumentsArray[7]);
+                this.updatedAt=(argumentsArray[7]);
+            }
+            if (argumentsArray[8]) {
+                this.createdAt=(argumentsArray[8]);
             }
         }
     };
 
-    public setFromAny(payMethodAny: any) {
-        this.key=(payMethodAny.key);
-        this.name=(payMethodAny.name);
-        this.description=(payMethodAny.description);
-        this.image=(payMethodAny.image);
-        this.active=(payMethodAny.active);
-        this.meta=(payMethodAny.meta);
-        if (payMethodAny.updatedAt) {
-            this.createdAt=(payMethodAny.updatedAt);
+    public setFromAny(unmarshalled: any) {
+        this.key=(unmarshalled.key);
+        this.name=(unmarshalled.name);
+        this.description=(unmarshalled.description);
+        this.image=(unmarshalled.image);
+        this.active=(unmarshalled.active);
+        this.meta=(unmarshalled.meta);
+        if (unmarshalled.updatedAt) {
+            this.createdAt=(unmarshalled.updatedAt);
         }
-        if (payMethodAny.createdAt) {
-            this.createdAt=(payMethodAny.createdAt);
+        if (unmarshalled.createdAt) {
+            this.createdAt=(unmarshalled.createdAt);
         }
     };
 

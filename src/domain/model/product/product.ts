@@ -35,7 +35,6 @@ export class Product extends Entity {
     active: boolean;
     reservations: Reservation[];
     sales: Sale[];
-
     createdAt?: Date;
     updatedAt?: Date;
 
@@ -44,78 +43,89 @@ export class Product extends Entity {
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
-    public constructor(productAny: any); 
-    public constructor(sku: string, barcode: string, name: string, description: string, images: string[], category: string, type: string, brand: string,
+    public constructor(unmarshalled: any); 
+    public constructor(id: string,
+        sku: string, barcode: string, name: string, description: string, images: string[], category: string, type: string, brand: string,
         color: string, model: string, gender: string, size: string, netCost: number, ivaAmountOnCost: number, grossCost: number, netPrice: number,
         ivaAmountOnPrice: number, grossPrice: number, stock: number, active: boolean);
     public constructor(...argumentsArray: any[]) {
-        super();
-        if (argumentsArray.length > 20) {
+        if (argumentsArray.length > 21) {
             throw new Error('Number of constructor arguments exceeded.');
         }
+        if (argumentsArray.length === 0) {
+            super();
+        }
         if (argumentsArray.length === 1) {
+            super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-            this.setSku(argumentsArray[0]);
-            this.setBarcode(argumentsArray[1]);
-            this.setName(argumentsArray[2]);
-            this.setDescription(argumentsArray[3]);
-            this.setImages(argumentsArray[4]);
-            this.setCategory(argumentsArray[5]);
-            this.setType(argumentsArray[6]);
-            this.setBrand(argumentsArray[7]);
-            this.setColor(argumentsArray[8]);
-            this.setModel(argumentsArray[9]);
-            this.setGender(argumentsArray[10]);
-            this.setSize(argumentsArray[11]);
-            this.setNetCost(argumentsArray[12]);
-            this.setIvaAmountOnCost(argumentsArray[13]);
-            this.setGrossCost(argumentsArray[14]);
-            this.setNetPrice(argumentsArray[15]);
-            this.setIvaAmountOnPrice(argumentsArray[16]);
-            this.setGrossPrice(argumentsArray[17]);
-            this.setStock(argumentsArray[18]);
-            this.setActive(argumentsArray[19]);
+            super(argumentsArray[0]);
+            this.setSku(argumentsArray[1]);
+            this.setBarcode(argumentsArray[2]);
+            this.setName(argumentsArray[3]);
+            this.setDescription(argumentsArray[4]);
+            this.setImages(argumentsArray[5]);
+            this.setCategory(argumentsArray[6]);
+            this.setType(argumentsArray[7]);
+            this.setBrand(argumentsArray[8]);
+            this.setColor(argumentsArray[9]);
+            this.setModel(argumentsArray[10]);
+            this.setGender(argumentsArray[11]);
+            this.setSize(argumentsArray[12]);
+            this.setNetCost(argumentsArray[13]);
+            this.setIvaAmountOnCost(argumentsArray[14]);
+            this.setGrossCost(argumentsArray[15]);
+            this.setNetPrice(argumentsArray[16]);
+            this.setIvaAmountOnPrice(argumentsArray[17]);
+            this.setGrossPrice(argumentsArray[18]);
+            this.setStock(argumentsArray[19]);
+            this.setActive(argumentsArray[20]);
             this.reservations = [];
             this.sales = [];
         }
     };
 
     /**
-     * Set all attributes from variable can be of any type 'any'.
+     * Set all attributes from Unmarshalled variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
-     * @param prod any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
-    public setFromAny(prod: any) {
-        this.setSku(prod.sku);
-        this.setBarcode(prod.barcode);
-        this.setName(prod.name);
-        this.setDescription(prod.description);
-        this.setImages(prod.images);
-        this.setCategory(prod.category);
-        this.setType(prod.type);
-        this.setBrand(prod.brand);
-        this.setColor(prod.color);
-        this.setModel(prod.model);
-        this.setGender(prod.gender);
-        this.setSize(prod.size);
-        this.setNetCost(prod.netCost);
-        this.setIvaAmountOnCost(prod.ivaAmountOnCost);
-        this.setGrossCost(prod.grossCost);
-        this.setNetPrice(prod.netPrice);
-        this.setIvaAmountOnPrice(prod.ivaAmountOnPrice);
-        this.setGrossPrice(prod.grossPrice);
-        this.setStock(prod.stock);
-        if (prod.active)
-            this.setActive(prod.active);
+    public setFromAny(unmarshalled: any) {
+        this.setSku(unmarshalled.sku);
+        this.setBarcode(unmarshalled.barcode);
+        this.setName(unmarshalled.name);
+        this.setDescription(unmarshalled.description);
+        this.setImages(unmarshalled.images);
+        this.setCategory(unmarshalled.category);
+        this.setType(unmarshalled.type);
+        this.setBrand(unmarshalled.brand);
+        this.setColor(unmarshalled.color);
+        this.setModel(unmarshalled.model);
+        this.setGender(unmarshalled.gender);
+        this.setSize(unmarshalled.size);
+        this.setNetCost(unmarshalled.netCost);
+        this.setIvaAmountOnCost(unmarshalled.ivaAmountOnCost);
+        this.setGrossCost(unmarshalled.grossCost);
+        this.setNetPrice(unmarshalled.netPrice);
+        this.setIvaAmountOnPrice(unmarshalled.ivaAmountOnPrice);
+        this.setGrossPrice(unmarshalled.grossPrice);
+        this.setStock(unmarshalled.stock);
+        if (unmarshalled.active)
+            this.setActive(unmarshalled.active);
         else this.active = true;
-        if (prod.reservations)
-            this.setReservations(prod.reservations);
+        if (unmarshalled.reservations)
+            this.setReservations(unmarshalled.reservations);
         else this.reservations = [];
-        if (prod.sales)
-            this.setSales(prod.sales);
+        if (unmarshalled.sales)
+            this.setSales(unmarshalled.sales);
         else this.sales = [];
+        if (unmarshalled.updatedAt) {
+            this.updatedAt=(unmarshalled.updatedAt);
+        }
+        if (unmarshalled.createdAt) {
+            this.createdAt=(unmarshalled.createdAt);
+        }
     };
 
     /**

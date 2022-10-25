@@ -107,7 +107,7 @@ export class ProductRepository implements IRepository<Product> {
             return objCasted;
         }
         const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
-        const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
+        const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
         return objCasted;
     };
 
@@ -115,12 +115,12 @@ export class ProductRepository implements IRepository<Product> {
 
         if (fieldsToExclude) {
             const prodDoc: ProductDocument = await this.productModel.findOne(query, fieldsToExclude);
-            const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
+            const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
             return objCasted;
         }
 
         const prodDoc: ProductDocument = await this.productModel.findOne(query);
-        const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
+        const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
         return objCasted;
     }
 
@@ -138,7 +138,7 @@ export class ProductRepository implements IRepository<Product> {
 
     async create(prod: Product): Promise<Product> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
-        const objCasted: Product = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Product = new Product(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     }
     
@@ -160,7 +160,7 @@ export class ProductRepository implements IRepository<Product> {
     castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): Product[] {
         let domainEntityArray: Product[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(
-            JSON.parse(JSON.stringify(element))
+            new Product(JSON.parse(JSON.stringify(element)))
         ));
         return domainEntityArray;
     };

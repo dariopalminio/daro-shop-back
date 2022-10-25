@@ -81,18 +81,18 @@ export class OrderRepository implements IRepository<Order> {
     async getById(id: string, fieldsToExclude?: any): Promise<Order> {
         const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<Order> {
         if (fieldsToExclude) {
             const entryDoc: OrderDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
+            const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
             return objCasted;
         }
         const entryDoc: OrderDocument = await this.entityModel.findOne(query);
-        const objCasted: Order = JSON.parse(JSON.stringify(entryDoc));
+        const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
         return objCasted;
     }
 
@@ -110,7 +110,7 @@ export class OrderRepository implements IRepository<Order> {
 
     async create(order: Order): Promise<Order> {
         const docCreated: OrderDocument = await this.entityModel.create(order);
-        const objCasted: Order = JSON.parse(JSON.stringify(docCreated));
+        const objCasted: Order = new Order(JSON.parse(JSON.stringify(docCreated)));
         return objCasted;
     };
 
@@ -132,7 +132,7 @@ export class OrderRepository implements IRepository<Order> {
     castArrayDocToArrayDomainEntity(schemaDocArray: OrderDocument[]): Order[] {
         let entitiesArray: Order[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
-            JSON.parse(JSON.stringify(element))
+            new Order(JSON.parse(JSON.stringify(element)))
         ));
         return entitiesArray;
     };
