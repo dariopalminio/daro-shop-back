@@ -70,48 +70,48 @@ export class OrderService implements IOrderService<Order> {
    */
   async initialize(orderParam: Order): Promise<Order> {
 
-    let newObj: Order = new Order(orderParam);
-    newObj.setClient(orderParam.getClient());
-    newObj.setOrderItems([]);
-    newObj.setCount(0);
-    newObj.setIncludesShipping(orderParam.getIncludesShipping());
-    newObj.setShippingAddress(orderParam.getShippingAddress());
-    newObj.setSubTotal(0);
-    newObj.setShippingPrice(0);
-    newObj.setTotal(0);
+    let ordenNew: Order = new Order(orderParam);
+    ordenNew.setClient(orderParam.getClient());
+    ordenNew.setOrderItems([]);
+    ordenNew.setCount(0);
+    ordenNew.setIncludesShipping(orderParam.getIncludesShipping());
+    ordenNew.setShippingAddress(orderParam.getShippingAddress());
+    ordenNew.setSubTotal(0);
+    ordenNew.setShippingPrice(0);
+    ordenNew.setTotal(0);
 
     //Calculate amounts
     for (let i = 0; i < orderParam.getOrderItems().length; i++) {
       const item: OrderItem = orderParam.getOrderItems()[i];
-      const product: Product = await this.productService.getById(item.productId);
-      if (orderParam.getOrderItems()[i].quantity > product.getStock())
-        throw new DomainError(ResponseCode.BAD_REQUEST, 'There is no stock of the product', { productId: item.productId });
-      const newAmount: number = product.getGrossPrice() * item.quantity;
-      const newItem: OrderItem = new OrderItem(item.productId, item.imageUrl, product.getName(), product.getGrossPrice(), item.quantity, newAmount);
-      newObj.addNewItem(newItem);
+      const product: Product = await this.productService.getById(item.getProductId());
+      if (orderParam.getOrderItems()[i].getQuantity() > product.getStock())
+        throw new DomainError(ResponseCode.BAD_REQUEST, 'There is no stock of the product', { productId: item.getProductId() });
+      const newAmount: number = product.getGrossPrice() * item.getQuantity();
+      const newItem: OrderItem = new OrderItem(item.getProductId(), item.getImageUrl(), product.getName(), product.getGrossPrice(), item.getQuantity(), newAmount);
+      ordenNew.addNewItem(newItem);
     }
 
     //Calculate subtotals
     let subTotalVal: number = 0;
-    for (let i = 0; i < newObj.getOrderItems().length; i++) {
-      subTotalVal += Number(newObj.getOrderItems()[i].amount);
+    for (let i = 0; i < ordenNew.getOrderItems().length; i++) {
+      subTotalVal += Number(ordenNew.getOrderItems()[i].getAmount());
     }
-    newObj.setSubTotal(Number(subTotalVal.toFixed(2)));
+    ordenNew.setSubTotal(Number(subTotalVal.toFixed(2)));
 
     //Calculate total with shipping price
-    newObj.setShippingPrice(0);
-    if (newObj.getIncludesShipping()) {
-      const pricing: any = await this.shippingPriceService.getPriceByAddress(newObj.getShippingAddress());
+    ordenNew.setShippingPrice(0);
+    if (ordenNew.getIncludesShipping()) {
+      const pricing: any = await this.shippingPriceService.getPriceByAddress(ordenNew.getShippingAddress());
       console.log("pricing:", pricing);
       if (!pricing || !pricing.price)
-        throw new DomainError(ResponseCode.BAD_REQUEST, 'No price found for delivery to the indicated address', { address: newObj.getShippingAddress() });
-      newObj.setShippingPrice(Number(pricing.price));
+        throw new DomainError(ResponseCode.BAD_REQUEST, 'No price found for delivery to the indicated address', { address: ordenNew.getShippingAddress() });
+      ordenNew.setShippingPrice(Number(pricing.price));
 
     }
-    newObj.setTotal(Number((subTotalVal + 0.0 + newObj.getShippingPrice()).toFixed(2)));
+    ordenNew.setTotal(Number((subTotalVal + 0.0 + ordenNew.getShippingPrice()).toFixed(2)));
 
     try {
-      const entityNew: Order = await this.orderRepository.create(newObj);
+      const entityNew: Order = await this.orderRepository.create(ordenNew);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -133,15 +133,19 @@ export class OrderService implements IOrderService<Order> {
 
       //validate that the stock is sufficient to full order
       for (let i = 0; i < order.getOrderItems().length; i++) {
-        let product: Product = await this.productService.getById(order.getOrderItems()[i].productId);
-        if (order.getOrderItems()[i].quantity > product.getStock()) {
+        const productId: string = order.getOrderItems()[i].getProductId();
+        let product: Product = await this.productService.getById(productId);
+        const qty: number = order.getOrderItems()[i].getQuantity();
+        if (qty > product.getStock()) {
           throw new DomainError(ResponseCode.BAD_REQUEST, `Insufficient stock for order ${orderId}.`, {});
         }
       }
 
       //add reservations in products indicated in order
       for (let i = 0; i < order.getOrderItems().length; i++) {
-        await this.productService.addStockReservation(order.getOrderItems()[i].productId, orderId, order.getOrderItems()[i].quantity);
+        const productId: string = order.getOrderItems()[i].getProductId();
+        const qty: number = order.getOrderItems()[i].getQuantity();
+        await this.productService.addStockReservation(productId, orderId, qty);
       }
 
       //change order status
@@ -160,7 +164,8 @@ export class OrderService implements IOrderService<Order> {
 
       //revert reservations in products indicated in order
       for (let i = 0; i < order.getOrderItems().length; i++) {
-        await this.productService.revertStockReservation(order.getOrderItems()[i].productId, orderId);
+        const productId: string = order.getOrderItems()[i].getProductId();
+        await this.productService.revertStockReservation(productId, orderId);
       }
 
       //change order status
@@ -178,7 +183,8 @@ export class OrderService implements IOrderService<Order> {
       const order: Order = await this.getById(orderId);
 
       for (let i = 0; i < order.getOrderItems().length; i++) {
-        await this.productService.moveReservationToSale(order.getOrderItems()[i].productId, orderId);
+        const productId: string = order.getOrderItems()[i].getProductId();
+        await this.productService.moveReservationToSale(productId, orderId);
       }
 
       const paid: boolean = await this.update({ _id: orderId }, { status: OrderStatus.PAID });

@@ -93,7 +93,6 @@ export class Order extends Entity {
         this.setTotal(unmarshalled.total);
         this.setOrderItemsFromAny(unmarshalled.orderItems);
         this.setCount(unmarshalled.count);
-        if (isNaN(unmarshalled.count)) throw new Error('Casting error: quantity field is not a number!');
         if (unmarshalled.status) {
             this.setStatus(unmarshalled.status);
         }
@@ -115,14 +114,7 @@ export class Order extends Entity {
         }
         let newItemsArray: OrderItem[] = [];
         for (let i = 0; i < items.length; i++) {
-            const orderItem: OrderItem = new OrderItem(
-                items[i].productId, 
-                items[i].imageUrl, 
-                items[i].name, 
-                items[i].grossPrice, 
-                items[i].quantity, 
-                items[i].amount
-                );
+            const orderItem: OrderItem = new OrderItem(items[i]); //unmarshalle to marshalled
             newItemsArray.push(orderItem);
         }
         this.orderItems = newItemsArray;
@@ -169,84 +161,84 @@ export class Order extends Entity {
      */
     public setClient(value: Client) {
         if (value === undefined || value === null)
-            throw new Error('Field client has invalid format because is undefined or null!');
+            throw new Error('Field client in order has invalid format because is undefined or null!');
         this.client = value;
     };
 
     public setOrderItems(value: OrderItem[]) {
         if (value === undefined || value === null)
-            throw new Error('Field orderItems has invalid format because is undefined or null!');
+            throw new Error('Field orderItems in order has invalid format because is undefined or null!');
         if (!Array.isArray(value)) {
-            throw new Error('Field orderItems is not an array.');
+            throw new Error('Field orderItems in order is not an array.');
         }
         this.orderItems = value;
     };
 
     public setCount(value: number) {
         if (value === undefined)
-            throw new Error('Field count has invalid format because is undefined or null!');
+            throw new Error('Field count in order has invalid format because is undefined or null!');
         if (Number.isNaN(value) || value < 0)
-            throw new Error('Field count has invalid format because is is not number type or is minor that zero!');
+            throw new Error('Field count in order has invalid format because is is not number type or is minor that zero!');
         this.count = value;
     };
 
     public setIncludesShipping(value: boolean) {
         if (value === undefined)
-            throw new Error('Field includesShipping has invalid format because is undefined or null!');
+            throw new Error('Field includesShipping in order has invalid format because is undefined or null!');
         if (typeof value !== "boolean")
-            throw new Error('Field includesShipping has invalid format because is not boolean type!');
+            throw new Error('Field includesShipping in order has invalid format because is not boolean type!');
         this.includesShipping = value;
     };
 
     public setShippingAddress(value: Address) {
         if (value === undefined || value === null)
-            throw new Error('Field shippingAddress has invalid format because is undefined or null!');
+            throw new Error('Field shippingAddress in order has invalid format because is undefined or null!');
         this.shippingAddress = value;
     };
 
     public setSubTotal(value: number) {
         if (value === undefined)
-            throw new Error('Field subTotal has invalid format because is undefined or null!');
+            throw new Error('Field subTotal in order has invalid format because is undefined or null!');
         if (Number.isNaN(value) || value < 0)
-            throw new Error('Field subTotal has invalid format because is is not number type or is minor that zero!');
+            throw new Error('Field subTotal in order has invalid format because is is not number type or is minor that zero!');
         this.subTotal = value;
     };
 
     public setShippingPrice(value: number) {
         if (value === undefined)
-            throw new Error('Field shippingPrice has invalid format because is undefined or null!');
+            throw new Error('Field shippingPrice in order has invalid format because is undefined or null!');
         if (Number.isNaN(value) || value < 0)
-            throw new Error('Field shippingPrice has invalid format because is is not number type or is minor that zero!');
+            throw new Error('Field shippingPrice in order has invalid format because is is not number type or is minor that zero!');
         this.shippingPrice = value;
     };
 
     public setTotal(value: number) {
         if (value === undefined)
-            throw new Error('Field total has invalid format because is undefined or null!');
+            throw new Error('Field total in order has invalid format because is undefined or null!');
         if (Number.isNaN(value) || value < 0)
-            throw new Error('Field total has invalid format because is is not number type or is minor that zero!');
+            throw new Error('Field total in order has invalid format because is is not number type or is minor that zero!');
         this.total = value;
     };
 
     public setStatus(value: string) {
         if (value === undefined || (typeof value !== 'string'))
-            throw new Error('Field status has invalid format because is undefined or is not string!');
+            throw new Error('Field status in order has invalid format because is undefined or is not string!');
         this.status = value;
     };
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt in order has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
 
     public addNewItem(newItem: OrderItem) {
         this.orderItems.push(newItem);
-        this.increaseCount(newItem.quantity);
+        this.increaseCount(newItem.getQuantity());
     };
 
     public increaseCount(quantity: number) {
-        if (quantity < 0) throw new Error('The quantity to increase count is not positive.');
+        if (quantity < 0) throw new Error('The quantity to increase count in order is not positive.');
         this.count += quantity;
     };
 
