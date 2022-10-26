@@ -213,15 +213,4 @@ export class ProductService implements IProductService<Product> {
     return updated;
   }
 
-  /**
-   * Factory method
-   * @param dto dto any object
-   * @returns  Product object instance
-   */
-  makeEntityFromAny(dto: any): Product {
-    let product: Product = new Product();
-    product.setFromAny(dto);
-    return product;
-  };
-
 };

@@ -68,7 +68,7 @@ export class AuthTokensService implements IAuthTokensService {
       scope: "profile email"
     };
 
-    const privateKEY: string = this.getPrivateKey();
+    const privateKEY: string = this._getPrivateKey();
 
     const issuer = 'Dario Palminio';
     const subject = payload.id;
@@ -105,7 +105,7 @@ export class AuthTokensService implements IAuthTokensService {
   * Create the PEM string base64 decode with auth public key
   * @returns 
   */
-  private getPrivateKey(): string {
+  private _getPrivateKey(): string {
     if (!this.globalConfig.get<string>('AUTH_PRIVATE_KEY') || this.globalConfig.get<string>('AUTH_PRIVATE_KEY') === '')
       throw Error("The public key is wrong!");
     let pem = '';
@@ -150,9 +150,7 @@ export class AuthTokensService implements IAuthTokensService {
     if (!user)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. User not found!" });
 
-      console.log("login-->loginForm.password:", loginForm.password);
-      console.log("login--> user.password:",  user.password);
-    const validPassword = await bcrypt.compare(loginForm.password, user.password);
+    const validPassword = await bcrypt.compare(loginForm.password, user.getPassword());
 
     console.log("login-->validPassword:", validPassword);
 
@@ -162,12 +160,12 @@ export class AuthTokensService implements IAuthTokensService {
     const payload: PayloadType = {
       id: user.getId(),
       typ: "Bearer",
-      roles: user.roles,
-      email_verified: user.verified,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userName: user.userName,
-      email: user.email
+      roles: user.getRoles(),
+      email_verified: user.getVerified(),
+      firstName: user.getFirstName(),
+      lastName: user.getLastName(),
+      userName: user.getUserName(),
+      email: user.getEmail()
     };
 
     const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
@@ -195,23 +193,23 @@ export class AuthTokensService implements IAuthTokensService {
     if (!user)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. User not found!" });
 
-    const validPassword = await bcrypt.compare(body.password, user.password);
+    const validPassword = await bcrypt.compare(body.password, user.getPassword());
 
     if (!validPassword)
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
 
-    if (!user.roles.includes(RolesEnum.ADMIN))
+    if (!user.hasRole(RolesEnum.ADMIN))
       throw new DomainError(ResponseCode.UNAUTHORIZED, "User is not Admin!", { error: "Unauthorized!" });
 
     const payload: PayloadType = {
       id: user.getId(),
       typ: "Bearer",
-      roles: user.roles,
-      email_verified: user.verified,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userName: user.userName,
-      email: user.email
+      roles: user.getRoles(),
+      email_verified: user.getVerified(),
+      firstName: user.getFirstName(),
+      lastName: user.getLastName(),
+      userName: user.getUserName(),
+      email: user.getEmail()
     };
 
     const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);

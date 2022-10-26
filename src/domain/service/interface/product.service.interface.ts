@@ -22,7 +22,6 @@ export interface IProductService<T> extends IPersistentAggregateService<T>{
     addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean>;
     revertStockReservation(productId: string, orderId: string): Promise<boolean>;
     moveReservationToSale(productId: string, orderId: string): Promise<boolean>;
-    makeEntityFromAny(dto: any): Product;
 };
 
 

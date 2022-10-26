@@ -15,5 +15,5 @@ export interface IOrderService<T> extends IPersistentAggregateService<T> {
     confirm(orderId: string): Promise<boolean>;
     abort(orderId: string): Promise<boolean>;
     completePayment(orderId: string): Promise<boolean>;
-    makeEntityFromAny(dto: any): Order;
+    
 };

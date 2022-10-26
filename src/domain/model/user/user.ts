@@ -1,5 +1,6 @@
 import { Entity } from '../entity';
 
+export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
 /**
  * User domain object as Entity
  * 
@@ -12,18 +13,18 @@ import { Entity } from '../entity';
  */
 export class User extends Entity {
 
-    enable: boolean;
-    userName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    roles: string[];
-    verified: boolean;
-    verificationCode: string;
-    startVerificationCode: Date;
-    updatedAt?: Date;
-    createdAt?: Date;
+    protected enable: boolean;
+    protected userName: string;
+    protected firstName: string;
+    protected lastName: string;
+    protected email: string;
+    protected password: string;
+    protected roles: string[];
+    protected verified: boolean;
+    protected verificationCode: string;
+    protected startVerificationCode: Date;
+    protected updatedAt?: Date;
+    protected createdAt?: Date;
     
     /**
     * Constructors 
@@ -83,7 +84,7 @@ export class User extends Entity {
         else this.verified = false;
         if (unmarshalled.verificationCode)
             this.setVerificationCode(unmarshalled.verificationCode);
-        else this.verificationCode = 'none$none.none-none*none';
+        else this.verificationCode = INVALID_VERIFICATION_CODE;
         if (unmarshalled.enable)
             this.setEnable(unmarshalled.enable);
         else this.enable = false;
@@ -201,5 +202,58 @@ export class User extends Entity {
         throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
+
+    public getEnable(): boolean {
+        return this.enable;
+    };
+
+    public getUserName(): string {
+        return this.userName;
+    };
+
+    public getFirstName(): string {
+        return this.firstName;
+    };
+
+    public getLastName(): string {
+        return this.lastName;
+    };
+
+    public getPassword(): string {
+        return this.password;
+    };
+
+    public getEmail(): string {
+        return this.email;
+    };
+
+    public getRoles(): string[] {
+        return this.roles;
+    };
+
+    public getVerified(): boolean {
+        return this.verified;
+    };
+
+    public getVerificationCode(): string {
+        return this.verificationCode;
+    };
+
+    public getStartVerificationCode(): Date {
+        return this.startVerificationCode;
+    };
+
+    public getUpdatedAt(): Date {
+        return this.updatedAt;
+    };
+    
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    };
+
+    public hasRole(rol: string): boolean {
+        return this.roles.includes(rol);
+    };
+
 
 };

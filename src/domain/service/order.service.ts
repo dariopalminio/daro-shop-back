@@ -231,15 +231,4 @@ export class OrderService implements IOrderService<Order> {
     return await this.orderRepository.hasByQuery(query);
   };
 
-  /**
-   * Factory method
-   * @param dto dto any object
-   * @returns  Order object instance
-   */
-  makeEntityFromAny(dto: any): Order {
-    let order: Order = new Order();
-    order.setFromAny(dto);
-    return order;
-  };
-
 };

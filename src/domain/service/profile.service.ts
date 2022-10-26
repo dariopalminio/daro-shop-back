@@ -105,15 +105,4 @@ export class ProfileService implements IProfileService<Profile> {
     return await this.profileRepository.hasByQuery(query);
   };
 
-    /**
-   * Factory method
-   * @param dto dto any object
-   * @returns  profile object instance
-   */
-     makeEntityFromAny(dto: any): Profile {
-      let entity: Profile = new Profile();
-      entity.setFromAny(dto);
-      return entity;
-    };
-
 };

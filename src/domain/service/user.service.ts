@@ -3,6 +3,9 @@ import { IUserService } from '../service/interface/user.service.interface';
 import { User } from 'src/domain/model/user/user';
 import { IRepository } from '../infra-interface/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
+import { generateToken } from '../helper/token.helper';
+import { RolesEnum } from '../model/auth/reles.enum';
+import { ResponseCode } from '../model/service/response.code.enum';
 
 /**
  * User Service
@@ -42,48 +45,35 @@ export class UserService implements IUserService<User> {
       password: 0,
       verificationCode: 0,
     };
-
     const usr: User = await this.getByUserName(userName);
-    ////(id: string,enable: boolean, userName: string, firstName: string, lastName: string, email: string, password: string, roles: string[], verified: boolean, verificationCode: string)
-    /*
-    const u2 = new User();
-
-    u2._id = u._id;
-    u2.firstName = u.firstName;
-    u2.lastName = u.lastName;
-    u2.email = u.email;
-    u2.userName = u.userName;
-    u2.roles = u.roles;
-    u2.verified = u.verified;
-    return u2;
-    */
     return usr;
   };
 
-  async create(userRegisterDTO: User): Promise<User> {
+  async create(userRegister: User): Promise<User> {
     try {
-      let newUser: User = new User();
-      newUser.userName = userRegisterDTO.userName;
-      newUser.email = userRegisterDTO.email;
-      newUser.firstName = userRegisterDTO.firstName;
-      newUser.lastName = userRegisterDTO.lastName;
-      newUser.password = userRegisterDTO.password;
-      newUser.roles = userRegisterDTO.roles;
-      newUser.verified = false;
-      newUser.enable = true;
-      newUser.verificationCode = "";
+      userRegister.setVerified(false);
+      userRegister.setEnable(true);
+      userRegister.setVerificationCode(generateToken());
 
-      const userNew: User = await this.userRepository.create(newUser);
+      if (this._areRolesInvalid(userRegister.getRoles())) {
+        throw new Error('There is some invalid role!');
+      };
+
+    } catch (error) {
+      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
+    }
+    try {
+      const userNew: User = await this.userRepository.create(userRegister);
       return userNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DomainError(409, error.message, error);
+          throw new DomainError(ResponseCode.CONFLICT, error.message, error);
         default:
           //Internal server error
-          throw new DomainError(500, error.message, error);
+          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
       }
     }
   };
@@ -122,15 +112,16 @@ export class UserService implements IUserService<User> {
     return await this.userRepository.hasByQuery(query);
   };
 
-  /**
-   * Factory method
-   * @param dto dto any object
-   * @returns  user object instance
-   */
-   makeEntityFromAny(dto: any): User {
-    let user: User = new User();
-    user.setFromAny(dto);
-    return user;
+  private _areRolesInvalid(roles: string[]): boolean {
+    let valid: boolean = false;
+    let i = 0;
+    do {
+      if (!Object.keys(RolesEnum).includes(roles[i].toUpperCase())) {
+        valid = true;
+      }
+      i += 1;
+    } while ((i < roles.length) && (valid === false));
+    return valid;
   };
 
 };

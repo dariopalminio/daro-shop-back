@@ -14,5 +14,4 @@ import { IPersistentAggregateService } from './persistent.aggregate.interface';
 export interface IProfileService<T> extends IPersistentAggregateService<T> {
     getByUserName(userName: string): Promise<Profile>;
     updateProfile(userProfileDTO: any): Promise<boolean>;
-    makeEntityFromAny(dto: any): Profile;
 };

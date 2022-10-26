@@ -74,12 +74,14 @@ export class AuthService implements IAuthService {
 
     // Create new user in user database
     let newObj: User = new User();
-    newObj.userName = userRegisterData.email; //userName is email
-    newObj.firstName = userRegisterData.firstName;
-    newObj.lastName = userRegisterData.lastName;
-    newObj.email = userRegisterData.email;
-    newObj.password = passwordCrypted;
-    newObj.roles = [RolesEnum.USER];
+    newObj.setUserName(userRegisterData.email); //userName is email
+    newObj.setFirstName(userRegisterData.firstName);
+    newObj.setLastName(userRegisterData.lastName);
+    newObj.setEmail(userRegisterData.email);
+    newObj.setPassword(passwordCrypted);
+    newObj.setRoles([RolesEnum.USER]);
+    newObj.setVerified(false);
+    newObj.setEnable(true);
 
     let userNew: User;
     try {
@@ -102,12 +104,12 @@ export class AuthService implements IAuthService {
     const payload: PayloadType = {
       id: userCreated.getId(),
       typ: "Bearer",
-      roles: userCreated.roles,
-      email_verified: userCreated.verified,
-      firstName: userCreated.firstName,
-      lastName: userCreated.lastName,
-      userName: userCreated.userName,
-      email: userCreated.email
+      roles: userCreated.getRoles(),
+      email_verified: userCreated.getVerified(),
+      firstName: userCreated.getFirstName(),
+      lastName: userCreated.getLastName(),
+      userName: userCreated.getUserName(),
+      email: userCreated.getEmail()
     };
 
     const tokens: TokensType = this.authTokensService.createTokens(payload, 86400, 86400 * 2);
@@ -193,8 +195,8 @@ export class AuthService implements IAuthService {
 
     //Update in database
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
-    user.verified = true;
-    user.verificationCode = discardVerificationCode; //verification code to invalidate future uses
+    user.setVerified(true);
+    user.setVerificationCode(discardVerificationCode); //verification code to invalidate future uses
     const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
 
     if (!updatedOk) {
@@ -204,7 +206,7 @@ export class AuthService implements IAuthService {
     //Notificate to user
     let notificated: any;
     try {
-      notificated = this.sendSuccessfulEmailConfirm(user.firstName, user.email, lang);
+      notificated = this.sendSuccessfulEmailConfirm(user.getFirstName(), user.getEmail(), lang);
     } catch (error) {
       //Could not be notified about confirmation of account 
       notificated = error;
@@ -280,8 +282,8 @@ export class AuthService implements IAuthService {
     };
 
     try {
-      user.verificationCode = newVerificationCode;
-      user.startVerificationCode = new Date();
+      user.setVerificationCode(newVerificationCode);
+      user.setStartVerificationCode(new Date());
 
       const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
       if (!updatedOk) throw new Error(await this.i18n.translate('auth.ERROR.COULD_NOT_SAVE_VERIFICATION_CODE',));
@@ -329,8 +331,8 @@ export class AuthService implements IAuthService {
 
     //Update in database
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
-    user.verificationCode = discardVerificationCode; //set verification code to invalidate future uses
-    user.password = newPasswordEncrypted;
+    user.setVerificationCode(discardVerificationCode); //set verification code to invalidate future uses
+    user.setPassword(newPasswordEncrypted);
     const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
 
     if (!updatedOk) {
@@ -339,7 +341,7 @@ export class AuthService implements IAuthService {
 
     //Notificate to user
     try {
-      this.sendSuccessfulRecoveryEmail(user.firstName, user.email, lang);
+      this.sendSuccessfulRecoveryEmail(user.getFirstName(), user.getEmail(), lang);
     } catch (error) {
       //Could not be notified about changed password 
       console.log(error);
@@ -403,7 +405,7 @@ export class AuthService implements IAuthService {
     }
 
     //Validate if expired time
-    const dateOfProcessStarted: Date = new Date(user.startVerificationCode);
+    const dateOfProcessStarted: Date = new Date(user.getStartVerificationCode());
     const expirationDaysLimit: number = this.globalConfig.get<number>('EXPIRATION_DAYS_LIMIT');
 
     if (this.isDateExpired(dateOfProcessStarted, expirationDaysLimit)) {
