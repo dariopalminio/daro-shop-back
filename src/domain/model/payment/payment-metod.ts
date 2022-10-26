@@ -65,10 +65,22 @@ export class PaymentMethod extends Entity {
         this.active=(unmarshalled.active);
         this.meta=(unmarshalled.meta);
         if (unmarshalled.updatedAt) {
-            this.createdAt=(unmarshalled.updatedAt);
+            if (unmarshalled.updatedAt instanceof Date) {
+                this.updatedAt = unmarshalled.updatedAt;
+            } else {
+                if (typeof unmarshalled.createdAt === "string") {
+                    this.updatedAt = new Date(unmarshalled.updatedAt);
+                }
+            }
         }
         if (unmarshalled.createdAt) {
-            this.createdAt=(unmarshalled.createdAt);
+            if (unmarshalled.createdAt instanceof Date) {
+                this.createdAt = unmarshalled.createdAt;
+            } else {
+                if (typeof unmarshalled.createdAt === "string") {
+                    this.createdAt = new Date(unmarshalled.createdAt);
+                }
+            }
         }
     };
 

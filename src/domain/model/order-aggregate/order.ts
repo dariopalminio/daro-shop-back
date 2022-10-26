@@ -99,10 +99,22 @@ export class Order extends Entity {
             this.setStatus(unmarshalled.status);
         }
         if (unmarshalled.updatedAt) {
-            this.updatedAt=(unmarshalled.updatedAt);
+            if (unmarshalled.updatedAt instanceof Date) {
+                this.updatedAt = unmarshalled.updatedAt;
+            } else {
+                if (typeof unmarshalled.updatedAt === "string") {
+                    this.updatedAt = new Date(unmarshalled.updatedAt);
+                }
+            }
         }
         if (unmarshalled.createdAt) {
-            this.createdAt=(unmarshalled.createdAt);
+            if (unmarshalled.createdAt instanceof Date) {
+                this.createdAt = unmarshalled.createdAt;
+            } else {
+                if (typeof unmarshalled.createdAt === "string") {
+                    this.createdAt = new Date(unmarshalled.createdAt);
+                }
+            }
         }
     };
 

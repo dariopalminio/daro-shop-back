@@ -158,57 +158,23 @@ export class ProductService implements IProductService<Product> {
   };
 
   async addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean> {
-    let reserva: Reservation = new Reservation();
-    reserva.orderId = orderId;
-    reserva.quantity = quantity;
-    reserva.date = new Date();
+    let reserva: Reservation = new Reservation(orderId, quantity, new Date());
     let product: Product = await this.getById(productId);
-    if (quantity > product.stock)
-      throw new Error(`Insufficient stock. In orderId ${orderId} try to reserve quantity ${quantity} when there is ${product.stock} in stock`);
-    product.stock -= reserva.quantity;
-    product.reservations.push(reserva);
+    product.addReservation(reserva);
     const updated: boolean = await this.updateById(productId, product);
     return updated;
   }
 
   async revertStockReservation(productId: string, orderId: string): Promise<boolean> {
     let product: Product = await this.getById(productId);
-    const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
-    if (reserveIndex === -1)
-      throw new Error(`Not found ${orderId} in reservation list of product ${productId}`);
-    const qty = product.reservations[reserveIndex].quantity;
-    product.stock += qty;
-
-    const newReservationList = [
-      ...product.reservations.slice(0, reserveIndex),
-      ...product.reservations.slice(reserveIndex + 1),
-    ];
-
-    product.reservations = newReservationList;
-
+    product.revertReservationAndUpdateStock(orderId);
     const updated: boolean = await this.updateById(productId, product);
     return updated;
   }
 
   async moveReservationToSale(productId: string, orderId: string): Promise<boolean> {
     let product: Product = await this.getById(productId);
-    const reserveIndex = product.reservations.findIndex((reservation) => reservation.orderId === orderId);
-    const reservation: Reservation = product.reservations[reserveIndex];
-
-    const newReservationList = [
-      ...product.reservations.slice(0, reserveIndex),
-      ...product.reservations.slice(reserveIndex + 1),
-    ];
-
-    product.reservations = newReservationList;
-
-    let newSale: Sale = new Sale();
-    newSale.orderId = reservation.orderId;
-    newSale.quantity = reservation.quantity;
-    newSale.grossPrice = product.grossPrice;
-    newSale.date = new Date();
-    product.sales.push(newSale);
-
+    product.moveReservationToSale(orderId);
     const updated: boolean = await this.updateById(productId, product);
     return updated;
   }

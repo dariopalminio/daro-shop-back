@@ -1,6 +1,7 @@
 import { Reservation } from './reservation';
 import { Sale } from './sale';
 import { Entity } from '../entity';
+import { throws } from 'assert';
 
 /**
  * Product domain object (Entity root)
@@ -13,37 +14,38 @@ import { Entity } from '../entity';
  */
 export class Product extends Entity {
 
-    sku: string;
-    barcode: string;
-    name: string;
-    description: string;
-    images: string[];
-    category: string;
-    type: string;
-    brand: string;
-    color: string;
-    model: string;
-    gender: string;
-    size: string;
-    netCost: number;
-    ivaAmountOnCost: number;
-    grossCost: number;
-    netPrice: number;
-    ivaAmountOnPrice: number;
-    grossPrice: number;
-    stock: number;
-    active: boolean;
-    reservations: Reservation[];
-    sales: Sale[];
-    updatedAt?: Date;
-    createdAt?: Date;
+    protected sku: string;
+    protected barcode: string;
+    protected name: string;
+    protected description: string;
+    protected images: string[];
+    protected category: string;
+    protected type: string;
+    protected brand: string;
+    protected color: string;
+    protected model: string;
+    protected gender: string;
+    protected size: string;
+    protected netCost: number;
+    protected ivaAmountOnCost: number;
+    protected grossCost: number;
+    protected netPrice: number;
+    protected ivaAmountOnPrice: number;
+    protected grossPrice: number;
+    protected stock: number;
+    protected active: boolean;
+    protected reservations: Reservation[];
+    protected sales: Sale[];
+    protected updatedAt?: Date;
+    protected createdAt?: Date;
+
 
     /**
     * Constructors
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
-    public constructor(unmarshalled: any); 
+    public constructor(unmarshalled: any);
     public constructor(id: string,
         sku: string, barcode: string, name: string, description: string, images: string[], category: string, type: string, brand: string,
         color: string, model: string, gender: string, size: string, netCost: number, ivaAmountOnCost: number, grossCost: number, netPrice: number,
@@ -84,10 +86,11 @@ export class Product extends Entity {
             this.reservations = [];
             this.sales = [];
             if (argumentsArray[21]) {
-                this.updatedAt=(argumentsArray[21]);
+                this.updatedAt = (argumentsArray[21]);
+                console.log();
             }
             if (argumentsArray[22]) {
-                this.createdAt=(argumentsArray[22]);
+                this.createdAt = (argumentsArray[22]);
             }
         }
     };
@@ -120,18 +123,68 @@ export class Product extends Entity {
         if (unmarshalled.active)
             this.setActive(unmarshalled.active);
         else this.active = true;
-        if (unmarshalled.reservations)
-            this.setReservations(unmarshalled.reservations);
-        else this.reservations = [];
-        if (unmarshalled.sales)
-            this.setSales(unmarshalled.sales);
-        else this.sales = [];
+        this.setReservationsFromAny(unmarshalled);
+        this.setSalesFromAny(unmarshalled);
         if (unmarshalled.updatedAt) {
-            this.updatedAt=(unmarshalled.updatedAt);
+            if (unmarshalled.updatedAt instanceof Date) {
+                this.updatedAt = unmarshalled.updatedAt;
+            } else {
+                if (typeof unmarshalled.updatedAt === "string") {
+                    this.updatedAt = new Date(unmarshalled.updatedAt);
+                }
+            }
         }
         if (unmarshalled.createdAt) {
-            this.createdAt=(unmarshalled.createdAt);
+            if (unmarshalled.createdAt instanceof Date) {
+                this.createdAt = unmarshalled.createdAt;
+            } else {
+                if (typeof unmarshalled.createdAt === "string") {
+                    this.createdAt = new Date(unmarshalled.createdAt);
+                }
+            }
         }
+    };
+
+    private setSalesFromAny(unmarshalled: any) {
+        if (unmarshalled.sales){
+            const saleList: Sale[] = this.createSalesEntityFromAny(unmarshalled.sales);
+            this.setSales(saleList);
+        }else{ 
+            this.sales = [];
+        }
+    };
+
+    private setReservationsFromAny(unmarshalled: any) {
+        if (unmarshalled.reservations){
+            const resList: Reservation[] = this.createReservationsEntityFromAny(unmarshalled.reservations);
+            this.setReservations(resList);
+        }else {
+            this.reservations = [];
+        }
+    };
+
+    /**
+     * Convert Unmarshalled array ( any[]) to marshalled value object
+     */
+    private createReservationsEntityFromAny(unmarshalledArray: any[]): Reservation[] {
+        console.log("Reservation unmarshalledArray:",unmarshalledArray);
+        let domainEntityArray: Reservation[] = [];
+        unmarshalledArray.forEach(element => domainEntityArray.push(
+            new Reservation(element)
+        ));
+        return domainEntityArray;
+    };
+
+    /**
+     * Convert Unmarshalled array ( any[]) to marshalled value object
+     */
+    private createSalesEntityFromAny(unmarshalledArray: any[]): Sale[] {
+        console.log("Sale unmarshalledArray:",unmarshalledArray);
+        let domainEntityArray: Sale[] = [];
+        unmarshalledArray.forEach(element => domainEntityArray.push(
+            new Sale(element)
+        ));
+        return domainEntityArray;
     };
 
     /**
@@ -276,8 +329,159 @@ export class Product extends Entity {
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
+    };
+
+
+    public getSku(): string {
+        return this.sku;
+    };
+
+    public getBarcode(): string {
+        return this.barcode;
+    };
+
+    public getName(): string {
+        return this.name;
+    };
+
+    public getDescription(): string {
+        return this.description;
+    };
+
+    public getImages(): string[] {
+        return this.images;
+    };
+
+    public getCategory(): string {
+        return this.category;
+    };
+
+    public getType(): string {
+        return this.type;
+    };
+
+    public getBrand(): string {
+        return this.brand;
+    };
+
+    public getColor(): string {
+        return this.color;
+    };
+
+    public getModel(): string {
+        return this.model;
+    };
+
+    public getGender(): string {
+        return this.gender;
+    };
+
+    public getSize(): string {
+        return this.size;
+    };
+
+    public getNetCost(): number {
+        return this.netCost;
+    };
+
+    public getIvaAmountOnCost(): number {
+        return this.ivaAmountOnCost;
+    };
+
+    public getGrossCost(): number {
+        return this.grossCost;
+    };
+
+    public getNetPrice(): number {
+        return this.netPrice;
+    };
+
+    public getIvaAmountOnPrice(): number {
+        return this.ivaAmountOnPrice;
+    };
+
+    public getGrossPrice(): number {
+        return this.grossPrice;
+    };
+
+    public getStock(): number {
+        return this.stock;
+    };
+
+    public getActive(): boolean {
+        return this.active;
+    };
+
+    public getUpdatedAt(): Date {
+        return this.updatedAt;
+    };
+
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    };
+
+    public getReservations(): Reservation[] {
+        return this.reservations;
+    };
+
+    public getSales(): Sale[] {
+        return this.sales;
+    };
+
+    public decreaseStock(quantity: number) {
+        if (quantity > this.stock) throw new Error('Insufficient stock. Cannot be decremented.');
+        this.stock -= quantity;
+    };
+
+    public increaseStock(quantity: number) {
+        if (quantity < 0) throw new Error('The amount to increase is not positive.');
+        this.stock += quantity;
+    };
+
+    public addReservation(reserva: Reservation) {
+        if (reserva.getQuantity() > this.stock) {
+            throw new Error(`Insufficient stock. In orderId ${reserva.getOrderId()}` +
+                `try to reserve quantity ${reserva.getQuantity()} when there is ${this.stock} in stock`);
+        }
+        this.stock -= reserva.getQuantity();
+        this.reservations.push(reserva);
+    };
+
+    /**
+     * Cancel reservation of orderId, rebook a reservation, and update the stock
+     */
+     public revertReservationAndUpdateStock(orderId: string) {
+        //search reservation of orderId indicated
+        const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
+        if (reserveIndex === -1) {
+            throw new Error(`Not found ${orderId} in reservation list of product ${this._id}`);
+        }
+        //increase stock with reserve quantity
+        const qty = this.reservations[reserveIndex].getQuantity();
+        this.increaseStock(qty);
+        //remove reservation from reservation list
+        const newReservationList = [
+            ...this.reservations.slice(0, reserveIndex),
+            ...this.reservations.slice(reserveIndex + 1),
+        ];
+        this.reservations = newReservationList;
+    };
+
+    public moveReservationToSale(orderId: string) {
+        //search the reservation
+        const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
+        const reservation: Reservation = this.reservations[reserveIndex];
+        //delete the reservation from list
+        const newReservationList = [
+            ...this.reservations.slice(0, reserveIndex),
+            ...this.reservations.slice(reserveIndex + 1),
+        ];
+        this.reservations = newReservationList;
+        //add new sale to sales list
+        let newSale: Sale = new Sale(reservation.getOrderId(), reservation.getQuantity(), this.grossPrice, new Date());
+        this.sales.push(newSale);
     };
 
 };

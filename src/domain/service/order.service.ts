@@ -94,10 +94,10 @@ export class OrderService implements IOrderService<Order> {
     for (let i = 0; i < orderParam.orderItems.length; i++) {
       const item: OrderItem = orderParam.orderItems[i];
       const product: Product = await this.productService.getById(item.productId);
-      if (orderParam.orderItems[i].quantity > product.stock)
+      if (orderParam.orderItems[i].quantity > product.getStock())
         throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });
-      const newAmount: number = product.grossPrice * item.quantity;
-      const newItem = new OrderItem(item.productId, item.imageUrl, product.name, product.grossPrice, item.quantity, newAmount);
+      const newAmount: number = product.getGrossPrice() * item.quantity;
+      const newItem = new OrderItem(item.productId, item.imageUrl, product.getName(), product.getGrossPrice(), item.quantity, newAmount);
       newObj.orderItems.push(newItem);
       newObj.count += item.quantity;
     }
@@ -144,7 +144,7 @@ export class OrderService implements IOrderService<Order> {
       //validate that the stock is sufficient to full order
       for (let i = 0; i < order.orderItems.length; i++) {
         let product: Product = await this.productService.getById(order.orderItems[i].productId);
-        if (order.orderItems[i].quantity > product.stock)
+        if (order.orderItems[i].quantity > product.getStock())
           throw new Error(`Insufficient stock for order ${orderId}.`);
       }
 

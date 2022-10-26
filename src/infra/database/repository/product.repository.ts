@@ -158,6 +158,7 @@ export class ProductRepository implements IRepository<Product> {
     };
 
     castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): Product[] {
+        console.log("castArrayDocToArrayDomainEntity...", schemaDocArray);
         let domainEntityArray: Product[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(
             new Product(JSON.parse(JSON.stringify(element)))
