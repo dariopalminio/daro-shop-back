@@ -25,7 +25,7 @@ export class User extends Entity {
     protected startVerificationCode: Date;
     protected updatedAt?: Date;
     protected createdAt?: Date;
-    
+
     /**
     * Constructors 
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
@@ -59,10 +59,10 @@ export class User extends Entity {
             this.setVerified(argumentsArray[8]);
             this.setVerificationCode(argumentsArray[9]);
             if (argumentsArray[10]) {
-                this.updatedAt=(argumentsArray[10]);
+                this.updatedAt = (argumentsArray[10]);
             }
             if (argumentsArray[11]) {
-                this.createdAt=(argumentsArray[11]);
+                this.createdAt = (argumentsArray[11]);
             }
         }
     };
@@ -85,14 +85,17 @@ export class User extends Entity {
         if (unmarshalled.verificationCode)
             this.setVerificationCode(unmarshalled.verificationCode);
         else this.verificationCode = INVALID_VERIFICATION_CODE;
-        if (unmarshalled.enable)
+        if ((unmarshalled.enable !== undefined) && (unmarshalled.enable !== null)) {
             this.setEnable(unmarshalled.enable);
-        else this.enable = false;
+        }
+        else {
+            this.enable = false;
+        }
         if (unmarshalled.updatedAt) {
-            this.updatedAt=(unmarshalled.updatedAt);
+            this.updatedAt = (unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            this.createdAt=(unmarshalled.createdAt);
+            this.createdAt = (unmarshalled.createdAt);
         }
     };
 
@@ -199,7 +202,7 @@ export class User extends Entity {
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
 
@@ -246,7 +249,7 @@ export class User extends Entity {
     public getUpdatedAt(): Date {
         return this.updatedAt;
     };
-    
+
     public getCreatedAt(): Date {
         return this.createdAt;
     };

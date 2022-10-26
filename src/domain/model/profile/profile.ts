@@ -13,19 +13,19 @@ import { IAddress } from "./address.interface";
  */
 export class Profile extends Entity {
 
-    userId: string;
-    enable: boolean;
-    userName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    docType: string;  //docType (RUT|DNI)
-    document: string;
-    telephone: string;
-    language: string;
-    addresses: IAddress[];
-    updatedAt?: Date;
-    createdAt?: Date;
+    protected userId: string;
+    protected enable: boolean;
+    protected userName: string;
+    protected firstName: string;
+    protected lastName: string;
+    protected email: string;
+    protected docType: string;  //docType (RUT|DNI)
+    protected document: string;
+    protected telephone: string;
+    protected language: string;
+    protected addresses: IAddress[];
+    protected updatedAt?: Date;
+    protected createdAt?: Date;
     
     /**
     * Constructors 
@@ -77,6 +77,11 @@ export class Profile extends Entity {
     */
     public setFromAny(unmarshalled: any) {
         this.setUserId(unmarshalled.userId);
+        if ((unmarshalled.enable !== undefined) && (unmarshalled.enable !== null)) {
+            this.setEnable(unmarshalled.enable);
+        }else{
+            this.setEnable(false);
+        }
         this.setUserName(unmarshalled.userName);
         this.setFirstName(unmarshalled.firstName);
         this.setLastName(unmarshalled.lastName);
@@ -185,6 +190,58 @@ export class Profile extends Entity {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
         throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
+    };
+
+    public getUserId(): string {
+        return this.userId;
+    };
+
+    public getEnable(): boolean {
+        return this.enable;
+    };
+
+    public getUserName(): string {
+        return this.userName;
+    };
+
+    public getFirstName(): string {
+        return this.firstName;
+    };
+
+    public getLastName(): string {
+        return this.lastName;
+    };
+
+    public getEmail(): string {
+        return this.email;
+    };
+ 
+    public getDocType(): string {
+        return this.docType;
+    };
+ 
+    public getDocument(): string {
+        return this.document;
+    };
+ 
+    public getTelephone(): string {
+        return this.telephone;
+    };
+ 
+    public getLanguage(): string {
+        return this.language;
+    };
+ 
+    public getAddresses(): IAddress[] {
+        return this.addresses;
+    };
+
+    public getUpdatedAt(): Date {
+        return this.updatedAt;
+    };
+
+    public getCreatedAt(): Date {
+        return this.createdAt;
     };
 
 };

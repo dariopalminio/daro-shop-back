@@ -3,6 +3,7 @@ import { IRepository } from '../infra-interface/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from './interface/profile.service.interface';
 import { Profile } from '../model/profile/profile';
+import { ResponseCode } from '../model/service/response.code.enum';
 
 /**
  * Profile Service
@@ -37,29 +38,18 @@ export class ProfileService implements IProfileService<Profile> {
     return entity;
   };
 
-  async create(userRegisterDTO: Profile): Promise<Profile> {
+  async create(profileRegister: Profile): Promise<Profile> {
     try {
-      let newProf: Profile = new Profile();
-      newProf.userId = userRegisterDTO.userId;
-      newProf.userName = userRegisterDTO.userName;
-      newProf.email = userRegisterDTO.email;
-      newProf.firstName = userRegisterDTO.firstName;
-      newProf.lastName = userRegisterDTO.lastName;
-      newProf.docType = userRegisterDTO.docType,
-      newProf.document = userRegisterDTO.document,
-      newProf.telephone = userRegisterDTO.telephone,
-      newProf.language = userRegisterDTO.language,
-      newProf.addresses = userRegisterDTO.addresses,
-      newProf.enable = true;
-      const entityNew: Profile = await this.profileRepository.create(newProf);
+      profileRegister.setEnable(true);
+      const entityNew: Profile = await this.profileRepository.create(profileRegister);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {
         case 11000:
-          throw new DomainError(409, error.message, error, 'Duplicate key error collection or index problem.');
+          throw new DomainError(ResponseCode.CONFLICT, error.message, error, 'Duplicate key error collection or index problem.');
         default:
-          throw new DomainError(500, error.message, error); //Internal server error
+          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error); //Internal server error
       }
     }
   };
