@@ -4,6 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from './interface/shipping-price.service.interface';
 import { ShippingPrice } from '../model/shipping/shipping-price';
 import { Address } from '../model/profile/address';
+import { ResponseCode } from '../model/service/response.code.enum';
 
 /**
  * Shipping Price Service
@@ -42,25 +43,19 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
     return entity;
   };
 
-  async create(shippingPriceRegisterDTO: ShippingPrice): Promise<ShippingPrice> {
+  async create(shippingPriceRegister: ShippingPrice): Promise<ShippingPrice> {
     try {
-      let newObj: ShippingPrice = new ShippingPrice();
-      newObj.location = shippingPriceRegisterDTO.location;
-      newObj.description = shippingPriceRegisterDTO.description;
-      newObj.price = shippingPriceRegisterDTO.price;
-      newObj.money = shippingPriceRegisterDTO.money;
-      
-      const entityNew: ShippingPrice = await this.shippingPriceRepository.create(newObj);
+      const entityNew: ShippingPrice = await this.shippingPriceRepository.create(shippingPriceRegister);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DomainError(409, error.message, error);
+          throw new DomainError(ResponseCode.CONFLICT, error.message, error);
         default:
           //Internal server error
-          throw new DomainError(500, error.message, error);
+          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
       }
     }
   };

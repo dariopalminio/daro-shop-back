@@ -13,10 +13,10 @@ import { Entity } from "../entity";
  */
 export class ShippingPrice extends Entity {
 
-    location: string;
-    price: number;
-    money: string;
-    description: string;
+    protected location: string;
+    protected price: number;
+    protected money: string;
+    protected description: string;
 
     /**
     * Constructors 
@@ -87,4 +87,18 @@ export class ShippingPrice extends Entity {
         this.description = value;
     };
 
+    public getLocation(): string {
+        return this.location;
+    };
+
+    public getPrice(): number {
+        return this.price;
+    };
+    public getMoney(): string {
+        return this.money;
+    };
+    public getDescription(): string {
+        return this.description;
+    };
+    
 };
