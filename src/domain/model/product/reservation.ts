@@ -1,11 +1,13 @@
+import { convertAnyToDate } from '../../helper/date.helper';
+
 /**
- * Reservation Value Object
- * 
- * This shows when an order has any of this product in its items.
- * An order can reserve a product and commit part of its stock.
- * 
- * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
- */
+* Reservation Value Object
+* 
+* This shows when an order has any of this product in its items.
+* An order can reserve a product and commit part of its stock.
+* 
+* Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
+*/
 export class Reservation {
 
     protected orderId: string; //order confirmed in a customer purchase attempt
@@ -28,16 +30,16 @@ export class Reservation {
             this.date = argumentsArray[2];
         }
     };
-   
+
     /**
      * Set all attributes from Unmarshalled variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO or Json, to the data type of this class.
-     * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     * @param unmarshalled Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
     public setFromAny(unmarshalled: any) {
         this.setOrderId(unmarshalled.orderId);
         this.setQuantity(unmarshalled.quantity);
-        this.setDate(unmarshalled.date);
+        this.date = convertAnyToDate(unmarshalled.date);
     };
 
     public getOrderId(): string {

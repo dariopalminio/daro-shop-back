@@ -85,16 +85,20 @@ export class Product {
     @Prop({ required: true })
     stock: Number; //value of inventory existence 
 
-    orderId: string; //order confirmed in a customer purchase attempt
-    quantity: number; //number of items reserved
-    date: Date;
-
+    @Prop({ required: true, default: [] })
+    reservations: [{
+        orderId: { type: String }, 
+        quantity: { type: Number }, 
+        date: { type: Date }, 
+      }]
 
     @Prop({ required: true, default: [] })
-    reservations: [Reservation];
-
-    @Prop({ required: true, default: [] })
-    sales: [Sale];
+    sales: [{
+        orderId: { type: String }, 
+        quantity: { type: Number }, 
+        grossPrice: { type: Number }, 
+        date: { type: Date }, 
+      }]
 
     @Prop()
     active: Boolean; //is active to sell?

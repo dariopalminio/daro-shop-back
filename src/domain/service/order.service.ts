@@ -50,17 +50,7 @@ export class OrderService implements IOrderService<Order> {
 
   async create(orderNew: Order): Promise<Order> {
     try {
-      let newObj: Order = new Order();
-      newObj.client = orderNew.client;
-      newObj.orderItems = orderNew.orderItems;
-      newObj.count = orderNew.count;
-      newObj.includesShipping = orderNew.includesShipping;
-      newObj.shippingAddress = orderNew.shippingAddress;
-      newObj.subTotal = orderNew.subTotal;
-      newObj.shippingPrice = orderNew.shippingPrice;
-      newObj.total = orderNew.total;
-
-      const entityNew: Order = await this.orderRepository.create(newObj);
+      const entityNew: Order = await this.orderRepository.create(orderNew);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
@@ -80,7 +70,7 @@ export class OrderService implements IOrderService<Order> {
    */
   async initialize(orderParam: Order): Promise<Order> {
 
-    let newObj: Order = new Order();
+    let newObj: Order = new Order(orderParam);
     newObj.client = orderParam.client;
     newObj.orderItems = [];
     newObj.count = 0;
@@ -117,9 +107,10 @@ export class OrderService implements IOrderService<Order> {
       if (!pricing || !pricing.price)
         throw new DomainError(500, 'No price found for delivery to the indicated address', { address: newObj.shippingAddress });
       newObj.shippingPrice = Number(pricing.price);
+
     }
     newObj.total = Number((subTotalVal + 0.0 + newObj.shippingPrice).toFixed(2));
-
+    console.log("newObj.total ", newObj.total);
     try {
       const entityNew: Order = await this.orderRepository.create(newObj);
       return entityNew;

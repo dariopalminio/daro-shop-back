@@ -167,7 +167,6 @@ export class Product extends Entity {
      * Convert Unmarshalled array ( any[]) to marshalled value object
      */
     private createReservationsEntityFromAny(unmarshalledArray: any[]): Reservation[] {
-        console.log("Reservation unmarshalledArray:",unmarshalledArray);
         let domainEntityArray: Reservation[] = [];
         unmarshalledArray.forEach(element => domainEntityArray.push(
             new Reservation(element)
@@ -179,7 +178,6 @@ export class Product extends Entity {
      * Convert Unmarshalled array ( any[]) to marshalled value object
      */
     private createSalesEntityFromAny(unmarshalledArray: any[]): Sale[] {
-        console.log("Sale unmarshalledArray:",unmarshalledArray);
         let domainEntityArray: Sale[] = [];
         unmarshalledArray.forEach(element => domainEntityArray.push(
             new Sale(element)

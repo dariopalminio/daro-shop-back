@@ -1,3 +1,5 @@
+import { convertAnyToDate } from '../../helper/date.helper';
+
 /**
  * Sale Value Object
  * 
@@ -34,19 +36,13 @@ export class Sale {
     /**
      * Set all attributes from Unmarshalled variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO or Json, to the data type of this class.
-     * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     * @param unmarshalled Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
     public setFromAny(unmarshalled: any) {
         this.setOrderId(unmarshalled.orderId);
         this.setQuantity(unmarshalled.quantity);
         this.setGrossPrice(unmarshalled.grossPrice);
-        if (unmarshalled.date instanceof Date) {
-            this.date = unmarshalled.date;
-        } else {
-            if (typeof unmarshalled.date === "string") {
-                this.date = new Date(unmarshalled.date);
-            }
-        }
+        this.date = convertAnyToDate(unmarshalled.date);
     };
 
     public getOrderId(): string {

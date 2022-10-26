@@ -88,13 +88,15 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<ShippingPrice> {
+        console.log("ShippingPriceRepository--->getByQuery");
         if (fieldsToExclude) {
-            const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
-            const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
+            const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
+            const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(doc)));
             return objCasted;
         }
-        const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
-        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
+        const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
+        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(doc)));
+        console.log("ShippingPriceRepository--->objCasted");
         return objCasted;
     }
 

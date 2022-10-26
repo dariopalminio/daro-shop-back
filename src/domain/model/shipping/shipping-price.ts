@@ -23,12 +23,10 @@ export class ShippingPrice extends Entity {
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
     */
     public constructor();
-    public constructor( unmarshalled: any   );
-    public constructor( id:string, 
-        location: string, price: number, money: string, description: string
-    );
+    public constructor(unmarshalled: any);
+    public constructor( id:string,  location: string, price: number, money: string, description: string );
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 12) {
+        if (argumentsArray.length > 5) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -38,7 +36,7 @@ export class ShippingPrice extends Entity {
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
-        if (argumentsArray.length > 0) {
+        if (argumentsArray.length > 1) {
             super(argumentsArray[0]); //id
             this.setLocation(argumentsArray[1]);
             this.setPrice(argumentsArray[2]);

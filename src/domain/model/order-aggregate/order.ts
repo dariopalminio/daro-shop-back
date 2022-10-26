@@ -41,13 +41,16 @@ export class Order extends Entity {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
+            console.log("super()");
             super();
         }
         if (argumentsArray.length === 1) {
+            console.log("argumentsArray.length === 1");
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
+            console.log("argumentsArray.length > 1");
             super(argumentsArray[0]); //id
             let clientObject: Client = new Client();
             clientObject.setFromAny(argumentsArray[1]); //client
