@@ -16,17 +16,17 @@ import { convertAnyToDate } from 'src/domain/helper/date.helper';
  */
 export class Order extends Entity {
 
-    client: Client;
-    orderItems: OrderItem[];
-    count: number;
-    includesShipping: boolean; //if is false then includes pick up in store
-    shippingAddress: Address;
-    subTotal: number;
-    shippingPrice: number;
-    total: number;
-    status: string;
-    updatedAt?: Date;
-    createdAt?: Date;
+    protected client: Client;
+    protected orderItems: OrderItem[];
+    protected count: number;
+    protected includesShipping: boolean; //if is false then includes pick up in store
+    protected shippingAddress: Address;
+    protected subTotal: number;
+    protected shippingPrice: number;
+    protected total: number;
+    protected status: string;
+    protected updatedAt?: Date;
+    protected createdAt?: Date;
 
     /**
      * Constructors
@@ -44,7 +44,7 @@ export class Order extends Entity {
         if (argumentsArray.length === 0) {
             super();
         }
-        if (argumentsArray.length === 1) {
+        if (argumentsArray.length === 1) { //Constructor to unmarshalled input
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
@@ -53,12 +53,10 @@ export class Order extends Entity {
             let clientObject: Client = new Client();
             clientObject.setFromAny(argumentsArray[1]); //client
             this.client = clientObject;
-            const hasAnArray: boolean = Array.isArray(argumentsArray[2]); //orderItems
-            if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
             this.setOrderItemsFromAny(argumentsArray[2]); //orderItems
             if (isNaN(argumentsArray[3])) throw new Error('Casting error: quantity field is not a number!');
-            this.setCount(argumentsArray[3]); //count
-            this.setIncludesShipping(argumentsArray[4]); //includesShipping
+            this.setCount(argumentsArray[3]);
+            this.setIncludesShipping(argumentsArray[4]); 
             let shippingAddress: Address = new Address(argumentsArray[5]);
             if (this.includesShipping) shippingAddress.validateFullAddress();
             this.setShippingAddress(shippingAddress);
@@ -77,7 +75,7 @@ export class Order extends Entity {
     /**
      * Set all attributes from variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
-     * @param prod any is used to tell TypeScript that a variable can be of any type such as DTO or json object
+     * @param unmarshalled any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
     public setFromAny(unmarshalled: any) {
         const hasAnArray: boolean = Array.isArray(unmarshalled.orderItems);
@@ -107,17 +105,64 @@ export class Order extends Entity {
         }
     };
 
+    /**
+     * Setting for convert unmarshalled array of items to Domain Class
+     * @param items unmarshalled items
+     */
     private setOrderItemsFromAny(items: Array<any>) {
         if (items === undefined || items === null || (!Array.isArray(items)) || items.length === 0) {
             throw new Error('This order has no product items. An order must have at least one item.');
         }
         let newItemsArray: OrderItem[] = [];
         for (let i = 0; i < items.length; i++) {
-            const orderItem: OrderItem = new OrderItem(items[i].productId, items[i].imageUrl, items[i].name, items[i].grossPrice, items[i].quantity, items[i].amount);
+            const orderItem: OrderItem = new OrderItem(
+                items[i].productId, 
+                items[i].imageUrl, 
+                items[i].name, 
+                items[i].grossPrice, 
+                items[i].quantity, 
+                items[i].amount
+                );
             newItemsArray.push(orderItem);
         }
         this.orderItems = newItemsArray;
     }
+
+    public getClient(): Client {
+        return this.client;
+    };
+
+    public getOrderItems(): OrderItem[] {
+        return this.orderItems;
+    };
+
+    public getCount(): number {
+        return this.count;
+    };
+    
+    public getIncludesShipping(): boolean {
+        return this.includesShipping;
+    };
+
+    public getShippingAddress(): Address {
+        return this.shippingAddress;
+    };
+
+    public getSubTotal(): number {
+        return this.subTotal;
+    };
+
+    public getShippingPrice(): number {
+        return this.shippingPrice;
+    };
+
+    public getTotal(): number {
+        return this.total;
+    };
+
+    public getStatus(): string {
+        return this.status;
+    };
 
     /**
      * Setter method with Attributes/Properties Validation
@@ -193,6 +238,16 @@ export class Order extends Entity {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
             throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
+    };
+
+    public addNewItem(newItem: OrderItem) {
+        this.orderItems.push(newItem);
+        this.increaseCount(newItem.quantity);
+    };
+
+    public increaseCount(quantity: number) {
+        if (quantity < 0) throw new Error('The quantity to increase count is not positive.');
+        this.count += quantity;
     };
 
 };

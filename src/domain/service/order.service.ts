@@ -71,46 +71,45 @@ export class OrderService implements IOrderService<Order> {
   async initialize(orderParam: Order): Promise<Order> {
 
     let newObj: Order = new Order(orderParam);
-    newObj.client = orderParam.client;
-    newObj.orderItems = [];
-    newObj.count = 0;
-    newObj.includesShipping = orderParam.includesShipping;
-    newObj.shippingAddress = orderParam.shippingAddress;
-    newObj.subTotal = 0;
-    newObj.shippingPrice = 0;
-    newObj.total = 0;
+    newObj.setClient(orderParam.getClient());
+    newObj.setOrderItems([]);
+    newObj.setCount(0);
+    newObj.setIncludesShipping(orderParam.getIncludesShipping());
+    newObj.setShippingAddress(orderParam.getShippingAddress());
+    newObj.setSubTotal(0);
+    newObj.setShippingPrice(0);
+    newObj.setTotal(0);
 
     //Calculate amounts
-    for (let i = 0; i < orderParam.orderItems.length; i++) {
-      const item: OrderItem = orderParam.orderItems[i];
+    for (let i = 0; i < orderParam.getOrderItems().length; i++) {
+      const item: OrderItem = orderParam.getOrderItems()[i];
       const product: Product = await this.productService.getById(item.productId);
-      if (orderParam.orderItems[i].quantity > product.getStock())
-        throw new DomainError(500, 'There is no stock of the product', { productId: item.productId });
+      if (orderParam.getOrderItems()[i].quantity > product.getStock())
+        throw new DomainError(ResponseCode.BAD_REQUEST, 'There is no stock of the product', { productId: item.productId });
       const newAmount: number = product.getGrossPrice() * item.quantity;
-      const newItem = new OrderItem(item.productId, item.imageUrl, product.getName(), product.getGrossPrice(), item.quantity, newAmount);
-      newObj.orderItems.push(newItem);
-      newObj.count += item.quantity;
+      const newItem: OrderItem = new OrderItem(item.productId, item.imageUrl, product.getName(), product.getGrossPrice(), item.quantity, newAmount);
+      newObj.addNewItem(newItem);
     }
 
     //Calculate subtotals
     let subTotalVal: number = 0;
-    for (let i = 0; i < newObj.orderItems.length; i++) {
-      subTotalVal += Number(newObj.orderItems[i].amount);
+    for (let i = 0; i < newObj.getOrderItems().length; i++) {
+      subTotalVal += Number(newObj.getOrderItems()[i].amount);
     }
-    newObj.subTotal = Number(subTotalVal.toFixed(2));
+    newObj.setSubTotal(Number(subTotalVal.toFixed(2)));
 
     //Calculate total with shipping price
-    newObj.shippingPrice = 0;
-    if (newObj.includesShipping) {
-      const pricing: any = await this.shippingPriceService.getPriceByAddress(newObj.shippingAddress);
+    newObj.setShippingPrice(0);
+    if (newObj.getIncludesShipping()) {
+      const pricing: any = await this.shippingPriceService.getPriceByAddress(newObj.getShippingAddress());
       console.log("pricing:", pricing);
       if (!pricing || !pricing.price)
-        throw new DomainError(500, 'No price found for delivery to the indicated address', { address: newObj.shippingAddress });
-      newObj.shippingPrice = Number(pricing.price);
+        throw new DomainError(ResponseCode.BAD_REQUEST, 'No price found for delivery to the indicated address', { address: newObj.getShippingAddress() });
+      newObj.setShippingPrice(Number(pricing.price));
 
     }
-    newObj.total = Number((subTotalVal + 0.0 + newObj.shippingPrice).toFixed(2));
-    console.log("newObj.total ", newObj.total);
+    newObj.setTotal(Number((subTotalVal + 0.0 + newObj.getShippingPrice()).toFixed(2)));
+
     try {
       const entityNew: Order = await this.orderRepository.create(newObj);
       return entityNew;
@@ -133,15 +132,16 @@ export class OrderService implements IOrderService<Order> {
       const order: Order = await this.getById(orderId);
 
       //validate that the stock is sufficient to full order
-      for (let i = 0; i < order.orderItems.length; i++) {
-        let product: Product = await this.productService.getById(order.orderItems[i].productId);
-        if (order.orderItems[i].quantity > product.getStock())
-          throw new Error(`Insufficient stock for order ${orderId}.`);
+      for (let i = 0; i < order.getOrderItems().length; i++) {
+        let product: Product = await this.productService.getById(order.getOrderItems()[i].productId);
+        if (order.getOrderItems()[i].quantity > product.getStock()) {
+          throw new DomainError(ResponseCode.BAD_REQUEST, `Insufficient stock for order ${orderId}.`, {});
+        }
       }
 
       //add reservations in products indicated in order
-      for (let i = 0; i < order.orderItems.length; i++) {
-        await this.productService.addStockReservation(order.orderItems[i].productId, orderId, order.orderItems[i].quantity);
+      for (let i = 0; i < order.getOrderItems().length; i++) {
+        await this.productService.addStockReservation(order.getOrderItems()[i].productId, orderId, order.getOrderItems()[i].quantity);
       }
 
       //change order status
@@ -149,6 +149,7 @@ export class OrderService implements IOrderService<Order> {
       return confirmed;
     } catch (error) {
       console.log("Order confirm error:", error);
+      if (error instanceof DomainError) throw error;
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
     }
   };
@@ -158,8 +159,8 @@ export class OrderService implements IOrderService<Order> {
       const order: Order = await this.getById(orderId);
 
       //revert reservations in products indicated in order
-      for (let i = 0; i < order.orderItems.length; i++) {
-        await this.productService.revertStockReservation(order.orderItems[i].productId, orderId);
+      for (let i = 0; i < order.getOrderItems().length; i++) {
+        await this.productService.revertStockReservation(order.getOrderItems()[i].productId, orderId);
       }
 
       //change order status
@@ -176,8 +177,8 @@ export class OrderService implements IOrderService<Order> {
     try {
       const order: Order = await this.getById(orderId);
 
-      for (let i = 0; i < order.orderItems.length; i++) {
-        await this.productService.moveReservationToSale(order.orderItems[i].productId, orderId);
+      for (let i = 0; i < order.getOrderItems().length; i++) {
+        await this.productService.moveReservationToSale(order.getOrderItems()[i].productId, orderId);
       }
 
       const paid: boolean = await this.update({ _id: orderId }, { status: OrderStatus.PAID });

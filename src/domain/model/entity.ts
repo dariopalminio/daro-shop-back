@@ -9,7 +9,7 @@ export class Entity {
     protected readonly _id?: string; //_id: holds an ObjectId
 
     constructor(id?: string) {
-        if (id!==undefined) this._id = id;
+        if (id !== undefined) this._id = id;
     }
 
     public getId(): string {

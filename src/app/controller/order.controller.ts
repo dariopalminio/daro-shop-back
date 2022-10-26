@@ -7,6 +7,7 @@ import { Order } from 'src/domain/model/order-aggregate/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
 import { OrderToCreateDTO } from '../dto/order-to-create.dto';
+import { DomainError } from 'src/domain/error/domain-error';
 
 /**
  * Order controller
@@ -39,6 +40,7 @@ export class OrderController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
   };
@@ -57,6 +59,7 @@ export class OrderController {
     try {
       objCreated = await this.orderService.create(orderToCreate);
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
     if (!objCreated) throw new NotFoundException('Could not be created!');
@@ -75,6 +78,7 @@ export class OrderController {
     try {
       objDeleted = await this.orderService.delete(id);
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
     if (!objDeleted) throw new NotFoundException('Does not exist or canot be deleted!');
@@ -99,6 +103,7 @@ export class OrderController {
         order: orderCreated
       })
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
   };
@@ -113,6 +118,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
   };
@@ -127,6 +133,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
   };
@@ -141,6 +148,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
       throw new InternalServerErrorException(error);
     }
   };

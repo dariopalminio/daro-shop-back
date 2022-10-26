@@ -1,3 +1,4 @@
+import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
 
 /**
@@ -12,14 +13,14 @@ import { Entity } from "../entity";
  */
 export class PaymentMethod extends Entity {
 
-    key: string;
-    name: string;
-    description: string;
-    image: string;
-    active: boolean;
-    meta: any;
-    updatedAt?: Date;
-    createdAt?: Date;
+    protected key: string;
+    protected name: string;
+    protected description: string;
+    protected image: string;
+    protected active: boolean;
+    protected meta: any;
+    protected updatedAt?: Date;
+    protected createdAt?: Date;
 
     /**
      * Constructors 
@@ -36,7 +37,7 @@ export class PaymentMethod extends Entity {
         if (argumentsArray.length === 0) {
             super();
         }
-        if (argumentsArray.length === 1) {
+        if (argumentsArray.length === 1) { //unmarshalled
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
@@ -57,6 +58,10 @@ export class PaymentMethod extends Entity {
         }
     };
 
+    /**
+     * Setting for Convert unmarshalled input to Domain Object Class
+     * @param unmarshalled unmarshalled
+     */
     public setFromAny(unmarshalled: any) {
         this.key=(unmarshalled.key);
         this.name=(unmarshalled.name);
@@ -65,23 +70,79 @@ export class PaymentMethod extends Entity {
         this.active=(unmarshalled.active);
         this.meta=(unmarshalled.meta);
         if (unmarshalled.updatedAt) {
-            if (unmarshalled.updatedAt instanceof Date) {
-                this.updatedAt = unmarshalled.updatedAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.updatedAt = new Date(unmarshalled.updatedAt);
-                }
-            }
+            this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            if (unmarshalled.createdAt instanceof Date) {
-                this.createdAt = unmarshalled.createdAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.createdAt = new Date(unmarshalled.createdAt);
-                }
-            }
+            this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    public getKey(): string {
+        return this.key;
+    };
+
+    public getName(): string {
+        return this.name;
+    };
+
+    public getDescription(): string {
+        return this.description;
+    };
+
+    public getImage(): string {
+        return this.image;
+    };
+
+    public getActive(): boolean {
+        return this.active;
+    };
+
+    public getMeta(): any {
+        return this.meta;
+    };
+
+    public getUpdatedAt(): Date {
+        return this.updatedAt;
+    };
+
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    };
+
+    public setKey(value: string) {
+        if (value === undefined || (typeof value !== 'string')) {
+            throw new Error('Field key has invalid format because is undefined or is not string!');
+        }
+        this.key = value;
+    };
+    public setName(value: string) {
+        if (value === undefined || (typeof value !== 'string')) {
+            throw new Error('Field name has invalid format because is undefined or is not string!');
+        }
+        this.name = value;
+    };
+    public setDescription(value: string) {
+        if (value === undefined || (typeof value !== 'string')) {
+            throw new Error('Field description has invalid format because is undefined or is not string!');
+        }
+        this.description = value;
+    };
+    public setImage(value: string) {
+        if (value === undefined || (typeof value !== 'string')) {
+            throw new Error('Field image has invalid format because is undefined or is not string!');
+        }
+        this.image = value;
+    };
+
+    public setActive(value: boolean) {
+        if (value === undefined || typeof value !== "boolean") {
+            throw new Error('Field active has invalid format because is undefined or is not boolean type!');
+        }
+        this.active = value;
+    };
+
+    public setMeta(value: any) {
+        this.meta = value;
     };
 
     public setUpdatedAt(updatedAt: Date) {

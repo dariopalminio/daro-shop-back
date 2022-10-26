@@ -79,7 +79,7 @@ export class Product extends Entity {
         if (argumentsArray.length === 0) {
             super();
         }
-        if (argumentsArray.length === 1) {
+        if (argumentsArray.length === 1) { //Constructor to unmarshalled input
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }

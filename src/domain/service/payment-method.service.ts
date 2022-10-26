@@ -40,15 +40,7 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
 
   async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
     try {
-      let newObj: PaymentMethod = new PaymentMethod();
-      newObj.key = paymentMethod.key;
-      newObj.name = paymentMethod.name;
-      newObj.description = paymentMethod.description;
-      newObj.image = paymentMethod.image;
-      newObj.active = paymentMethod.active;
-      newObj.meta = paymentMethod.meta;
-
-      const entityNew: PaymentMethod = await this.paymentMethodRepo.create(newObj);
+      const entityNew: PaymentMethod = await this.paymentMethodRepo.create(paymentMethod);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);

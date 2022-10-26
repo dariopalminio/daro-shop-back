@@ -44,7 +44,7 @@ export class User extends Entity {
         if (argumentsArray.length === 0) {
             super();
         }
-        if (argumentsArray.length === 1) {
+        if (argumentsArray.length === 1) { //Constructor to unmarshalled input
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
@@ -70,7 +70,7 @@ export class User extends Entity {
 
     /**
      * Set all attributes from Unmarshalled variable can be of any type 'any'.
-     * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
+     * It is used to convert (casting) and validate an input data type, such as a DTO or schema data from database, to the data type of this class.
      * @param usr Unmarshalled or any is used to tell TypeScript that a variable can be of any type
      */
     public setFromAny(unmarshalled: any) {

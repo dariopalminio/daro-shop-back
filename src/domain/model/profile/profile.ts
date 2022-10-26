@@ -45,11 +45,11 @@ export class Profile extends Entity {
         if (argumentsArray.length === 0) {
             super();
         }
-        if (argumentsArray.length === 1) {
+        if (argumentsArray.length === 1) { //Constructor to unmarshalled input
             super(argumentsArray[0]._id);
             this.setFromAny(argumentsArray[0]);
         }
-        if (argumentsArray.length > 1) {
+        if (argumentsArray.length > 1) { 
             super(argumentsArray[0]); //id
             this.setUserId(argumentsArray[1]);
             this.setEnable(argumentsArray[2]);

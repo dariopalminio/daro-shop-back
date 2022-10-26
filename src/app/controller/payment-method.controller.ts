@@ -95,7 +95,7 @@ export class PaymentMethodController {
     } catch (error) {
       throw new BadRequestException('Payment Method data malformed:' + error.message);
     }
-    const query = { key: paymentMethod.key };
+    const query = { key: paymentMethod.getKey() };
     let updatedObj;
     try {
       updatedObj = await this.paymentMethodService.update(query, paymentMethod);
