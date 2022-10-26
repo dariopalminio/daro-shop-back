@@ -81,18 +81,18 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
     async getById(id: string, fieldsToExclude?: any): Promise<PaymentMethod> {
         const entryDoc: PaymentMethodDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
+        const objCasted: PaymentMethod = new PaymentMethod(entryDoc);
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<PaymentMethod> {
         if (fieldsToExclude) {
             const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
+            const objCasted: PaymentMethod = new PaymentMethod(entryDoc);
             return objCasted;
         }
         const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query);
-        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(entryDoc)));
+        const objCasted: PaymentMethod = new PaymentMethod(entryDoc);
         return objCasted;
     }
 
@@ -110,7 +110,7 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
 
     async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
         const docCreated: PaymentMethodDocument = await this.entityModel.create(paymentMethod);
-        const objCasted: PaymentMethod = new PaymentMethod(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: PaymentMethod = new PaymentMethod(docCreated);
         return objCasted;
     };
 
@@ -129,10 +129,15 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
         return !!docDeleted; //doc is not null
     };
 
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToArrayDomainEntity(schemaDocArray: PaymentMethodDocument[]): PaymentMethod[] {
         let entitiesArray: PaymentMethod[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
-            new PaymentMethod(JSON.parse(JSON.stringify(element)))
+            new PaymentMethod(element)
         ));
         return entitiesArray;
     };

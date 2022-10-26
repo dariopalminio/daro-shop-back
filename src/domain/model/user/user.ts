@@ -1,3 +1,4 @@
+import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Entity } from '../entity';
 
 export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
@@ -92,22 +93,10 @@ export class User extends Entity {
             this.enable = false;
         }
         if (unmarshalled.updatedAt) {
-            if (unmarshalled.updatedAt instanceof Date) {
-                this.updatedAt = unmarshalled.updatedAt;
-            } else {
-                if (typeof unmarshalled.updatedAt === "string") {
-                    this.updatedAt = new Date(unmarshalled.updatedAt);
-                }
-            }
+            this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            if (unmarshalled.createdAt instanceof Date) {
-                this.createdAt = unmarshalled.createdAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.createdAt = new Date(unmarshalled.createdAt);
-                }
-            }
+            this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
     };
 

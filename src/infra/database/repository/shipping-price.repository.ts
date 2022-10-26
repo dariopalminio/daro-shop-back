@@ -77,12 +77,12 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         if (fieldsToExclude) {
             const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: ShippingPrice = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: ShippingPrice = new ShippingPrice(profileDoc);
             return objCasted;
         }
         const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(profileDoc)));
+        const objCasted: ShippingPrice = new ShippingPrice(profileDoc);
         return objCasted;
         //return this.conversorDocToCategory(catDoc);
     };
@@ -91,11 +91,11 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         console.log("ShippingPriceRepository--->getByQuery");
         if (fieldsToExclude) {
             const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
-            const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(doc)));
+            const objCasted: ShippingPrice = new ShippingPrice(doc);
             return objCasted;
         }
         const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
-        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(doc)));
+        const objCasted: ShippingPrice = new ShippingPrice(doc);
         console.log("ShippingPriceRepository--->objCasted");
         return objCasted;
     }
@@ -114,7 +114,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
 
     async create(doc: ShippingPrice): Promise<ShippingPrice> {
         const docCreated: ShippingPriceDocument = await this.shippingPriceModel.create(doc);
-        const objCasted: ShippingPrice = new ShippingPrice(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: ShippingPrice = new ShippingPrice(docCreated);
         return objCasted;
     }
 
@@ -146,11 +146,15 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         return !!docDeleted; //doc is not null
     };
 
-      
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToArrayDomainEntity(entityDocArray: ShippingPriceDocument[]): ShippingPrice[] {
         let entitiesArray: ShippingPrice[] = [];
         entityDocArray.forEach(element => entitiesArray.push(
-            new ShippingPrice(JSON.parse(JSON.stringify(element)))
+            new ShippingPrice(element)
         ));
         return entitiesArray;
     };

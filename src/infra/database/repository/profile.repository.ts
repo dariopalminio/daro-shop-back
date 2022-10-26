@@ -77,23 +77,23 @@ export class ProfileRepository implements IRepository<Profile> {
         if (fieldsToExclude) {
             const profileDoc: ProfileDocument = await this.profileModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: Profile = JSON.parse(JSON.stringify(profileDoc));
+            const objCasted: Profile = new Profile(profileDoc);
             return objCasted;
         }
         const profileDoc: ProfileDocument = await this.profileModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(profileDoc)));
+        const objCasted: Profile = new Profile(profileDoc);
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<Profile> {
         if (fieldsToExclude) {
             const profileDoc: ProfileDocument =  await this.profileModel.findOne(query, fieldsToExclude);
-            const objCasted: Profile =  new Profile(JSON.parse(JSON.stringify(profileDoc)));
+            const objCasted: Profile =  new Profile(profileDoc);
             return objCasted;
         }
         const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
-        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(profileDoc)));
+        const objCasted: Profile = new Profile(profileDoc);
         return objCasted;
     }
 
@@ -111,7 +111,7 @@ export class ProfileRepository implements IRepository<Profile> {
 
     async create(doc: Profile): Promise<Profile> {
         const docCreated: ProfileDocument = await this.profileModel.create(doc);
-        const objCasted: Profile = new Profile(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: Profile = new Profile(docCreated);
         return objCasted;
     }
 
@@ -143,11 +143,15 @@ export class ProfileRepository implements IRepository<Profile> {
         return !!docDeleted; //doc is not null
     };
 
-      
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToUser(schemaDocArray: ProfileDocument[]): Profile[] {
         let entityArray: Profile[] = [];
         schemaDocArray.forEach(element => entityArray.push(
-            new Profile(JSON.parse(JSON.stringify(element)))
+            new Profile(element)
         ));
         return entityArray;
     };

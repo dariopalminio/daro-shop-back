@@ -76,24 +76,23 @@ export class UserRepository implements IRepository<User> {
         if (fieldsToExclude) {
             const userDoc: UserDocument = await this.userModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
-            const objCasted: User = JSON.parse(JSON.stringify(userDoc));
+            const objCasted: User = new User(userDoc);
             return objCasted;
         }
         const userDoc: UserDocument = await this.userModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
+        const objCasted: User = new User(userDoc);
         return objCasted;
-        //return this.conversorDocToCategory(catDoc);
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<User> {
         if (fieldsToExclude) {
             const userDoc: UserDocument =  await this.userModel.findOne(query, fieldsToExclude);
-            const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
+            const objCasted: User = new User(userDoc);
             return objCasted;
         }
         const userDoc: UserDocument =  await this.userModel.findOne(query);
-        const objCasted: User = new User(JSON.parse(JSON.stringify(userDoc)));
+        const objCasted: User = new User(userDoc);
         return objCasted;
     }
 
@@ -112,7 +111,7 @@ export class UserRepository implements IRepository<User> {
     async create(doc: User): Promise<User> {
         const docCreated: UserDocument = await this.userModel.create(doc);
         //const objCasted: User = JSON.parse(JSON.stringify(docCreated));
-        const objCasted: User = new User(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: User = new User(docCreated);
         return objCasted;
     }
 
@@ -144,11 +143,16 @@ export class UserRepository implements IRepository<User> {
         return !!docDeleted; //doc is not null
     };
 
-      
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToArrayDomainEntity(schemaDocArray: UserDocument[]): User[] {
         let entityArray: User[] = [];
         schemaDocArray.forEach(element => entityArray.push(
-            new User(JSON.parse(JSON.stringify(element)))
+            //new User(element)))
+            new User(element)
         ));
         return entityArray;
     };

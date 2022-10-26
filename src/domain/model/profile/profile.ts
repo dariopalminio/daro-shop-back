@@ -1,3 +1,4 @@
+import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
 import { IAddress } from "./address.interface";
 
@@ -26,7 +27,7 @@ export class Profile extends Entity {
     protected addresses: IAddress[];
     protected updatedAt?: Date;
     protected createdAt?: Date;
-    
+
     /**
     * Constructors 
     * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
@@ -62,10 +63,10 @@ export class Profile extends Entity {
             this.setLanguage(argumentsArray[10]);
             this.setAddresses(argumentsArray[11]);
             if (argumentsArray[12]) {
-                this.updatedAt=(argumentsArray[12]);
+                this.updatedAt = (argumentsArray[12]);
             }
             if (argumentsArray[13]) {
-                this.createdAt=(argumentsArray[13]);
+                this.createdAt = (argumentsArray[13]);
             }
         }
     };
@@ -79,7 +80,7 @@ export class Profile extends Entity {
         this.setUserId(unmarshalled.userId);
         if ((unmarshalled.enable !== undefined) && (unmarshalled.enable !== null)) {
             this.setEnable(unmarshalled.enable);
-        }else{
+        } else {
             this.setEnable(false);
         }
         this.setUserName(unmarshalled.userName);
@@ -92,22 +93,10 @@ export class Profile extends Entity {
         this.setLanguage(unmarshalled.language);
         this.setAddresses(unmarshalled.addresses);
         if (unmarshalled.updatedAt) {
-            if (unmarshalled.updatedAt instanceof Date) {
-                this.updatedAt = unmarshalled.updatedAt;
-            } else {
-                if (typeof unmarshalled.updatedAt === "string") {
-                    this.updatedAt = new Date(unmarshalled.updatedAt);
-                }
-            }
+            this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            if (unmarshalled.createdAt instanceof Date) {
-                this.createdAt = unmarshalled.createdAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.createdAt = new Date(unmarshalled.createdAt);
-                }
-            }
+            this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
     };
 
@@ -200,7 +189,7 @@ export class Profile extends Entity {
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
 
@@ -227,23 +216,23 @@ export class Profile extends Entity {
     public getEmail(): string {
         return this.email;
     };
- 
+
     public getDocType(): string {
         return this.docType;
     };
- 
+
     public getDocument(): string {
         return this.document;
     };
- 
+
     public getTelephone(): string {
         return this.telephone;
     };
- 
+
     public getLanguage(): string {
         return this.language;
     };
- 
+
     public getAddresses(): IAddress[] {
         return this.addresses;
     };

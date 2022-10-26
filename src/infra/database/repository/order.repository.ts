@@ -81,18 +81,18 @@ export class OrderRepository implements IRepository<Order> {
     async getById(id: string, fieldsToExclude?: any): Promise<Order> {
         const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
-        const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
+        const objCasted: Order = new Order(entryDoc);
         return objCasted;
     };
 
     async getByQuery(query: any, fieldsToExclude?: any): Promise<Order> {
         if (fieldsToExclude) {
             const entryDoc: OrderDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
+            const objCasted: Order = new Order(entryDoc);
             return objCasted;
         }
         const entryDoc: OrderDocument = await this.entityModel.findOne(query);
-        const objCasted: Order = new Order(JSON.parse(JSON.stringify(entryDoc)));
+        const objCasted: Order = new Order(entryDoc);
         return objCasted;
     }
 
@@ -110,7 +110,7 @@ export class OrderRepository implements IRepository<Order> {
 
     async create(order: Order): Promise<Order> {
         const docCreated: OrderDocument = await this.entityModel.create(order);
-        const objCasted: Order = new Order(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: Order = new Order(docCreated);
         return objCasted;
     };
 
@@ -129,10 +129,15 @@ export class OrderRepository implements IRepository<Order> {
         return !!docDeleted; //doc is not null
     };
 
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToArrayDomainEntity(schemaDocArray: OrderDocument[]): Order[] {
         let entitiesArray: Order[] = [];
         schemaDocArray.forEach(element => entitiesArray.push(
-            new Order(JSON.parse(JSON.stringify(element)))
+            new Order(element)
         ));
         return entitiesArray;
     };

@@ -1,10 +1,38 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
-import { Reservation } from 'src/domain/model/product/reservation';
-import { Sale } from 'src/domain/model/product/sale';
 
 export type ProductDocument = Product & Document;
 
+@Schema()
+export class ReservationsDocument extends Document {
+
+  @Prop({ required: true })
+  orderId: string;
+
+  @Prop({ required: true })
+  quantity: number;
+
+  @Prop({ required: true, default: new Date() })
+  date: Date;
+
+}
+
+@Schema()
+export class SalesDocument extends Document {
+
+  @Prop({ required: true })
+  orderId: string;
+
+  @Prop({ required: true })
+  quantity: number;
+
+  @Prop({ required: true })
+  grossPrice: number;
+
+  @Prop({ required: true, default: new Date() })
+  date: Date;
+
+}
 
 @Schema()
 export class Product {
@@ -24,13 +52,13 @@ export class Product {
     description: string;
 
     @Prop()
-    images: [string]; //array of images name
+    images: string[]; //array of images name
 
     @Prop()
     category: string;
 
     @Prop()
-    type: string; //Sub-category
+    type: string; 
 
     @Prop()
     brand: string;
@@ -49,56 +77,30 @@ export class Product {
 
     @Prop()
     netCost: number;
-    //purchase net price or amount of the purchase, before including VAT
 
     @Prop()
     ivaAmountOnCost: number;
-    //IVA value of purchase or VAT amount on netCost (value added tax)
-
 
     @Prop()
     grossCost: number;
-    //gross value of purchase to provider
 
     @Prop()
     netPrice: number;
-    //netPrice price of sale or Net amount: It is the amount of the sale, before including VAT.
-    //netPrice = (grossPrice * 100) / (100 + %IVA)
 
     @Prop()
     ivaAmountOnPrice: number;
-    //IVA value of sale or VAT amount (value added tax): 
-    //Corresponds to an additional X% based on the net amount. If the ticket is exempt, the value remains at $0.
-    //ivaAmountOnPrice = ((netPrice * %IVA)/100)
-
-    //Amount not affected or exempt: This amount will be different from $0 when the tax document is an exempt ticket or is not affected by VAT.
 
     @Prop()
     grossPrice: number;
-    //Total amount with VAT included or gross Price: 
-    //Equivalent to the sum of the totals (net, VAT and exempt) according to the type of document. It is the amount consumer paid.
-    //gross price of sale, grossPrice = netPrice + ivaAmountOnPrice
-    //grossPrice = netPrice + ((netPrice * %IVA)/100)
-    //The prices in television commercials, catalogues, internet and in the straps of the gondolas 
-    //is published with VAT included.
 
     @Prop({ required: true })
     stock: number; //value of inventory existence 
 
     @Prop({ required: true, default: [] })
-    reservations: [{
-        orderId: { type: string }, 
-        quantity: { type: number }, 
-        date: { type: Date }, 
-      }]
+    reservations: ReservationsDocument[]
 
     @Prop({ required: true, default: [] })
-    sales: [{
-        orderId: { type: string }, 
-        quantity: { type: number }, 
-        grossPrice: { type: number }, 
-        date: { type: Date }, 
-      }]
+    sales: SalesDocument[]
 
     @Prop()
     active: Boolean; //is active to sell?

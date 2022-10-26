@@ -1,5 +1,6 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as MongoSchema } from 'mongoose';
+import { AddressDocument } from './address.schema';
 
 export type ProfileDocument = Profile & Document;
 
@@ -50,14 +51,7 @@ export class Profile {
   language: string;
 
   @Prop()
-  addresses: [{
-    street: { type: string }, //street with number
-    department: { type: string }, //department, flat or office
-    neighborhood: { type: string }, //neighborhood or commune
-    city: { type: string }, //city
-    state: { type: string }, //state, region or province
-    country: { type: string } //country
-  }]
+  addresses: AddressDocument[]
 
   @Prop({ required: true, default: new Date() })
   createdAt?: Date;

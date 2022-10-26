@@ -2,6 +2,7 @@ import { Reservation } from './reservation';
 import { Sale } from './sale';
 import { Entity } from '../entity';
 import { throws } from 'assert';
+import { convertAnyToDate } from 'src/domain/helper/date.helper';
 
 /**
  * Product domain object (Entity root)
@@ -26,12 +27,33 @@ export class Product extends Entity {
     protected model: string;
     protected gender: string;
     protected size: string;
+
+    //purchase net price or amount of the purchase, before including VAT
     protected netCost: number;
+
+    //IVA value of purchase or VAT amount on netCost (value added tax)
     protected ivaAmountOnCost: number;
+
+    //gross value of purchase to provider
     protected grossCost: number;
+
+    //netPrice price of sale or Net amount: It is the amount of the sale, before including VAT.
+    //netPrice = (grossPrice * 100) / (100 + %IVA)
     protected netPrice: number;
+
+    //IVA value of sale or VAT amount (value added tax): 
+    //Corresponds to an additional X% based on the net amount. If the ticket is exempt, the value remains at $0.
+    //ivaAmountOnPrice = ((netPrice * %IVA)/100)
     protected ivaAmountOnPrice: number;
+
+    //Total amount with VAT included or gross Price: 
+    //Equivalent to the sum of the totals (net, VAT and exempt) according to the type of document. It is the amount consumer paid.
+    //gross price of sale, grossPrice = netPrice + ivaAmountOnPrice
+    //grossPrice = netPrice + ((netPrice * %IVA)/100)
+    //The prices in television commercials, catalogues, internet and in the straps of the gondolas 
+    //is published with VAT included.
     protected grossPrice: number;
+
     protected stock: number;
     protected active: boolean;
     protected reservations: Reservation[];
@@ -126,39 +148,27 @@ export class Product extends Entity {
         this.setReservationsFromAny(unmarshalled);
         this.setSalesFromAny(unmarshalled);
         if (unmarshalled.updatedAt) {
-            if (unmarshalled.updatedAt instanceof Date) {
-                this.updatedAt = unmarshalled.updatedAt;
-            } else {
-                if (typeof unmarshalled.updatedAt === "string") {
-                    this.updatedAt = new Date(unmarshalled.updatedAt);
-                }
-            }
+            this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            if (unmarshalled.createdAt instanceof Date) {
-                this.createdAt = unmarshalled.createdAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.createdAt = new Date(unmarshalled.createdAt);
-                }
-            }
+            this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
     };
 
     private setSalesFromAny(unmarshalled: any) {
-        if (unmarshalled.sales){
+        if (unmarshalled.sales) {
             const saleList: Sale[] = this.createSalesEntityFromAny(unmarshalled.sales);
             this.setSales(saleList);
-        }else{ 
+        } else {
             this.sales = [];
         }
     };
 
     private setReservationsFromAny(unmarshalled: any) {
-        if (unmarshalled.reservations){
+        if (unmarshalled.reservations) {
             const resList: Reservation[] = this.createReservationsEntityFromAny(unmarshalled.reservations);
             this.setReservations(resList);
-        }else {
+        } else {
             this.reservations = [];
         }
     };
@@ -450,7 +460,7 @@ export class Product extends Entity {
     /**
      * Cancel reservation of orderId, rebook a reservation, and update the stock
      */
-     public revertReservationAndUpdateStock(orderId: string) {
+    public revertReservationAndUpdateStock(orderId: string) {
         //search reservation of orderId indicated
         const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
         if (reserveIndex === -1) {

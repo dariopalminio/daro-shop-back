@@ -103,11 +103,11 @@ export class ProductRepository implements IRepository<Product> {
     async getById(id: string, fieldsToExclude?: any): Promise<Product> {
         if (fieldsToExclude) {
             const prodDoc: ProductDocument = await this.productModel.findById(id, fieldsToExclude).exec();
-            const objCasted: Product = JSON.parse(JSON.stringify(prodDoc));
+            const objCasted: Product = new Product(prodDoc);
             return objCasted;
         }
         const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
-        const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
+        const objCasted: Product = new Product(prodDoc);
         return objCasted;
     };
 
@@ -115,12 +115,12 @@ export class ProductRepository implements IRepository<Product> {
 
         if (fieldsToExclude) {
             const prodDoc: ProductDocument = await this.productModel.findOne(query, fieldsToExclude);
-            const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
+            const objCasted: Product = new Product(prodDoc);
             return objCasted;
         }
 
         const prodDoc: ProductDocument = await this.productModel.findOne(query);
-        const objCasted: Product = new Product(JSON.parse(JSON.stringify(prodDoc)));
+        const objCasted: Product = new Product(prodDoc);
         return objCasted;
     }
 
@@ -138,7 +138,7 @@ export class ProductRepository implements IRepository<Product> {
 
     async create(prod: Product): Promise<Product> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
-        const objCasted: Product = new Product(JSON.parse(JSON.stringify(docCreated)));
+        const objCasted: Product = new Product(docCreated);
         return objCasted;
     }
     
@@ -157,11 +157,15 @@ export class ProductRepository implements IRepository<Product> {
         return !!docDeleted; //doc is not null
     };
 
+    /**
+     * Convert Unmarshalled structure data (documents from Mongo) to Domain Object Structure (Domain classes)
+     * @param schemaDocArray Unmarshalled structure data (documents from Mongo)
+     * @returns Domain Object Structure (Domain classes)
+     */
     castArrayDocToArrayDomainEntity(schemaDocArray: ProductDocument[]): Product[] {
-        
         let domainEntityArray: Product[] = [];
         schemaDocArray.forEach(element => domainEntityArray.push(
-            new Product(JSON.parse(JSON.stringify(element)))
+            new Product(element)
         ));
         return domainEntityArray;
     };

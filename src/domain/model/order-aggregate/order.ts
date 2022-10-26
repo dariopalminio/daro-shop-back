@@ -2,6 +2,7 @@ import { Address } from '../profile/address';
 import { Client } from './client';
 import { Entity } from '../entity';
 import { OrderItem } from './order-item';
+import { convertAnyToDate } from 'src/domain/helper/date.helper';
 
 /**
  * Order domain object (Entity root)
@@ -34,7 +35,7 @@ export class Order extends Entity {
     public constructor();
     public constructor(unmarshalled: any);
     public constructor(id: string,
-        client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number, 
+        client: Client, orderItems: OrderItem[], count: number, includesShipping: boolean, shippingAddress: Address, subTotal: number, shippingPrice: number,
         total: number, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
         if (argumentsArray.length > 11) {
@@ -65,10 +66,10 @@ export class Order extends Entity {
             this.setShippingPrice(argumentsArray[7]);
             this.setTotal(argumentsArray[8]);
             if (argumentsArray[9]) {
-                this.updatedAt=(argumentsArray[9]);
+                this.updatedAt = (argumentsArray[9]);
             }
             if (argumentsArray[10]) {
-                this.createdAt=(argumentsArray[10]);
+                this.createdAt = (argumentsArray[10]);
             }
         }
     };
@@ -99,22 +100,10 @@ export class Order extends Entity {
             this.setStatus(unmarshalled.status);
         }
         if (unmarshalled.updatedAt) {
-            if (unmarshalled.updatedAt instanceof Date) {
-                this.updatedAt = unmarshalled.updatedAt;
-            } else {
-                if (typeof unmarshalled.updatedAt === "string") {
-                    this.updatedAt = new Date(unmarshalled.updatedAt);
-                }
-            }
+            this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
-            if (unmarshalled.createdAt instanceof Date) {
-                this.createdAt = unmarshalled.createdAt;
-            } else {
-                if (typeof unmarshalled.createdAt === "string") {
-                    this.createdAt = new Date(unmarshalled.createdAt);
-                }
-            }
+            this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
     };
 
@@ -202,7 +191,7 @@ export class Order extends Entity {
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
 
