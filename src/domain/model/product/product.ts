@@ -1,5 +1,4 @@
 import { Reservation } from './reservation';
-import { Sale } from './sale';
 import { Entity } from '../entity';
 import { throws } from 'assert';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
@@ -57,10 +56,8 @@ export class Product extends Entity {
     protected stock: number;
     protected active: boolean;
     protected reservations: Reservation[];
-    protected sales: Sale[];
     protected updatedAt?: Date;
     protected createdAt?: Date;
-
 
     /**
     * Constructors
@@ -106,7 +103,6 @@ export class Product extends Entity {
             this.setStock(argumentsArray[19]);
             this.setActive(argumentsArray[20]);
             this.reservations = [];
-            this.sales = [];
             if (argumentsArray[21]) {
                 this.updatedAt = (argumentsArray[21]);
                 console.log();
@@ -146,21 +142,11 @@ export class Product extends Entity {
             this.setActive(unmarshalled.active);
         else this.active = true;
         this.setReservationsFromAny(unmarshalled);
-        this.setSalesFromAny(unmarshalled);
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
-        }
-    };
-
-    private setSalesFromAny(unmarshalled: any) {
-        if (unmarshalled.sales) {
-            const saleList: Sale[] = this.createSalesEntityFromAny(unmarshalled.sales);
-            this.setSales(saleList);
-        } else {
-            this.sales = [];
         }
     };
 
@@ -180,17 +166,6 @@ export class Product extends Entity {
         let domainEntityArray: Reservation[] = [];
         unmarshalledArray.forEach(element => domainEntityArray.push(
             new Reservation(element)
-        ));
-        return domainEntityArray;
-    };
-
-    /**
-     * Convert Unmarshalled array ( any[]) to marshalled value object
-     */
-    private createSalesEntityFromAny(unmarshalledArray: any[]): Sale[] {
-        let domainEntityArray: Sale[] = [];
-        unmarshalledArray.forEach(element => domainEntityArray.push(
-            new Sale(element)
         ));
         return domainEntityArray;
     };
@@ -285,10 +260,6 @@ export class Product extends Entity {
 
     public getReservations(): Reservation[] {
         return this.reservations;
-    };
-
-    public getSales(): Sale[] {
-        return this.sales;
     };
 
     /**
@@ -423,14 +394,6 @@ export class Product extends Entity {
         this.reservations = value;
     };
 
-    public setSales(value: Sale[]) {
-        if (value === undefined)
-            throw new Error('Field reservations in product has invalid format because is undefined!');
-        const isAnArray: boolean = Array.isArray(value);
-        if (!isAnArray) throw new Error('Field sales has invalid format because is not array!');
-        this.sales = value;
-    };
-
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
             throw new Error('Field updatedAt in product has invalid format because is undefined or is not Date!');
@@ -476,9 +439,12 @@ export class Product extends Entity {
         this.reservations = newReservationList;
     };
 
-    public moveReservationToSale(orderId: string) {
+    public removeReservation(orderId: string): boolean {
         //search the reservation
         const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
+        if (reserveIndex === -1) {
+            return false;
+        }
         const reservation: Reservation = this.reservations[reserveIndex];
         //delete the reservation from list
         const newReservationList = [
@@ -486,9 +452,15 @@ export class Product extends Entity {
             ...this.reservations.slice(reserveIndex + 1),
         ];
         this.reservations = newReservationList;
-        //add new sale to sales list
-        let newSale: Sale = new Sale(reservation.getOrderId(), reservation.getQuantity(), this.grossPrice, new Date());
-        this.sales.push(newSale);
+        return true;
+    };
+
+    public getReservationByOrderId(orderId: string): Reservation | null {
+        const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
+        if (reserveIndex === -1) {
+            return null; //not found
+        }
+        return this.reservations[reserveIndex];
     };
 
 };

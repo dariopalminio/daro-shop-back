@@ -21,7 +21,7 @@ export interface IProductService<T> extends IPersistentAggregateService<T>{
     getDetailById(id: string): Promise<Product>;
     addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean>;
     revertStockReservation(productId: string, orderId: string): Promise<boolean>;
-    moveReservationToSale(productId: string, orderId: string): Promise<boolean>;
+    concreteReservationBySale(productId: string, orderId: string): Promise<boolean>;
 };
 
 

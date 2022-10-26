@@ -18,7 +18,7 @@ export class User extends Entity {
     protected userName: string;
     protected firstName: string;
     protected lastName: string;
-    protected email: string;
+    protected email: string; //min: 6, max: 254
     protected password: string;
     protected roles: string[];
     protected verified: boolean;
@@ -146,10 +146,20 @@ export class User extends Entity {
      * Setter method with Attributes/Properties Validation
      */
     public setEmail(email: string) {
-        if (email === undefined || email.length === 0) throw new Error('Field email has invalid format becuse is undefined or empty!');
+        if (email === undefined || email.length === 0){
+            throw new Error('Field email has invalid format becuse is undefined or empty!');
+        }
+        if (email.length < 6){
+            throw new Error('The number of characters in user email is short, the email is very short!');
+        }
+        if (email.length > 254){
+            throw new Error('The number of characters in user email is too many, the email is too long!');
+        }
         const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-        const hasClientEmail: boolean = expresionsRegularEmail.test(email);
-        if (!hasClientEmail) throw new Error('Field email has invalid format!');
+        const emailValid: boolean = expresionsRegularEmail.test(email);
+        if (!emailValid){
+            throw new Error('Field user email has invalid format!');
+        }
         this.email = email;
     }
 

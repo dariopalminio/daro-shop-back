@@ -16,8 +16,8 @@ export class User {
 
   @Prop({
     required: true,
-    min: 6,
-    max: 255
+    min: 3,
+    max: 254
   })
   firstName: string;
 
@@ -30,7 +30,7 @@ export class User {
     unique: true,
     required: true,
     min: 6,
-    max: 1024
+    max: 254
   })
   email: string; // implicitly has "index: true" because is unique
 
@@ -50,9 +50,7 @@ export class User {
   @Prop()
   verificationCode: string;
 
-  @Prop({
-    default: Date.now(),
-  })
+  @Prop({ default: Date.now(), })
   startVerificationCode: Date;
 
   @Prop({ required: true, default: new Date() })

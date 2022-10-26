@@ -184,7 +184,7 @@ export class OrderService implements IOrderService<Order> {
 
       for (let i = 0; i < order.getOrderItems().length; i++) {
         const productId: string = order.getOrderItems()[i].getProductId();
-        await this.productService.moveReservationToSale(productId, orderId);
+        await this.productService.concreteReservationBySale(productId, orderId);
       }
 
       const paid: boolean = await this.update({ _id: orderId }, { status: OrderStatus.PAID });

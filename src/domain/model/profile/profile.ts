@@ -1,6 +1,6 @@
 import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
-import { IAddress } from "./address.interface";
+import { Address } from "./address";
 
 /**
  * Profile domain object
@@ -24,7 +24,7 @@ export class Profile extends Entity {
     protected document: string;
     protected telephone: string;
     protected language: string;
-    protected addresses: IAddress[];
+    protected addresses: Address[];
     protected updatedAt?: Date;
     protected createdAt?: Date;
 
@@ -36,7 +36,7 @@ export class Profile extends Entity {
     public constructor(unmarshalled: any);
     public constructor(id: string,
         userId: string, enable: boolean, userName: string, firstName: string, lastName: string, email: string, docType: string,
-        document: string, telephone: string, language: string, addresses: IAddress[], updatedAt?: Date, createdAt?: Date
+        document: string, telephone: string, language: string, addresses: Address[], updatedAt?: Date, createdAt?: Date
     );
     public constructor(...argumentsArray: any[]) {
         if (argumentsArray.length > 14) {
@@ -100,6 +100,59 @@ export class Profile extends Entity {
         }
     };
 
+    public getUserId(): string {
+        return this.userId;
+    };
+
+    public getEnable(): boolean {
+        return this.enable;
+    };
+
+    public getUserName(): string {
+        return this.userName;
+    };
+
+    public getFirstName(): string {
+        return this.firstName;
+    };
+
+    public getLastName(): string {
+        return this.lastName;
+    };
+
+    public getEmail(): string {
+        return this.email;
+    };
+
+    public getDocType(): string {
+        return this.docType;
+    };
+
+    public getDocument(): string {
+        return this.document;
+    };
+
+    public getTelephone(): string {
+        return this.telephone;
+    };
+
+    public getLanguage(): string {
+        return this.language;
+    };
+
+    public getAddresses(): Address[] {
+        return this.addresses;
+    };
+
+    public getUpdatedAt(): Date {
+        return this.updatedAt;
+    };
+
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    };
+
+
     public setUserId(value: string) {
         if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field userId has invalid format because is undefined or is not string!');
@@ -131,7 +184,6 @@ export class Profile extends Entity {
         this.firstName = value;
     };
 
-
     public setLastName(value: string) {
         if (value === undefined || (typeof value !== 'string')) {
             throw new Error('Field lastName has invalid format because is undefined or is not string!');
@@ -143,13 +195,21 @@ export class Profile extends Entity {
         if (email === undefined || email.length === 0) {
             throw new Error('Field email has invalid format becuse is undefined or empty!');
         }
+        if (email.length < 6){
+            throw new Error('The number of characters in user email is short, the email is very short!');
+        }
+        if (email.length > 254){
+            throw new Error('The number of characters in user email is too many, the email is too long!');
+        }
         const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-        const hasClientEmail: boolean = expresionsRegularEmail.test(email);
-        if (!hasClientEmail) throw new Error('Field email has invalid format!');
+        const emailValid: boolean = expresionsRegularEmail.test(email);
+        if (!emailValid){
+            throw new Error('Field profile email has invalid format!');
+        }
         this.email = email;
     };
 
-    public setAddresses(value: IAddress[]) {
+    public setAddresses(value: Address[]) {
         if (value === undefined || value === null) {
             throw new Error('Field addresses has invalid format because is undefined or null!');
         }
@@ -191,58 +251,6 @@ export class Profile extends Entity {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
             throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
-    };
-
-    public getUserId(): string {
-        return this.userId;
-    };
-
-    public getEnable(): boolean {
-        return this.enable;
-    };
-
-    public getUserName(): string {
-        return this.userName;
-    };
-
-    public getFirstName(): string {
-        return this.firstName;
-    };
-
-    public getLastName(): string {
-        return this.lastName;
-    };
-
-    public getEmail(): string {
-        return this.email;
-    };
-
-    public getDocType(): string {
-        return this.docType;
-    };
-
-    public getDocument(): string {
-        return this.document;
-    };
-
-    public getTelephone(): string {
-        return this.telephone;
-    };
-
-    public getLanguage(): string {
-        return this.language;
-    };
-
-    public getAddresses(): IAddress[] {
-        return this.addresses;
-    };
-
-    public getUpdatedAt(): Date {
-        return this.updatedAt;
-    };
-
-    public getCreatedAt(): Date {
-        return this.createdAt;
     };
 
 };

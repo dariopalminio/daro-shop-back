@@ -26,7 +26,7 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
 
   getPriceByAddress(address: Address): Promise<any> {
     console.log("getPriceByAddress");
-    return this.getByQuery({location: address.state});
+    return this.getByQuery({location: address.getState()});
   }
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<ShippingPrice[]> {

@@ -1,18 +1,19 @@
-import { IAddress } from "./address.interface";
-
 /**
  * Address Value Object
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
+ * Value Object is a DDD concept that is immutable and doesn’t have its own identity. 
+ * Since it is immutable, it does not have public setter methods.
  */
-export class Address implements IAddress {
+export class Address {
 
-    country: string;
-    state: string; //region
-    city: string;
-    neighborhood: string; //commune
-    street: string;
-    department: string;
+    protected country: string;
+    protected state: string; //region
+    protected city: string;
+    protected neighborhood: string; //commune
+    protected street: string;
+    protected department: string;
+    //zipCode - not implemented
 
     public constructor();
     public constructor(addrsAny: any); 
@@ -25,12 +26,12 @@ export class Address implements IAddress {
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
-            this.setCountry(argumentsArray[0]); //country
-            this.setState(argumentsArray[1]); //state
-            this.setCity(argumentsArray[2]); //city
-            this.setNeighborhood(argumentsArray[3]); //neighborhood
-            this.setStreet(argumentsArray[4]); //street
-            this.setDepartment(argumentsArray[5]); //department
+            this._setCountry(argumentsArray[0]); //country
+            this._setState(argumentsArray[1]); //state
+            this._setCity(argumentsArray[2]); //city
+            this._setNeighborhood(argumentsArray[3]); //neighborhood
+            this._setStreet(argumentsArray[4]); //street
+            this._setDepartment(argumentsArray[5]); //department
         }
     };
 
@@ -39,35 +40,59 @@ export class Address implements IAddress {
             throw new Error('Address is invalid (undefined or null)!');
         if (!addrsAny.country || !addrsAny.state || !addrsAny.city || !addrsAny.neighborhood || !addrsAny.street || !addrsAny.department)
             throw new Error('Address has some invalid field!');
-        this.setCountry(addrsAny.country);
-        this.setState(addrsAny.state);
-        this.setCity(addrsAny.city);
-        this.setNeighborhood(addrsAny.neighborhood);
-        this.setStreet(addrsAny.street);
-        this.setDepartment(addrsAny.department);
+        this._setCountry(addrsAny.country);
+        this._setState(addrsAny.state);
+        this._setCity(addrsAny.city);
+        this._setNeighborhood(addrsAny.neighborhood);
+        this._setStreet(addrsAny.street);
+        this._setDepartment(addrsAny.department);
     };
 
-    public setCountry(country: string) {
+    public getCountry(): string {
+        return this.country;
+    };
+
+    public getState(): string {
+        return this.state;
+    };
+
+    public getCity(): string {
+        return this.city;
+    };
+
+    public getNeighborhood(): string {
+        return this.neighborhood;
+    };
+
+    public getStreet(): string {
+        return this.street;
+    };
+
+    public getDepartment(): string {
+        return this.department;
+    };
+
+    private _setCountry(country: string) {
         this.country = country;
     }
 
-    public setCity(city: string) {
+    private _setCity(city: string) {
         this.city = city ? city : '';
     }
 
-    public setState(state: string) {
+    private _setState(state: string) {
         this.state = state ? state : '';
     }
 
-    public setNeighborhood(neighborhood: string) {
+    private _setNeighborhood(neighborhood: string) {
         this.neighborhood = neighborhood ? neighborhood : '';
     }
 
-    public setStreet(street: string) {
+    private _setStreet(street: string) {
         this.street = street ? street : '';
     }
 
-    public setDepartment(dept: string) {
+    private _setDepartment(dept: string) {
         this.department = dept ? dept : '';
     }
 

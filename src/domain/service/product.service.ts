@@ -3,7 +3,6 @@ import { IProductService } from '../service/interface/product.service.interface'
 import { ProductOfCatalog } from 'src/domain/model/product/product-of-catalog';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from '../model/product/reservation';
-import { Sale } from '../model/product/sale';
 import { Product } from '../model/product/product';
 import { IRepository } from '../infra-interface/repository.interface';
 
@@ -172,9 +171,9 @@ export class ProductService implements IProductService<Product> {
     return updated;
   }
 
-  async moveReservationToSale(productId: string, orderId: string): Promise<boolean> {
+  async concreteReservationBySale(productId: string, orderId: string): Promise<boolean> {
     let product: Product = await this.getById(productId);
-    product.moveReservationToSale(orderId);
+    product.removeReservation(orderId);
     const updated: boolean = await this.updateById(productId, product);
     return updated;
   }
