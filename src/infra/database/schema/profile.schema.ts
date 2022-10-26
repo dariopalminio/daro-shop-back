@@ -51,12 +51,12 @@ export class Profile {
 
   @Prop()
   addresses: [{
-    street: { type: String }, //street with number
-    department: { type: String }, //department, flat or office
-    neighborhood: { type: String }, //neighborhood or commune
-    city: { type: String }, //city
-    state: { type: String }, //state, region or province
-    country: { type: String } //country
+    street: { type: string }, //street with number
+    department: { type: string }, //department, flat or office
+    neighborhood: { type: string }, //neighborhood or commune
+    city: { type: string }, //city
+    state: { type: string }, //state, region or province
+    country: { type: string } //country
   }]
 
   @Prop({ required: true, default: new Date() })
