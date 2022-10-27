@@ -1,7 +1,7 @@
 
 ## Folder structure
 
-doc/architecture/hexa3-clean-architecture.png
+![Test](doc/architecture/hexa3-clean-architecture.png)
 
 ```bash
 .
