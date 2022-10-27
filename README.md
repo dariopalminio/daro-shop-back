@@ -30,6 +30,14 @@ Main concepts for this architecture Hexa3L are around codebase scalability. The 
 
 ```
 
+## Code Rules
+
+- The Ports and Adapters Pattern: 
+a) From the app layer, only the domain layer is accessed through input-port (incoming).
+b) From the domain layer, only the infra layer is accessed through output-port (outgoing).
+- Dependency injection:
+a) The incoming and outgoing implementations are injected via annotations or another mechanism.
+
 ## Stack
 
 - Stack: MERN + Nest + Typescript
