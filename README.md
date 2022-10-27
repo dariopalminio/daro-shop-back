@@ -1,7 +1,11 @@
 
-## Folder structure
+## Architecture
 
-![Test](doc/architecture/hexa3-clean-architecture.png)
+Main concepts for this architecture Hexa3L are around codebase scalability. The goal is to provide a clean architecture while flexible for implementing and growing functionalities into the codebase.
+
+![Hexa3](doc/architecture/hexa3-clean-architecture.png)
+
+## Folder structure
 
 ```bash
 .
