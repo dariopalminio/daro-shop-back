@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IRepository } from '../../../domain/infra-interface/repository.interface';
+import { IRepository } from '../../../domain/outgoing/repository.interface';
 import { PaymentMethodDocument } from '../schema/payment-method.schema';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 

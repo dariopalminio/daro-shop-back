@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../infra-interface/repository.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IProfileService } from './interface/profile.service.interface';
-import { Profile } from '../model/profile/profile';
-import { ResponseCode } from '../model/service/response.code.enum';
+import { IProfileService } from 'src/domain/incoming/profile.service.interface';
+import { Profile } from 'src/domain/model/profile/profile';
+import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 
 /**
  * Profile Service

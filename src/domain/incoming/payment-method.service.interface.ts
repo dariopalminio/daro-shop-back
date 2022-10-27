@@ -1,4 +1,4 @@
-import { IPersistentAggregateService } from './persistent.aggregate.interface';
+import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
 
 /**
  * Payment Method Service Interface

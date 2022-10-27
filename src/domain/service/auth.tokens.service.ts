@@ -1,20 +1,20 @@
 import { Injectable, Inject } from '@nestjs/common';
-import IEmailSender from '../infra-interface/email-sender.interface';
-import { ITranslator } from 'src/domain/infra-interface/translator.interface';
+import IEmailSender from 'src/domain/outgoing/email-sender.interface';
+import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IAuthTokensService } from './interface/auth.tokens.service.interface';
+import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import jwt from "jsonwebtoken";
-import { AuthClientType } from '../model/auth/token/auth.client.type';
-import { RequestRefreshTokenType } from '../model/auth/token/auth.request.refresh.token.type';
-import { NewAdminTokenRequestType } from '../model/auth/token/auth.admin.type';
+import { AuthClientType } from 'src/domain/model/auth/token/auth.client.type';
+import { RequestRefreshTokenType } from 'src/domain/model/auth/token/auth.request.refresh.token.type';
+import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
 import { PayloadType } from '../model/auth/token/payload.type';
-import { IUserService } from './interface/user.service.interface';
-import { RolesEnum } from '../model/auth/reles.enum';
-import { LoginForm } from '../model/auth/login/login-form';
-import { User } from '../model/user/user';
+import { IUserService } from 'src/domain/incoming/user.service.interface';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { LoginForm } from 'src/domain/model/auth/login/login-form';
+import { User } from 'src/domain/model/user/user';
 const bcrypt = require('bcrypt');
 
 /**

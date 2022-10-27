@@ -1,9 +1,8 @@
-
-import { IPersistentAggregateService } from './persistent.aggregate.interface';
-import { User } from 'src/domain/model/user/user';
+import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
+import { Address } from 'src/domain/model/profile/address';
 
 /**
- * User Service Interface
+ * Shipping Price Service Interface
  * 
  * This is a Domain Service Interface that works with an Entity Root and its collection.
  * 
@@ -12,7 +11,6 @@ import { User } from 'src/domain/model/user/user';
  * An input port (driving port) lets the application core (Domain layer) to expose the functionality to the outside of the world (app layer).
  * Application layer controllers use services only through these interfaces (input port).
  */
-export interface IUserService<T> extends IPersistentAggregateService<T> {
-    getByUserName(userName: string): Promise<User>;
-    getUserJustRegister(userName: string): Promise<User>;
+export interface IShippingPriceService<T> extends IPersistentAggregateService<T> {
+    getPriceByAddress(address: Address): Promise<any>;
 };

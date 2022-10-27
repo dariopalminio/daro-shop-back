@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../../../app/controller/app.controller';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ITranslator } from '../../../domain/infra-interface/translator.interface';
-import { IGlobalConfig } from '../../../domain/infra-interface/global-config.interface';
+import { ITranslator } from '../../../domain/outgoing/translator.interface';
+import { IGlobalConfig } from '../../../domain/outgoing/global-config.interface';
 import { TerminusModule } from '@nestjs/terminus';
 
 // Stub for i18n traslator

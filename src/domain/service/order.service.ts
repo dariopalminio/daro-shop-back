@@ -1,15 +1,15 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../infra-interface/repository.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IOrderService } from './interface/order.service.interface';
-import { Order } from '../model/order-aggregate/order';
-import { IProductService } from './interface/product.service.interface';
-import { IShippingPriceService } from './interface/shipping-price.service.interface';
-import { OrderItem } from '../model/order-aggregate/order-item';
-import { OrderStatus } from '../model/order-aggregate/order-status.enum';
-import { ResponseCode } from '../model/service/response.code.enum';
-import { ShippingPrice } from '../model/shipping/shipping-price';
-import { Product } from '../model/product/product';
+import { IOrderService } from 'src/domain/incoming/order.service.interface';
+import { Order } from 'src/domain/model/order-aggregate/order';
+import { IProductService } from 'src/domain/incoming/product.service.interface';
+import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
+import { OrderItem } from 'src/domain/model/order-aggregate/order-item';
+import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum';
+import { ResponseCode } from 'src/domain/model/service/response.code.enum';
+import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
+import { Product } from 'src/domain/model/product/product';
 
 /**
  * Order Service

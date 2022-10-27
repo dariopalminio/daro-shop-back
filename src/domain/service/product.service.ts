@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IProductService } from '../service/interface/product.service.interface';
+import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { ProductOfCatalog } from 'src/domain/model/product/product-of-catalog';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
-import { Reservation } from '../model/product/reservation';
-import { Product } from '../model/product/product';
-import { IRepository } from '../infra-interface/repository.interface';
+import { Reservation } from 'src/domain/model/product/reservation';
+import { Product } from 'src/domain/model/product/product';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 
 /**
  * Product Service

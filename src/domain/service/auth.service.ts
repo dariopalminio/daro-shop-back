@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IAuthService } from '../service/interface/auth.service.interface';
-import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import IEmailSender from '../infra-interface/email-sender.interface';
-import { validEmail } from '../helper/validators.helper';
+import { IAuthService } from 'src/domain/incoming/auth.service.interface';
+import { IUserService } from 'src/domain/incoming/user.service.interface';
+import IEmailSender from 'src/domain/outgoing/email-sender.interface';
+import { validEmail } from 'src/domain/helper/validators.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from '../helper/token.helper';
 import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
 import { ParamsRegisterStart } from 'src/domain/model/auth/register/params-register-start';
@@ -10,16 +10,16 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { ITranslator } from 'src/domain/infra-interface/translator.interface';
+import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { ResponseCode } from 'src/domain/model/service/response.code.enum';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';;
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';;
 import { DomainError } from 'src/domain/error/domain-error';
-import { User } from '../model/user/user';
-import { IAuthTokensService } from './interface/auth.tokens.service.interface';
-import { PayloadType } from '../model/auth/token/payload.type';
-import { TokensType } from '../model/auth/token/tokens.type';
-import { RolesEnum } from '../model/auth/reles.enum';
-import { RegisterForm } from '../model/auth/register/register-form';
+import { User } from 'src/domain/model/user/user';
+import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
+import { PayloadType } from 'src/domain/model/auth/token/payload.type';
+import { TokensType } from 'src/domain/model/auth/token/tokens.type';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 const bcrypt = require('bcrypt');
 
 /**

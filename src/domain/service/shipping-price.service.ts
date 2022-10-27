@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../infra-interface/repository.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IShippingPriceService } from './interface/shipping-price.service.interface';
-import { ShippingPrice } from '../model/shipping/shipping-price';
-import { Address } from '../model/profile/address';
-import { ResponseCode } from '../model/service/response.code.enum';
+import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
+import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
+import { Address } from 'src/domain/model/profile/address';
+import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 
 /**
  * Shipping Price Service

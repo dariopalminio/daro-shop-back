@@ -1,4 +1,4 @@
-import { IPersistentAggregateService } from './persistent.aggregate.interface';
+import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Product } from 'src/domain/model/product/product';
 

@@ -1,4 +1,4 @@
-import { ITranslator } from '../../../domain/infra-interface/translator.interface';
+import { ITranslator } from '../../../domain/outgoing/translator.interface';
 
 export class TranslatorStub implements ITranslator {
 

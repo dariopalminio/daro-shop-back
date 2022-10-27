@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../infra-interface/repository.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { IPaymentMethodService } from './interface/payment-method.service.interface';
-import { PaymentMethod } from '../model/payment/payment-metod';
+import { IPaymentMethodService } from 'src/domain/incoming/payment-method.service.interface';
+import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 
 
 /**

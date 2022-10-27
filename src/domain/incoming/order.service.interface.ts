@@ -1,5 +1,5 @@
 import { Order } from 'src/domain/model/order-aggregate/order';
-import { IPersistentAggregateService } from './persistent.aggregate.interface';
+import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
 
 /**
  * Order Service Interface

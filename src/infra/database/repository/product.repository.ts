@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IRepository } from '../../../domain/infra-interface/repository.interface';
+import { IRepository } from '../../../domain/outgoing/repository.interface';
 import { Product } from '../../../domain/model/product/product';
 import { ProductDocument } from '../schema/product.schema';
 

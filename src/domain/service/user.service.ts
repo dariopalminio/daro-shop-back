@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IUserService } from '../service/interface/user.service.interface';
+import { IUserService } from 'src/domain/incoming/user.service.interface';
 import { User } from 'src/domain/model/user/user';
-import { IRepository } from '../infra-interface/repository.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
-import { generateToken } from '../helper/token.helper';
-import { RolesEnum } from '../model/auth/reles.enum';
-import { ResponseCode } from '../model/service/response.code.enum';
+import { generateToken } from 'src/domain/helper/token.helper';
+import { RolesEnum } from 'src/domain/model/auth/reles.enum';
+import { ResponseCode } from 'src/domain/model/service/response.code.enum';
 
 /**
  * User Service

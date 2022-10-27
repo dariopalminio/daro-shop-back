@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import * as pack from "../../../package.json"
 
 require('dotenv').config();

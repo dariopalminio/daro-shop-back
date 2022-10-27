@@ -1,5 +1,5 @@
 import { PaginatedResult } from 'src/domain/model/paginated-result';
-import { IPersistentAggregateService } from './persistent.aggregate.interface';
+import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
 
 /**
  * Category Service Interface

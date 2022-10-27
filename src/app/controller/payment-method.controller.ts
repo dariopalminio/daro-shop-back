@@ -1,8 +1,8 @@
 import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException, Param } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
-import { IPaymentMethodService } from 'src/domain/service/interface/payment-method.service.interface';
+import { IPaymentMethodService } from 'src/domain/incoming/payment-method.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 import { PaymentMethodDTO } from '../dto/payment-method.dto';

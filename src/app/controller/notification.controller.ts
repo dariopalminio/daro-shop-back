@@ -1,7 +1,7 @@
 import { Controller, Res, Get, Post, Body, Inject, Headers, HttpStatus, InternalServerErrorException } from '@nestjs/common';
-import { INotificationService } from 'src/domain/service/interface/notification.service.interface';
+import { INotificationService } from 'src/domain/incoming/notification.service.interface';
 import { ContactMessage } from 'src/domain/model/notification/contact.message';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmailDataDTO } from 'src/domain/model/notification/email-data-dto';

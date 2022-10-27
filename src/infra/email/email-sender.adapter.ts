@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
-import IEmailSender from 'src/domain/infra-interface/email-sender.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import IEmailSender from 'src/domain/outgoing/email-sender.interface';
 import * as path from 'path';
 
 const fs = require("fs")

@@ -1,4 +1,4 @@
-import { ITranslator } from "src/domain/infra-interface/translator.interface"
+import { ITranslator } from "src/domain/outgoing/translator.interface"
 
 
 /**

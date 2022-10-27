@@ -2,8 +2,8 @@
 import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
 import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
-import { LogoutForm } from '../../model/auth/login/logout-form';
-import { RecoveryUpdateDataType } from '../../model/auth/recovery/recovery-update-data.type';
+import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
+import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 
 /**

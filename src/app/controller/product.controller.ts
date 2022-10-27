@@ -3,9 +3,9 @@ import {
   NotFoundException, Delete, Query, Put, BadRequestException, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
 
-import { IProductService } from 'src/domain/service/interface/product.service.interface';
+import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { Product } from 'src/domain/model/product/product';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';

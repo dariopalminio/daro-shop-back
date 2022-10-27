@@ -1,6 +1,6 @@
 import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards, BadRequestException } from '@nestjs/common';
-import { ICategoryService } from 'src/domain/service/interface/category.service.interface';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { ICategoryService } from 'src/domain/incoming/category.service.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';

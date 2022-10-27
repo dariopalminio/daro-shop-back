@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from '../infra-interface/repository.interface';
-import { ICategoryService } from '../service/interface/category.service.interface';
+import { IRepository } from 'src/domain/outgoing/repository.interface';
+import { ICategoryService } from 'src/domain/incoming/category.service.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
-import { Category } from '../model/category/category';
+import { Category } from 'src/domain/model/category/category';
 
 /**
  * Category Service

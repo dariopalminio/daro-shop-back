@@ -2,8 +2,8 @@ import {
   Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus,
   NotFoundException, UseGuards, InternalServerErrorException, BadRequestException
 } from '@nestjs/common';
-import { IUserService } from 'src/domain/service/interface/user.service.interface';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IUserService } from 'src/domain/incoming/user.service.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';

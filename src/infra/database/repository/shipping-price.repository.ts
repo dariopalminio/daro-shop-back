@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
-import { IRepository } from '../../../domain/infra-interface/repository.interface';
+import { IRepository } from '../../../domain/outgoing/repository.interface';
 import { ShippingPriceDocument } from '../schema/shipping-price.schema';
 
 /**

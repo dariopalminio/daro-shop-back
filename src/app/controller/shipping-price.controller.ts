@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/infra-interface/global-config.interface';
+import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { Address } from 'src/domain/model/profile/address';
-import { IShippingPriceService } from 'src/domain/service/interface/shipping-price.service.interface';
+import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
