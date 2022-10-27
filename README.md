@@ -1,5 +1,8 @@
 
 ## Folder structure
+
+doc/architecture/hexa3-clean-architecture.png
+
 ```bash
 .
 └── src
