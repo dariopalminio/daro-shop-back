@@ -7,7 +7,7 @@ import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { OrderItem } from 'src/domain/model/order-aggregate/order-item';
 import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum';
-import { ResponseCode } from 'src/domain/error/response.code.enum';
+import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Product } from 'src/domain/model/product/product';
 

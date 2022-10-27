@@ -4,7 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Address } from 'src/domain/model/profile/address';
-import { ResponseCode } from 'src/domain/error/response.code.enum';
+import { ResponseCode } from 'src/domain/error/response-code.enum';
 
 /**
  * Shipping Price Service

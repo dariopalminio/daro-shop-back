@@ -3,7 +3,7 @@ import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
-import { ResponseCode } from 'src/domain/error/response.code.enum';
+import { ResponseCode } from 'src/domain/error/response-code.enum';
 
 /**
  * Profile Service
