@@ -10,12 +10,16 @@
     │     ├── dto # Data Transfer Objects 
     │     └── controller # API Controllers responsible for handling incoming requests and returning responses to the client (routing)
     ├── domain # Layer for the domain to Business Logic
+    │     ├── incoming # input-port, services interfaces 
     │     ├── service # Layer that composes application use cases 
-    │     │    └── interface # input-port used by app layer
-    │     ├── infra-interface # output-port to infrastructure interfaces
-    │     └── model # Business domain classes and everything that composes domain model (Entities and Value Objects)
+    │     ├── model # Business domain classes and everything that composes domain model (Entities and Value Objects)
+    │     └── outgoing # output-port to infrastructure interfaces
     │
     └── infra # Layer for communication with what is external of application and infrastructure
+        ├── database # output-port to infrastructure interfaces
+        │     ├── repository # implementation of repository pattern
+        │     └── schema # Model schema for database
+        └── etc 
 
 ```
 
