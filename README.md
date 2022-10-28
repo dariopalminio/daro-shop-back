@@ -1,7 +1,7 @@
 
 ## Architecture
 
-Main concepts for this architecture Hexa3L are around codebase scalability. The goal is to provide a clean architecture while flexible for implementing and growing functionalities into the codebase.
+Main concepts for this architecture Hexa3L are around codebase scalability using Arquitectura hexagonal and DDD. The goal is to provide a clean architecture while flexible for implementing and growing functionalities into the codebase.
 
 ![Hexa3](doc/architecture/hexa3-clean-architecture.png)
 
@@ -37,6 +37,8 @@ a) From the app layer, only the domain layer is accessed through input-port (inc
 b) From the domain layer, only the infra layer is accessed through output-port (outgoing).
 - Dependency injection:
 a) The incoming and outgoing implementations are injected via annotations or another mechanism.
+- Domain core: 
+a) From the domain it is not allowed to use infrastructure or application elements directly.
 
 ## Stack
 
