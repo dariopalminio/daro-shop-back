@@ -208,5 +208,6 @@ Nest is [MIT licensed](LICENSE).
 - DDD article: https://bazaglia.com/clean-architecture-with-typescript-ddd-onion/
 - DDD Code example: https://github.com/bazaglia/shopping-cart
 - The Clean Architecture: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+- https://nestjs-i18n.com/
 
 

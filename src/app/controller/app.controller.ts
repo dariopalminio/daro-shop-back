@@ -1,9 +1,11 @@
-import { Controller, Get, Res, Inject, Headers } from '@nestjs/common';
+import { Controller, Get, Res, Inject, Headers, HttpStatus, BadRequestException } from '@nestjs/common';
 import { HealthCheck, HttpHealthIndicator, HealthCheckService, MongooseHealthIndicator } from "@nestjs/terminus";
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { DomainError } from 'src/domain/error/domain-error';
+import { ResponseCode } from 'src/domain/error/response-code.enum';
 
 /**
  * App controller
@@ -131,7 +133,7 @@ export class AppController {
 
     let variables = "DEBUG is false!";
     if (this.globalConfig.get<boolean>('DEBUG') as boolean)
-      variables =this.globalConfig.stringify()
+      variables = this.globalConfig.stringify()
 
     const response = {
       isSuccess: true,
@@ -143,6 +145,27 @@ export class AppController {
       globalConfig: variables,
     };
     return res.status(200).json(response);
+  };
+
+  @Get('test')
+  async testError(@Headers() headers, @Res() res) {
+
+    let lang = 'en';
+
+    if (headers && headers.lang) {
+      lang = headers.lang;
+    }
+
+    try {
+      let err = new DomainError(ResponseCode.BAD_REQUEST, 'Email ya registrado');
+      err.detail = "Traslated Msg";
+      throw err;
+    } catch (error) {
+      if (error instanceof DomainError && error.code === HttpStatus.BAD_REQUEST) throw new BadRequestException(error);
+    }
+
+
+    return res.status(200).json("OK");
   };
 
 

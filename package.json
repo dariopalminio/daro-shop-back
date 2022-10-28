@@ -48,7 +48,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.1",
-    "nestjs-i18n": "^9.1.10",
+    "nestjs-i18n": "^9.2.1",
     "nodemailer": "^6.7.8",
     "nodemailer-handlebars": "^1.0.1",
     "reflect-metadata": "^0.1.13",
