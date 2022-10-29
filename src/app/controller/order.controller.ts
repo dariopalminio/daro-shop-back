@@ -7,8 +7,7 @@ import { Order } from 'src/domain/model/order-aggregate/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
 import { OrderToCreateDTO } from '../dto/order-to-create.dto';
-import { DomainError } from 'src/domain/error/domain-error';
-import { throwAppError } from '../error/app-error-handling';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Order controller
@@ -41,7 +40,7 @@ export class OrderController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -59,7 +58,7 @@ export class OrderController {
     try {
       objCreated = await this.orderService.create(orderToCreate);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!objCreated) throw new NotFoundException('Could not be created!');
     return res.status(HttpStatus.OK).json({
@@ -77,7 +76,7 @@ export class OrderController {
     try {
       objDeleted = await this.orderService.delete(id);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!objDeleted) throw new NotFoundException('Does not exist or canot be deleted!');
     return res.status(HttpStatus.OK).json({
@@ -101,7 +100,7 @@ export class OrderController {
         order: orderCreated
       })
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -115,7 +114,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -129,7 +128,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -143,7 +142,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 

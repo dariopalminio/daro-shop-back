@@ -8,6 +8,7 @@ import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ProfileDTO } from '../dto/profile.dto';
 import { Profile } from 'src/domain/model/profile/profile';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Profile controller
@@ -65,7 +66,7 @@ export class ProfileController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -77,7 +78,7 @@ export class ProfileController {
     try {
       user = await this.profileService.getById(userID);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!user) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -92,7 +93,7 @@ export class ProfileController {
       if (!profile) throw new NotFoundException('Profile does not exist!');
       return res.status(HttpStatus.OK).json(profile);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -111,7 +112,7 @@ export class ProfileController {
     try {
       newProfile = await this.profileService.create(profile);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!newProfile) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -130,7 +131,7 @@ export class ProfileController {
     try {
       categoryDeleted = await this.profileService.delete(id);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Profile does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -152,7 +153,7 @@ export class ProfileController {
     try {
       updatedUser = await this.profileService.updateProfile(profile);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!updatedUser) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({

@@ -5,7 +5,7 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from 'src/domain/model/product/reservation';
 import { Product } from 'src/domain/model/product/product';
 import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DuplicateProductError, DuplicateSkuError, SkuGenerationError } from '../error/product-errors';
+import { DuplicateProductError, DuplicateSkuError, ProductNotFoundError, SkuGenerationError } from '../error/product-errors';
 import { DomainError } from '../error/domain-error';
 import { ResponseCode } from '../error/response-code.enum';
 
@@ -78,6 +78,7 @@ export class ProductService implements IProductService<Product> {
 
   async getById(id: string): Promise<Product> {
     const entity: Product = await this.productRepository.getById(id);
+    if (!entity || entity === null) throw new ProductNotFoundError();
     return entity;
   };
 
@@ -90,6 +91,7 @@ export class ProductService implements IProductService<Product> {
       ivaAmountOnPrice: 0,
     };
     const entity: Product = await this.productRepository.getById(id, fieldsToExclude);
+    if (!entity || entity === null) throw new ProductNotFoundError();
     return entity;
   };
 
@@ -107,12 +109,17 @@ export class ProductService implements IProductService<Product> {
   };
 
   async delete(id: string): Promise<boolean> {
+    const found: boolean = await this.productRepository.hasById(id);
+    if (!found) throw new ProductNotFoundError();
     const deleted: boolean = await this.productRepository.delete(id);
     return deleted;
   };
 
   async updateById(id: string, product: Product): Promise<boolean> {
+    const found: boolean = await this.productRepository.hasById(id);
+    if (!found) throw new ProductNotFoundError();
     const updatedProduct: boolean = await this.productRepository.updateById(id, { ...product, updatedAt: new Date() });
+    if (!updatedProduct) throw new Error("Could not update the indicated product.");
     return updatedProduct;
   };
 
@@ -123,6 +130,7 @@ export class ProductService implements IProductService<Product> {
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
     const updatedProduct: boolean = await this.productRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
+    if (!updatedProduct) throw new ProductNotFoundError();
     return updatedProduct;
   };
 

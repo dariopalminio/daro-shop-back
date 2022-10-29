@@ -15,7 +15,7 @@ import { IUserService } from 'src/domain/incoming/user.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
 import { User } from 'src/domain/model/user/user';
-import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError } from 'src/domain/error/auth-errors';
+import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError, TokkensCreationError } from 'src/domain/error/auth-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -57,49 +57,52 @@ export class AuthTokensService implements IAuthTokensService {
    * @returns 
    */
   createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType {
+    try {
+      let tokens: TokensType = {
+        access_token: "",
+        expires_in: 0,
+        refresh_expires_in: 0,
+        refresh_token: "",
+        token_type: "Bearer",
+        "not-before-policy": 0,
+        session_state: "",
+        scope: "profile email"
+      };
 
-    let tokens: TokensType = {
-      access_token: "",
-      expires_in: 0,
-      refresh_expires_in: 0,
-      refresh_token: "",
-      token_type: "Bearer",
-      "not-before-policy": 0,
-      session_state: "",
-      scope: "profile email"
-    };
+      const privateKEY: string = this._getPrivateKey();
 
-    const privateKEY: string = this._getPrivateKey();
+      const issuer = 'Dario Palminio';
+      const subject = payload.id;
+      const audience = 'Dario Palminio';
 
-    const issuer = 'Dario Palminio';
-    const subject = payload.id;
-    const audience = 'Dario Palminio';
+      const accessSignOptions: any = {
+        issuer: issuer,
+        subject: subject,
+        audience: audience,
+        expiresIn: accessExpiresIn,
+        algorithm: "RS256"
+      };
 
-    const accessSignOptions: any = {
-      issuer: issuer,
-      subject: subject,
-      audience: audience,
-      expiresIn: accessExpiresIn,
-      algorithm: "RS256"
-    };
+      // Create a access token
+      tokens.access_token = jwt.sign(payload, privateKEY, accessSignOptions);
+      tokens.expires_in = accessSignOptions.expiresIn;
 
-    // Create a access token
-    tokens.access_token = jwt.sign(payload, privateKEY, accessSignOptions);
-    tokens.expires_in = accessSignOptions.expiresIn;
+      const refreshSignOptions: any = {
+        issuer: issuer,
+        subject: subject,
+        audience: audience,
+        expiresIn: refreshExpireIn, // 2 days
+        algorithm: "RS256"
+      };
 
-    const refreshSignOptions: any = {
-      issuer: issuer,
-      subject: subject,
-      audience: audience,
-      expiresIn: refreshExpireIn, // 2 days
-      algorithm: "RS256"
-    };
+      // Create a refresh token
+      tokens.refresh_token = jwt.sign(payload, privateKEY, refreshSignOptions);
+      tokens.refresh_expires_in = accessSignOptions.expiresIn;
 
-    // Create a refresh token
-    tokens.refresh_token = jwt.sign(payload, privateKEY, refreshSignOptions);
-    tokens.refresh_expires_in = accessSignOptions.expiresIn;
-
-    return tokens;
+      return tokens;
+    } catch (error) {
+      throw new TokkensCreationError(error.message);
+    }
   };
 
   /**
@@ -152,8 +155,6 @@ export class AuthTokensService implements IAuthTokensService {
       throw new InvalidCredentialsError(`Unauthorized. User ${loginForm.userName} not found!`);
 
     const validPassword = await bcrypt.compare(loginForm.password, user.getPassword());
-
-    console.log("login-->validPassword:", validPassword);
 
     if (!validPassword)
       throw new InvalidCredentialsError(`Unauthorized. Password is invalid!`);

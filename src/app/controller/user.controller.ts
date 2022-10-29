@@ -10,7 +10,7 @@ import { Roles } from '../guard/roles.decorator';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { UserDTO } from '../dto/user.dto';
 import { User } from 'src/domain/model/user/user';
-import { throwAppError } from '../error/app-error-handling';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Users controller
@@ -65,7 +65,7 @@ export class UserController {
     try {
        user = await this.userService.getById(userID);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -79,7 +79,7 @@ export class UserController {
     try {
        user = await this.userService.getByUserName(userName);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -100,7 +100,7 @@ export class UserController {
     try {
        created = await this.userService.create(user);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!created) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -119,7 +119,7 @@ export class UserController {
     try {
        categoryDeleted = await this.userService.delete(id);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -142,7 +142,7 @@ export class UserController {
     try {
        updatedUser = await this.userService.updateById(id, user);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

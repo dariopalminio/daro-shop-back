@@ -18,7 +18,7 @@ import { UserRegisterDTO } from '../dto/user-register.dto';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 import { VerificationCodeDTO } from '../dto/verification-code.dto';
 import { StartConfirmEmailDTO } from '../dto/start-confirm-email.dto';
-import { throwAppError } from '../error/app-error-handling';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Auth controller
@@ -63,7 +63,7 @@ export class AuthController {
       result = await this.authService.register(registerForm);
       console.log("register controller:", result);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     };
     return res.status(HttpStatus.OK).json(result);
   };
@@ -74,7 +74,7 @@ export class AuthController {
       const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
       return res.status(result.status).json(result);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -85,7 +85,7 @@ export class AuthController {
       confirmed = await this.authService.confirmAccount(verificationCodeDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(confirmed);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -97,7 +97,7 @@ export class AuthController {
       if (authResponse === true)
         return res.status(HttpStatus.OK).json({});
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     };
     throw new InternalServerErrorException();
   };
@@ -111,7 +111,7 @@ export class AuthController {
       authResponse = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
       return res.status(authResponse.status).json(authResponse);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 
@@ -121,7 +121,7 @@ export class AuthController {
       const data: any = await this.authService.recoveryUpdatePassword(recoveryUpdateDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 

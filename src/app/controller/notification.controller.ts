@@ -5,7 +5,7 @@ import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmailDataDTO } from 'src/domain/model/notification/email-data-dto';
-import { throwAppError } from '../error/app-error-handling';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Notification controller
@@ -50,7 +50,7 @@ export class NotificationController {
     try {
       sentInfo = await this.supportService.sendContactEmail(contactMessage, lang);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
 
     return res.status(HttpStatus.OK).json(sentInfo);
@@ -63,7 +63,7 @@ export class NotificationController {
       if (sentInfo.isSuccess) return res.status(HttpStatus.OK).json(sentInfo);
       return res.status(sentInfo.status).json(sentInfo);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
 
   };

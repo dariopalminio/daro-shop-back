@@ -20,7 +20,8 @@ import { PayloadType } from 'src/domain/model/auth/token/payload.type';
 import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
-import { DuplicateUserError } from 'src/domain/error/auth-errors';
+import { InvalidVerificationCodeError } from 'src/domain/error/auth-errors';
+import { DuplicateUserError, UserFormatError } from 'src/domain/error/user-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -69,27 +70,29 @@ export class AuthService implements IAuthService {
       throw new DuplicateUserError('The Email just was registered');
     }
 
-    // Encrypt hash of password
-    const salt = await bcrypt.genSalt(10);
-    const passwordCrypted: string = await bcrypt.hash(userRegisterData.password, salt);
-
     // Create new user in user database
     let newObj: User = new User();
-    newObj.setUserName(userRegisterData.email); //userName is email
-    newObj.setFirstName(userRegisterData.firstName);
-    newObj.setLastName(userRegisterData.lastName);
-    newObj.setEmail(userRegisterData.email);
-    newObj.setPassword(passwordCrypted);
-    newObj.setRoles([RolesEnum.USER]);
-    newObj.setVerified(false);
-    newObj.setEnable(true);
+    try {
+      // Encrypt hash of password
+      const salt = await bcrypt.genSalt(10);
+      const passwordCrypted: string = await bcrypt.hash(userRegisterData.password, salt);
+      //set user data
+      newObj.setUserName(userRegisterData.email); //userName is email
+      newObj.setFirstName(userRegisterData.firstName);
+      newObj.setLastName(userRegisterData.lastName);
+      newObj.setEmail(userRegisterData.email);
+      newObj.setPassword(passwordCrypted);
+      newObj.setRoles([RolesEnum.USER]);
+      newObj.setVerified(false);
+      newObj.setEnable(true);
+    } catch (error) {
+      throw new UserFormatError(`Error when trying to create user instance. ${error.message}`);
+    }
 
     let userNew: User;
-    try {
-      userNew = await this.userService.create(newObj);
-    } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error when trying to create or save user.');
-    }
+
+    userNew = await this.userService.create(newObj);
+
     let userCreated: User;
     if (userNew) {
       try {
@@ -320,11 +323,7 @@ export class AuthService implements IAuthService {
 
     let user: User = null;
 
-    try {
-      user = await this.verificateToken(recoveryUpdateData.token);
-    } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, "Token data undefined. Can not obtain token.", error);
-    }
+    user = await this.verificateToken(recoveryUpdateData.token);
 
     // hash contraseña
     const salt = await bcrypt.genSalt(10);
@@ -383,7 +382,7 @@ export class AuthService implements IAuthService {
 
     //Validate if token exist
     if (!token) {
-      throw Error(await this.i18n.translate('auth.ERROR.INVALID_VERIFICATION_CODE_PARAM',));
+      throw new InvalidVerificationCodeError("Invalid verification code token!");
     }
 
     const partsArray = decodeToken(token);
@@ -392,7 +391,7 @@ export class AuthService implements IAuthService {
 
     //Validate email
     if (!validEmail(decodedEmail)) {
-      throw Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
+      throw new InvalidVerificationCodeError("Invalid email!");
     }
 
     //Verificate code
@@ -402,7 +401,7 @@ export class AuthService implements IAuthService {
     });
 
     if (user == null) {
-      throw Error(await this.i18n.translate('auth.ERROR.INVALID_VERIFICATION_CODE',));
+      throw new InvalidVerificationCodeError("Not found or verification code is wrong!");
     }
 
     //Validate if expired time
@@ -410,7 +409,7 @@ export class AuthService implements IAuthService {
     const expirationDaysLimit: number = this.globalConfig.get<number>('EXPIRATION_DAYS_LIMIT');
 
     if (this.isDateExpired(dateOfProcessStarted, expirationDaysLimit)) {
-      throw Error(await this.i18n.translate('auth.ERROR.VERIFICATION_CODE_EXPIRED',));
+      throw new InvalidVerificationCodeError("Time has expired! Start the process again.");
     }
 
     return user;

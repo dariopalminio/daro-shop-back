@@ -6,8 +6,8 @@ import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { throwAppError } from '../error/app-error-handling';
-import { DuplicateUserError } from 'src/domain/error/auth-errors';
+import { AppErrorHandler } from '../error/app-error-handler';
+
 
 /**
  * App controller
@@ -148,5 +148,6 @@ export class AppController {
     };
     return res.status(200).json(response);
   };
+
 
 };

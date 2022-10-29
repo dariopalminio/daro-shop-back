@@ -11,8 +11,7 @@ import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.inte
 import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
 import { UserLoginDTO } from '../dto/user-login.dto';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
-import { throwAppError } from '../error/app-error-handling';
-
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Auth Tokens controller
@@ -64,7 +63,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.login(loginForm);
         } catch (error) {
-            throwAppError(error);
+            throw AppErrorHandler.createError(error);
         }
 
         if (!authResponse.access_token) return res.status(HttpStatus.UNAUTHORIZED).json(authResponse);
@@ -83,7 +82,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getAppToken(authClientDTO);
         } catch (error) {
-            throwAppError(error);
+            throw AppErrorHandler.createError(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };
@@ -97,7 +96,7 @@ export class AuthTokensController {
         try {
             data = await this.authTokensService.getAdminToken(body);
         } catch (error) {
-            throwAppError(error);
+            throw AppErrorHandler.createError(error);
           }
         return res.status(HttpStatus.OK).json(data);
     };
@@ -116,7 +115,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getRefreshToken(body);
         } catch (error) {
-            throwAppError(error);
+            throw AppErrorHandler.createError(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };

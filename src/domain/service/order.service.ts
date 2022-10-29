@@ -10,7 +10,7 @@ import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum'
 import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Product } from 'src/domain/model/product/product';
-import { OrderMalformedError, OutOfStockError } from '../error/order-errors';
+import { DuplicateOrderError, OrderFormatError, OrderNotFoundError, OutOfStockError } from '../error/order-errors';
 
 /**
  * Order Service
@@ -105,7 +105,7 @@ export class OrderService implements IOrderService<Order> {
       const pricing: any = await this.shippingPriceService.getPriceByAddress(ordenNew.getShippingAddress());
       console.log("pricing:", pricing);
       if (!pricing || !pricing.price)
-        throw new OrderMalformedError('No price found for delivery to the indicated address', { address: ordenNew.getShippingAddress() });
+        throw new OrderFormatError('No price found for delivery to the indicated address', { address: ordenNew.getShippingAddress() });
       ordenNew.setShippingPrice(Number(pricing.price));
 
     }
@@ -119,7 +119,7 @@ export class OrderService implements IOrderService<Order> {
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DomainError(409, error.message, error);
+          throw new DuplicateOrderError(error.message, error);
         default:
           //Internal server error
           throw new DomainError(500, error.message, error);
@@ -129,19 +129,24 @@ export class OrderService implements IOrderService<Order> {
 
   async confirm(orderId: string): Promise<boolean> {
     //you must reserve quantity in the products of each order items and set status to CONFIRMED
+    let order: Order;
     try {
-      const order: Order = await this.getById(orderId);
-
-      //validate that the stock is sufficient to full order
-      for (let i = 0; i < order.getOrderItems().length; i++) {
-        const productId: string = order.getOrderItems()[i].getProductId();
-        let product: Product = await this.productService.getById(productId);
-        const qty: number = order.getOrderItems()[i].getQuantity();
-        if (qty > product.getStock()) {
-          throw new OutOfStockError(`Insufficient stock for order ${orderId}.`);
-        }
+      order = await this.getById(orderId);
+      if (!order) throw new Error();
+    } catch (error) {
+      throw new OrderNotFoundError();
+    }
+    //validate that the stock is sufficient to full order
+    for (let i = 0; i < order.getOrderItems().length; i++) {
+      const productId: string = order.getOrderItems()[i].getProductId();
+      let product: Product = await this.productService.getById(productId);
+      const qty: number = order.getOrderItems()[i].getQuantity();
+      if (qty > product.getStock()) {
+        throw new OutOfStockError(`Insufficient stock for order ${orderId}.`);
       }
+    }
 
+    try {
       //add reservations in products indicated in order
       for (let i = 0; i < order.getOrderItems().length; i++) {
         const productId: string = order.getOrderItems()[i].getProductId();
@@ -153,16 +158,21 @@ export class OrderService implements IOrderService<Order> {
       const confirmed: boolean = await this.update({ _id: orderId }, { status: OrderStatus.CONFIRMED });
       return confirmed;
     } catch (error) {
-      console.log("Order confirm error:", error);
       if (error instanceof DomainError) throw error;
       throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order confirmation.', { error: error.message });
     }
   };
 
   async abort(orderId: string): Promise<boolean> {
+    let order: Order;
     try {
-      const order: Order = await this.getById(orderId);
+      order = await this.getById(orderId);
+      if (!order) throw new Error();
+    } catch (error) {
+      throw new OrderNotFoundError();
+    }
 
+    try {
       //revert reservations in products indicated in order
       for (let i = 0; i < order.getOrderItems().length; i++) {
         const productId: string = order.getOrderItems()[i].getProductId();
@@ -180,9 +190,14 @@ export class OrderService implements IOrderService<Order> {
 
   async completePayment(orderId: string): Promise<boolean> {
     //you must register the sale effectively discounting the stock
+    let order: Order;
     try {
-      const order: Order = await this.getById(orderId);
-
+      order = await this.getById(orderId);
+      if (!order) throw new Error();
+    } catch (error) {
+      throw new OrderNotFoundError();
+    }
+    try {
       for (let i = 0; i < order.getOrderItems().length; i++) {
         const productId: string = order.getOrderItems()[i].getProductId();
         await this.productService.concreteReservationBySale(productId, orderId);
@@ -197,28 +212,32 @@ export class OrderService implements IOrderService<Order> {
   };
 
   async delete(id: string): Promise<boolean> {
+
+    const exist: boolean = await this.orderRepository.hasById(id);
+    if (!exist) throw new OrderNotFoundError();
+
     const deleted: boolean = await this.orderRepository.delete(id);
     return deleted;
   };
 
   async updateById(id: string, order: Order): Promise<boolean> {
+    const exist: boolean = await this.orderRepository.hasById(id);
+    if (!exist) throw new OrderNotFoundError();
+
     const updated: boolean = await this.orderRepository.updateById(id, { ...order, updatedAt: new Date() });
+    if (!updated) throw new Error("Could not update the indicated order.");
     return updated;
   };
 
-  async getByUserName(userName: string): Promise<Order> {
-    const query = { userName: userName };
-    const user = await this.orderRepository.getByQuery(query);
-    return user;
-  };
-
   async getByQuery(query: any): Promise<Order> {
-    const user = await this.orderRepository.getByQuery(query);
-    return user;
+    const order = await this.orderRepository.getByQuery(query);
+    if (!order || order === null) throw new OrderNotFoundError();
+    return order;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
     const updatedProduct: boolean = await this.orderRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
+    if (!updatedProduct) throw new OrderNotFoundError();
     return updatedProduct;
   };
 

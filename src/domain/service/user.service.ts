@@ -6,7 +6,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { generateToken } from 'src/domain/helper/token.helper';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateUserError } from '../error/auth-errors';
+import { UserNotFoundError, DuplicateUserError } from '../error/user-errors';
 
 /**
  * User Service
@@ -38,6 +38,7 @@ export class UserService implements IUserService<User> {
 
   async getById(id: string): Promise<User> {
     const entity: User = await this.userRepository.getById(id);
+    if (!entity || entity === null) throw new UserNotFoundError();
     return entity;
   };
 
@@ -76,28 +77,35 @@ export class UserService implements IUserService<User> {
   };
 
   async delete(id: string): Promise<boolean> {
+    const found: boolean = await this.userRepository.hasById(id);
+    if (!found) throw new UserNotFoundError();
     const deleted: boolean = await this.userRepository.delete(id);
     return deleted;
   };
 
   async updateById(id: string, user: User): Promise<boolean> {
+    const found: boolean = await this.userRepository.hasById(id);
+    if (!found) throw new UserNotFoundError();
     const updated: boolean = await this.userRepository.updateById(id, { ...user, updatedAt: new Date() });
     return updated;
   };
 
   async getByUserName(userName: string): Promise<User> {
     const query = { userName: userName };
-    const user = await this.userRepository.getByQuery(query);
-    return user;
+    const entity = await this.userRepository.getByQuery(query);
+    if (!entity || entity === null) throw new UserNotFoundError();
+    return entity;
   };
 
   async getByQuery(query: any): Promise<User> {
-    const entity = await this.userRepository.getByQuery(query);
+    const entity: User = await this.userRepository.getByQuery(query);
+    if (!entity || entity === null) throw new UserNotFoundError();
     return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
     const updated: boolean = await this.userRepository.update(query, { ...valuesToSet, updatedAt: new Date() });
+    if (!updated) throw new UserNotFoundError();
     return updated;
   };
 

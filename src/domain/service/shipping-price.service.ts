@@ -5,6 +5,7 @@ import { IShippingPriceService } from 'src/domain/incoming/shipping-price.servic
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Address } from 'src/domain/model/profile/address';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { DuplicateShippingPriceError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
 
 /**
  * Shipping Price Service
@@ -41,6 +42,7 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
 
   async getById(id: string): Promise<ShippingPrice> {
     const entity: ShippingPrice = await this.shippingPriceRepository.getById(id);
+    if (!entity || entity === null) throw new ShippingPriceNotFoundError();
     return entity;
   };
 
@@ -48,12 +50,12 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
     try {
       const entityNew: ShippingPrice = await this.shippingPriceRepository.create(shippingPriceRegister);
       return entityNew;
-    } catch (error) { //MongoError 
+    } catch (error) { 
       console.log("create error code:", error.code);
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DomainError(ResponseCode.CONFLICT, error.message, error);
+          throw new DuplicateShippingPriceError(error.message, error);
         default:
           //Internal server error
           throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
@@ -62,22 +64,28 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
   };
 
   async delete(id: string): Promise<boolean> {
+    const found: boolean = await this.shippingPriceRepository.hasById(id);
+    if (!found) throw new ShippingPriceNotFoundError();
     const deleted: boolean = await this.shippingPriceRepository.delete(id);
     return deleted;
   };
 
   async updateById(id: string, user: ShippingPrice): Promise<boolean> {
+    const found: boolean = await this.shippingPriceRepository.hasById(id);
+    if (!found) throw new ShippingPriceNotFoundError();
     const updated: boolean = await this.shippingPriceRepository.updateById(id, user);
     return updated;
   };
 
   async getByQuery(query: any): Promise<ShippingPrice> {
     const entity = await this.shippingPriceRepository.getByQuery(query);
+    if (!entity || entity === null) throw new ShippingPriceNotFoundError();
     return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
     const updated: boolean = await this.shippingPriceRepository.update(query, valuesToSet);
+    if (!updated) throw new ShippingPriceNotFoundError();
     return updated;
   };
 

@@ -9,7 +9,7 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { Category } from 'src/domain/model/category/category';
 import { CategoryDTO } from '../dto/category.dto';
-import { throwAppError } from '../error/app-error-handling';
+import { AppErrorHandler } from '../error/app-error-handler';
 
 /**
  * Category controller
@@ -59,7 +59,7 @@ export class CategoryController {
       console.log("categories getAll", list);
       return res.status(HttpStatus.OK).json(list);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     };
   };
 
@@ -70,7 +70,7 @@ export class CategoryController {
     try {
       category = await this.categoryService.getById(categoryID);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!category) throw new NotFoundException('Category does not exist!');
     return res.status(HttpStatus.OK).json(category);
@@ -91,7 +91,7 @@ export class CategoryController {
     try {
       newCat = await this.categoryService.create(category);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!newCat) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -110,7 +110,7 @@ export class CategoryController {
     try {
       categoryDeleted = await this.categoryService.delete(id);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -135,7 +135,7 @@ export class CategoryController {
     try {
       updatedCategory = await this.categoryService.updateById(id, category);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     };
     if (!updatedCategory) throw new NotFoundException('Problem in creation. Category does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -158,7 +158,7 @@ export class CategoryController {
       const data: PaginatedResult = await this.categoryService.search({}, page, limit, orderByField, isAscending);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throwAppError(error);
+      throw AppErrorHandler.createError(error);
     }
   };
 

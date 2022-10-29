@@ -4,7 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateProfileError } from '../error/profile-errors';
+import { DuplicateProfileError, ProfileNotFoundError } from '../error/profile-errors';
 
 /**
  * Profile Service
@@ -36,6 +36,7 @@ export class ProfileService implements IProfileService<Profile> {
 
   async getById(id: string): Promise<Profile> {
     const entity: Profile = await this.profileRepository.getById(id);
+    if (!entity || entity === null) throw new ProfileNotFoundError();
     return entity;
   };
 
@@ -45,7 +46,6 @@ export class ProfileService implements IProfileService<Profile> {
       const entityNew: Profile = await this.profileRepository.create(profileRegister);
       return entityNew;
     } catch (error) { //MongoError 
-      console.log("create error code:", error.code);
       if (error.code && error.code === 11000) {
           throw new DuplicateProfileError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
@@ -54,28 +54,35 @@ export class ProfileService implements IProfileService<Profile> {
   };
 
   async delete(id: string): Promise<boolean> {
+    const found: boolean = await this.profileRepository.hasById(id);
+    if (!found) throw new ProfileNotFoundError();
     const deleted: boolean = await this.profileRepository.delete(id);
     return deleted;
   };
 
   async updateById(id: string, profile: Profile): Promise<boolean> {
+    const found: boolean = await this.profileRepository.hasById(id);
+    if (!found) throw new ProfileNotFoundError();
     const updated: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
     return updated;
   };
 
   async getByUserName(userName: string): Promise<Profile> {
     const query = {userName: userName};
-    const user = await this.profileRepository.getByQuery(query);
-    return user;
+    const entity: Profile = await this.profileRepository.getByQuery(query);
+    if (!entity || entity === null) throw new ProfileNotFoundError();
+    return entity;
   };
 
   async getByQuery(query: any): Promise<Profile> {
-    const entity = await this.profileRepository.getByQuery(query);
+    const entity: Profile = await this.profileRepository.getByQuery(query);
+    if (!entity || entity === null) throw new ProfileNotFoundError();
     return entity;
   };
 
   async update(query: any, valuesToSet: any): Promise<boolean> {
     const updated: boolean = await this.profileRepository.update(query, {...valuesToSet, updatedAt: new Date()});
+    if (!updated) throw new ProfileNotFoundError();
     return updated;
   };
 
