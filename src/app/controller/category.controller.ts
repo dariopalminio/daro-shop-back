@@ -9,6 +9,7 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { Category } from 'src/domain/model/category/category';
 import { CategoryDTO } from '../dto/category.dto';
+import { throwAppError } from '../error/app-error-handling';
 
 /**
  * Category controller
@@ -54,12 +55,11 @@ export class CategoryController {
   @Get('all')
   async getAll(@Res() res) {
     try {
-        const list = await this.categoryService.getAll();
-        console.log("categories getAll",list);
-        return res.status(HttpStatus.OK).json(list);
-    
+      const list = await this.categoryService.getAll();
+      console.log("categories getAll", list);
+      return res.status(HttpStatus.OK).json(list);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throwAppError(error);
     };
   };
 
@@ -70,7 +70,7 @@ export class CategoryController {
     try {
       category = await this.categoryService.getById(categoryID);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throwAppError(error);
     }
     if (!category) throw new NotFoundException('Category does not exist!');
     return res.status(HttpStatus.OK).json(category);
@@ -91,7 +91,7 @@ export class CategoryController {
     try {
       newCat = await this.categoryService.create(category);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throwAppError(error);
     }
     if (!newCat) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -110,7 +110,7 @@ export class CategoryController {
     try {
       categoryDeleted = await this.categoryService.delete(id);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throwAppError(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -135,7 +135,7 @@ export class CategoryController {
     try {
       updatedCategory = await this.categoryService.updateById(id, category);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throwAppError(error);
     };
     if (!updatedCategory) throw new NotFoundException('Problem in creation. Category does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -144,23 +144,22 @@ export class CategoryController {
     })
   };
 
-    // Example: http://localhost:3001/api/webshop/v1/categories/search?page=1&limit=100&orderBy=name&isAsc=true
-    @Get('search')
-    async search(@Res() res,@Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
-      try {
-        if (pageParam && limitParam && orderBy && isAsc) {
-          const page: number = parseInt(pageParam);
-          const limit: number = parseInt(limitParam);
-          const orderByField: string = orderBy.toString();
-          const isAscending: boolean = (isAsc === 'true') ? true : false;
-          const data: PaginatedResult = await this.categoryService.search({},page, limit, orderByField, isAscending);
-          return res.status(HttpStatus.OK).json(data);
-        } else {
-          throw new InternalServerErrorException("No params");
-        }
-      } catch (error) {
-        throw new InternalServerErrorException(error);
-      }
-    };
+  // Example: http://localhost:3001/api/webshop/v1/categories/search?page=1&limit=100&orderBy=name&isAsc=true
+  @Get('search')
+  async search(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
+    if (!pageParam || !limitParam || !orderBy || !isAsc) {
+      throw new BadRequestException("some parameter is missing: page, limit, orderBy or isAsc");
+    }
+    try {
+      const page: number = parseInt(pageParam);
+      const limit: number = parseInt(limitParam);
+      const orderByField: string = orderBy.toString();
+      const isAscending: boolean = (isAsc === 'true') ? true : false;
+      const data: PaginatedResult = await this.categoryService.search({}, page, limit, orderByField, isAscending);
+      return res.status(HttpStatus.OK).json(data);
+    } catch (error) {
+      throwAppError(error);
+    }
+  };
 
 };

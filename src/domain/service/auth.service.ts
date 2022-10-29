@@ -20,6 +20,7 @@ import { PayloadType } from 'src/domain/model/auth/token/payload.type';
 import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
+import { DuplicateUserError } from 'src/domain/error/auth-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -65,7 +66,7 @@ export class AuthService implements IAuthService {
     const isEmailExist: boolean = await this.userService.hasByQuery({ email: userRegisterData.email });
     if (isEmailExist) {
       //return res.status(400).json({error: 'Email ya registrado'})
-      throw new DomainError(ResponseCode.BAD_REQUEST, 'Email ya registrado', { error: 'Email ya registrado' });
+      throw new DuplicateUserError('The Email just was registered');
     }
 
     // Encrypt hash of password
@@ -87,7 +88,7 @@ export class AuthService implements IAuthService {
     try {
       userNew = await this.userService.create(newObj);
     } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Error al registrar usuario' });
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error when trying to create or save user.');
     }
     let userCreated: User;
     if (userNew) {
@@ -248,7 +249,7 @@ export class AuthService implements IAuthService {
       if (!userAuthId)
         throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: error });
+      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error.message, { error: error });
     };
     return true;
   };

@@ -7,6 +7,7 @@ import { RolesGuard } from '../guard/roles.guard';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { ShippingPriceDTO } from '../dto/shipping-price.dto';
+import { throwAppError } from '../error/app-error-handling';
 
 /**
  * ShippingPrice controller
@@ -39,7 +40,7 @@ export class ShippingPriceController {
     try {
       pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (pricingObj === null) throw new NotFoundException('Location not found');
     return res.status(200).json(pricingObj);
@@ -60,7 +61,7 @@ export class ShippingPriceController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
   };
 
@@ -78,7 +79,7 @@ export class ShippingPriceController {
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPrice);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!objCreatedId) throw new NotFoundException('Problems saving!');
     return res.status(HttpStatus.OK).json({
@@ -97,7 +98,7 @@ export class ShippingPriceController {
     try {
       objDeleted = await this.shippingPriceService.delete(id);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!objDeleted) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
@@ -120,7 +121,7 @@ export class ShippingPriceController {
     try {
       updatedObj = await this.shippingPriceService.update(query, shippingPrice);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

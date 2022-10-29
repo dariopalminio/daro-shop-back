@@ -191,7 +191,7 @@ export class AuthKeycloakImpl implements IAuth {
           const user = { user: result.data[0] };
           return user; //successful
         }
-        throw new DomainError(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown error in get user by username", {});
+        throw new DomainError(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown error in get user by username", '', {});
       }
       case HttpStatus.UNAUTHORIZED: //401
         throw new DomainError(HttpStatus.UNAUTHORIZED, result.statusText, result.data);
@@ -302,7 +302,7 @@ export class AuthKeycloakImpl implements IAuth {
         throw new DomainError(HttpStatus.UNAUTHORIZED, msg, response.data);
       }
       default:
-        throw new DomainError(response.status, response.statusText, response);
+        throw new DomainError(response.status, response.statusText, '', response);
     }
 
   };
@@ -502,7 +502,7 @@ export class AuthKeycloakImpl implements IAuth {
     const params = new URLSearchParams();
     params.append('client_id', body.client_id);
     params.append('grant_type', body.grant_type);
-    params.append('username', body.username);
+    params.append('username', body.userName);
     params.append('password', body.password);
     params.append('scope', body.scope);
     params.append('client_secret', body.client_secret);
@@ -536,7 +536,7 @@ export class AuthKeycloakImpl implements IAuth {
     const body: NewAdminTokenRequestType = {
       client_id: this.config.get<string>('Keycloak_client_id'),
       grant_type: 'password',
-      username: this.config.get<string>('Keycloak_username_admin'),
+      userName: this.config.get<string>('Keycloak_username_admin'),
       password: this.config.get<string>('Keycloak_password_admin'),
       scope: 'openid roles',
       client_secret: this.config.get<string>('Keycloak_client_secret'),

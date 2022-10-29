@@ -50,7 +50,7 @@ export class NotificationService implements INotificationService {
       return resp;
     } catch (error) {
       const msg = await this.i18n.translate('notification.ERROR.EMAIL_COULD_NOT_SENT',);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, msg, error);
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, msg, '', error);
     };
   };
 

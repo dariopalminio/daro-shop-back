@@ -4,6 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { DuplicateProfileError } from '../error/profile-errors';
 
 /**
  * Profile Service
@@ -45,12 +46,10 @@ export class ProfileService implements IProfileService<Profile> {
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
-      switch (error.code) {
-        case 11000:
-          throw new DomainError(ResponseCode.CONFLICT, error.message, error, 'Duplicate key error collection or index problem.');
-        default:
-          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error); //Internal server error
+      if (error.code && error.code === 11000) {
+          throw new DuplicateProfileError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
     }
   };
 

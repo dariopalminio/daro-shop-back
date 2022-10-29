@@ -6,6 +6,7 @@ import { IPaymentMethodService } from 'src/domain/incoming/payment-method.servic
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 import { PaymentMethodDTO } from '../dto/payment-method.dto';
+import { throwAppError } from '../error/app-error-handling';
 
 /**
  * Payment controller
@@ -45,7 +46,7 @@ export class PaymentMethodController {
     try {
       element = await this.paymentMethodService.getByQuery({ key: key });
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!element) throw new NotFoundException('Payment Method does not exist!');
     return res.status(HttpStatus.OK).json(element);
@@ -65,7 +66,7 @@ export class PaymentMethodController {
     try {
       objCreated = await this.paymentMethodService.create(paymentMethod);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!objCreated) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
@@ -79,12 +80,16 @@ export class PaymentMethodController {
   @Delete('delete')
   async delete(@Res() res, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
-    const objDeleted = await this.paymentMethodService.delete(id);
-    if (!objDeleted) throw new NotFoundException('Does not exist or canot delete!');
-    return res.status(HttpStatus.OK).json({
-      message: 'Payment Method Deleted Successfully',
-      deleted: objDeleted
-    })
+    try {
+      const objDeleted = await this.paymentMethodService.delete(id);
+      if (!objDeleted) throw new Error('Does not exist or canot delete!');
+      return res.status(HttpStatus.OK).json({
+        message: 'Payment Method Deleted Successfully',
+        deleted: objDeleted
+      })
+    } catch (error) {
+      throwAppError(error);
+    }
   };
 
   @Put('update')
@@ -100,7 +105,7 @@ export class PaymentMethodController {
     try {
       updatedObj = await this.paymentMethodService.update(query, paymentMethod);
     } catch (error) {
-      new InternalServerErrorException(error);
+      throwAppError(error);
     }
     if (!updatedObj) throw new NotFoundException('Payment Method does not exist!');
     return res.status(HttpStatus.OK).json({

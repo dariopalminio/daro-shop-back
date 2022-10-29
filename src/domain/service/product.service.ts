@@ -5,6 +5,9 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from 'src/domain/model/product/reservation';
 import { Product } from 'src/domain/model/product/product';
 import { IRepository } from 'src/domain/outgoing/repository.interface';
+import { DuplicateProductError, DuplicateSkuError, SkuGenerationError } from '../error/product-errors';
+import { DomainError } from '../error/domain-error';
+import { ResponseCode } from '../error/response-code.enum';
 
 /**
  * Product Service
@@ -86,13 +89,20 @@ export class ProductService implements IProductService<Product> {
       netPrice: 0,
       ivaAmountOnPrice: 0,
     };
-
     const entity: Product = await this.productRepository.getById(id, fieldsToExclude);
     return entity;
   };
 
   async create(product: Product): Promise<Product> {
-    const entityNew: Promise<Product> = this.productRepository.create(product);
+    let entityNew: Promise<Product>;
+    try {
+      entityNew = this.productRepository.create(product);
+    } catch (error) {
+      if (error.code && error.code === 11000) {
+        throw new DuplicateProductError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
+      }
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); 
+    }
     return entityNew;
   };
 
@@ -137,13 +147,13 @@ export class ProductService implements IProductService<Product> {
       skuGenerated = this.generateAnySKU(type, brand, model, color, size, maxNumber);
       alreadyExists = await this.productRepository.hasByQuery({ sku: skuGenerated });
     } while ((alreadyExists) && (attemps < maxNumber));
-    if (alreadyExists) throw new Error("Failed to generate unique SKU!");
+    if (alreadyExists) throw new DuplicateSkuError("Failed because another product already has the same sku generated.");
     return skuGenerated;
   };
 
   generateAnySKU(type: string, brand: string, model: string, color: string, size: string, numberRange: number): string {
     if (!type || !brand || !model || !color || !size)
-      throw new Error("Failed to generate SKU because empty attribute!");
+      throw new SkuGenerationError("Failed to generate SKU because type, brand, model, color or size attribute is null or not exist!");
     const separator = "-";
     let firstStr = type.substring(0, 4);
     let secondStr = brand.substring(0, 3);

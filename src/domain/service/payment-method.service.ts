@@ -47,10 +47,10 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DomainError(409, error.message, error);
+          throw new DomainError(409, error.message, '', error);
         default:
           //Internal server error
-          throw new DomainError(500, error.message, error);
+          throw new DomainError(500, error.message, '', error);
       }
     }
   };

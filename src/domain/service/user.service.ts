@@ -6,6 +6,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { generateToken } from 'src/domain/helper/token.helper';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { DuplicateUserError } from '../error/auth-errors';
 
 /**
  * User Service
@@ -67,14 +68,10 @@ export class UserService implements IUserService<User> {
       return userNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
-      switch (error.code) {
-        case 11000:
-          //  duplicate key error collection
-          throw new DomainError(ResponseCode.CONFLICT, error.message, error);
-        default:
-          //Internal server error
-          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
+      if (error.code && error.code === 11000) {
+        throw new DuplicateUserError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
     }
   };
 

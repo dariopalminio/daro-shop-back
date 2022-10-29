@@ -15,6 +15,7 @@ import { IUserService } from 'src/domain/incoming/user.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
 import { User } from 'src/domain/model/user/user';
+import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError } from 'src/domain/error/auth-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -44,10 +45,10 @@ export class AuthTokensService implements IAuthTokensService {
 
   async test() {
 
-        // Encrypt hash of password
-        const salt = await bcrypt.genSalt(10);
-        const passwordCrypted: string = await bcrypt.hash('12345Qwert', salt);
-        console.log('12345Qwert = ', passwordCrypted);
+    // Encrypt hash of password
+    const salt = await bcrypt.genSalt(10);
+    const passwordCrypted: string = await bcrypt.hash('12345Qwert', salt);
+    console.log('12345Qwert = ', passwordCrypted);
 
   }
   /**
@@ -145,17 +146,17 @@ export class AuthTokensService implements IAuthTokensService {
       user = await this.userService.getByQuery({ userName: loginForm.userName });
     } catch (error) {
       if (error instanceof DomainError) throw error;
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Cannot obtain user from data base!' });
+      throw new InvalidCredentialsError(`Unauthorized. User ${loginForm.userName} not found! Cannot obtain user from data base!`);
     }
     if (!user)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. User not found!" });
+      throw new InvalidCredentialsError(`Unauthorized. User ${loginForm.userName} not found!`);
 
     const validPassword = await bcrypt.compare(loginForm.password, user.getPassword());
 
     console.log("login-->validPassword:", validPassword);
 
     if (!validPassword)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
+      throw new InvalidCredentialsError(`Unauthorized. Password is invalid!`);
 
     const payload: PayloadType = {
       id: user.getId(),
@@ -181,25 +182,25 @@ export class AuthTokensService implements IAuthTokensService {
     //grant_type=password
     const isClient: boolean = this.verifyClient(body.client_id, body.client_secret);
     if (!isClient)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "Is not a client!", { error: "Unauthorized. Client id or client secret are invalid!" });
+      throw new InvalidClientCredentialsError(`Is not a client! Client id or client secret are invalid!`);
 
     let user: User;
     try {
-      user = await this.userService.getByQuery({ userName: body.username });
+      user = await this.userService.getByQuery({ userName: body.userName });
     } catch (error) {
       if (error instanceof DomainError) throw error;
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: 'Cannot obtain user from data base!' });
+      throw new InvalidCredentialsError(`Unauthorized. User ${body.userName} not found! Cannot obtain user from data base!`);
     }
     if (!user)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. User not found!" });
+      throw new InvalidCredentialsError(`Unauthorized. User ${body.userName} not found!`);
 
     const validPassword = await bcrypt.compare(body.password, user.getPassword());
 
     if (!validPassword)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "User not found!", { error: "Unauthorized. Any data is invalid!" });
+      throw new InvalidCredentialsError(`Unauthorized. Password is invalid!`);
 
     if (!user.hasRole(RolesEnum.ADMIN))
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "User is not Admin!", { error: "Unauthorized!" });
+      throw new InvalidCredentialsError(`User is not Admin! To grant an admin token the user must be an admin`);
 
     const payload: PayloadType = {
       id: user.getId(),
@@ -227,13 +228,14 @@ export class AuthTokensService implements IAuthTokensService {
       if (!authClientDTO.client_id || !authClientDTO.client_secret || !authClientDTO.grant_type)
         throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: error });
+      throw new InvalidClientCredentialsError(`The client_id, client_secret or grant_type is empty`,
+        {}, ResponseCode.BAD_REQUEST);
     };
 
     const isClient: boolean = this.verifyClient(authClientDTO.client_id, authClientDTO.client_secret);
     if (!isClient)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "Is not a client!", { error: "Unauthorized. Client id and client secret are invalid!" });
-
+      throw new InvalidClientCredentialsError(`Is not a client! Client id and client secret are invalid!`,
+        {}, ResponseCode.BAD_REQUEST);
 
     const payload: PayloadType = {
       id: authClientDTO.client_id,
@@ -260,17 +262,15 @@ export class AuthTokensService implements IAuthTokensService {
    */
   async getRefreshToken(body: RequestRefreshTokenType): Promise<any> {
 
-    try {
-      if (!body)
-        throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
-    } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: error });
-    };
+
+    if (!body)
+      throw new RefreshTokenMalformedError();
 
 
     const isClient: boolean = this.verifyClient(body.client_id, body.client_secret);
     if (!isClient)
-      throw new DomainError(ResponseCode.UNAUTHORIZED, "Is not a client!", { error: "Unauthorized. Client id and client secret are invalid!" });
+      throw new InvalidClientCredentialsError(`Is not a client! Client id and client secret are invalid!`);
+
     let payload: PayloadType;
 
     try {
@@ -287,7 +287,7 @@ export class AuthTokensService implements IAuthTokensService {
         email: jwtDecoded.email
       };
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, { error: "Refresh token malformed!" });
+      throw new RefreshTokenMalformedError("JWT in Refresh token malformed!");
     };
 
     const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);

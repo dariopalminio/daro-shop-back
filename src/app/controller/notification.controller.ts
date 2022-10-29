@@ -5,6 +5,7 @@ import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmailDataDTO } from 'src/domain/model/notification/email-data-dto';
+import { throwAppError } from '../error/app-error-handling';
 
 /**
  * Notification controller
@@ -45,11 +46,11 @@ export class NotificationController {
       lang = headers.lang;
     }
     let sentInfo;
-console.log("sendContactEmail-->", contactMessage);
+
     try {
       sentInfo = await this.supportService.sendContactEmail(contactMessage, lang);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throwAppError(error);
     }
 
     return res.status(HttpStatus.OK).json(sentInfo);
@@ -57,10 +58,13 @@ console.log("sendContactEmail-->", contactMessage);
 
   @Post('sendEmail')
   async sendEmail(@Res() res, @Body() emailDataDTO: EmailDataDTO) {
-
-    const sentInfo: any = await this.supportService.sendEmail(emailDataDTO.subject, emailDataDTO.email, emailDataDTO.content);
-    if (sentInfo.isSuccess) return res.status(HttpStatus.OK).json(sentInfo);
-    return res.status(sentInfo.status).json(sentInfo);
+    try {
+      const sentInfo: any = await this.supportService.sendEmail(emailDataDTO.subject, emailDataDTO.email, emailDataDTO.content);
+      if (sentInfo.isSuccess) return res.status(HttpStatus.OK).json(sentInfo);
+      return res.status(sentInfo.status).json(sentInfo);
+    } catch (error) {
+      throwAppError(error);
+    }
 
   };
 

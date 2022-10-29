@@ -10,6 +10,7 @@ import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum'
 import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Product } from 'src/domain/model/product/product';
+import { OrderMalformedError, OutOfStockError } from '../error/order-errors';
 
 /**
  * Order Service
@@ -85,7 +86,7 @@ export class OrderService implements IOrderService<Order> {
       const item: OrderItem = orderParam.getOrderItems()[i];
       const product: Product = await this.productService.getById(item.getProductId());
       if (orderParam.getOrderItems()[i].getQuantity() > product.getStock())
-        throw new DomainError(ResponseCode.BAD_REQUEST, 'There is no stock of the product', { productId: item.getProductId() });
+        throw new OutOfStockError(`The product with id ${item.getProductId()} is out of stock`);
       const newAmount: number = product.getGrossPrice() * item.getQuantity();
       const newItem: OrderItem = new OrderItem(item.getProductId(), item.getImageUrl(), product.getName(), product.getGrossPrice(), item.getQuantity(), newAmount);
       ordenNew.addNewItem(newItem);
@@ -104,7 +105,7 @@ export class OrderService implements IOrderService<Order> {
       const pricing: any = await this.shippingPriceService.getPriceByAddress(ordenNew.getShippingAddress());
       console.log("pricing:", pricing);
       if (!pricing || !pricing.price)
-        throw new DomainError(ResponseCode.BAD_REQUEST, 'No price found for delivery to the indicated address', { address: ordenNew.getShippingAddress() });
+        throw new OrderMalformedError('No price found for delivery to the indicated address', { address: ordenNew.getShippingAddress() });
       ordenNew.setShippingPrice(Number(pricing.price));
 
     }
@@ -137,7 +138,7 @@ export class OrderService implements IOrderService<Order> {
         let product: Product = await this.productService.getById(productId);
         const qty: number = order.getOrderItems()[i].getQuantity();
         if (qty > product.getStock()) {
-          throw new DomainError(ResponseCode.BAD_REQUEST, `Insufficient stock for order ${orderId}.`, {});
+          throw new OutOfStockError(`Insufficient stock for order ${orderId}.`);
         }
       }
 
@@ -154,7 +155,7 @@ export class OrderService implements IOrderService<Order> {
     } catch (error) {
       console.log("Order confirm error:", error);
       if (error instanceof DomainError) throw error;
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order confirmation.', { error: error.message });
     }
   };
 
@@ -173,7 +174,7 @@ export class OrderService implements IOrderService<Order> {
       return aborted;
     } catch (error) {
       console.log("Order abort error:", error);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order aborting', { error: error.message });
     }
   }
 
@@ -191,7 +192,7 @@ export class OrderService implements IOrderService<Order> {
       return paid;
     } catch (error) {
       console.log("Order completePayment error:", error);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, { error: error.message });
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in complete payment.', { error: error.message });
     }
   };
 
