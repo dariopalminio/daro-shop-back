@@ -1,4 +1,7 @@
 
+/**
+ * Extract Jwt from Auth Header As Bearer Token
+ */
 export default function extractTokenFromHeader(headers: any): string {
 
     //console.log('extractTokenFromHeader process...');

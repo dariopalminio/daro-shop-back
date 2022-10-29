@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import extractTokenFromHeader from '../helper/token.helper';
 
@@ -18,58 +19,43 @@ export class AuthMiddleware implements NestMiddleware {
     constructor(
         @Inject('IGlobalConfig')
         private readonly globalConfig: IGlobalConfig,
+        @Inject('IAuthTokensService')
+        private readonly authTokensService: IAuthTokensService,
     ) { };
 
     /**
+     * Auth Middleware is a function which is called before the route handler to validate JWT Token. 
+     * Specific routes will be authorized and available only when the caller (usually a specific authenticated user) has an enabling token.
+     * AuthGuard we will now build assumes an authenticated user (and therefore a token is attached to the request headers). 
+     * It will extract and validate the token and use the extracted information to determine whether or not the request can proceed.
      * In initialization phase microservice loads public key and signing algorithm
      * from Auth server (Keycloak’s) well known config page. On each request microservice checks 
      * the signature of the bearer token. Token validation is done offline without 
      * going to Auth server (Keycloak).
-     * @param req 
-     * @param res 
-     * @param next 
-     * @returns 
      */
     use(req: Request, res: Response, next: () => void) {
-        console.log("AUTH_MIDDLEWARE_ON=", this.globalConfig.get<string>('AUTH_MIDDLEWARE_ON'));
+        console.log("AUTH_MIDDLEWARE_ON=", this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON'));
         console.log("req.originalUrl:", req.originalUrl);
 
-        if (this.globalConfig.get<string>('AUTH_MIDDLEWARE_ON')) {
+        const isAuthGuardActive: boolean = this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON');
 
-            if (!req.headers || !req.headers.authorization) {
-                console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header." );
-                return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
-            }
+        if (!isAuthGuardActive) next(); //does nothing
 
-            try {
-                var token = extractTokenFromHeader(req.headers);
-                console.log("AuthMiddleware. AuthMiddleware.token:", token);
+        if (!req.headers || !req.headers.authorization) {
+            console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header.");
+            return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
+        }
 
-                jwt.verify(token, this.getPEMPublicKey(), { algorithms: ['RS256'] });
-            } catch (error) {
-                // Unauthorized, invalid signature
-                console.log("401 Invalid token." );
-                return res.status(401).send({ message: error.message });
-            };
+        try {
+            var token = extractTokenFromHeader(req.headers);
+            console.log("AuthMiddleware. AuthMiddleware.token:", token);
+            jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
+        } catch (error) {
+            console.log("401 Invalid token.");
+            return res.status(401).send({ message: error.message }); // Unauthorized, invalid signature
         };
 
         next();
-    };
-
-    /**
-     * Create the PEM string base64 decode with auth public key
-     * @returns 
-     */
-    private getPEMPublicKey(): string {
-        const publicKey: string = this.globalConfig.get<string>('AUTH_PUBLIC_KEY');
-        if (!publicKey || publicKey === '')
-            throw Error("The public key is wrong!");
-        let pem = '';
-        pem += '-----BEGIN PUBLIC KEY-----\n';
-        pem += this.globalConfig.get<string>('AUTH_PUBLIC_KEY');
-        pem += '\n';
-        pem += '-----END PUBLIC KEY-----\n';
-        return pem;
     };
 
 

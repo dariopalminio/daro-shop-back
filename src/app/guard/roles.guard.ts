@@ -18,51 +18,42 @@ export class RolesGuard implements CanActivate {
         @Inject('IGlobalConfig')
         private readonly globalConfig: IGlobalConfig) { }
 
+    /**
+     * This CanActivate function should return a boolean, indicating whether the current request is allowed or not. 
+     * It can return the response either synchronously or asynchronously (via a Promise or Observable). 
+     * Nest uses the return value to control the next action:
+     * if it returns true, the request will be processed.
+     * if it returns false, Nest will deny the request.
+     */
     canActivate(context: ExecutionContext): boolean {
         console.log("RolesGuard executed!");
-        if (!this.globalConfig.get<string>('AUTH_MIDDLEWARE_ON')) return true;
+
+        if (!this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON')) return true; //does nothing
+
         const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
         if (!requiredRoles) {
-            return true;
+            return true; //does nothing
         }
-        return true;/*
+
         const request = context.switchToHttp().getRequest();
-        const response = context.switchToHttp().getResponse();
+        //const response = context.switchToHttp().getResponse();
         console.log("RolesGuard for:", request.originalUrl);
         console.log("Roles from controller:", requiredRoles);
-        const userRoles = this.obtainRolesFromKeycloakJWT(request);
+        const userRoles = this.obtainRolesFromJWT(request);
         const authorized = this.matchRoles(requiredRoles, userRoles);
         console.log("RolesGuard is this authorized?:", authorized);
-        return authorized;*/
+        return authorized;
     }
 
-    matchRoles(requiredRoles: Array<string>, userRoles: Array<string>): boolean {
-        let isMatch = userRoles.some(r => requiredRoles.indexOf(r) >= 0);
-        return isMatch;
-    };
-
-    obtainRolesFromKeycloakJWT(request: any): Array<string> {
+    /**
+     * Get the list of roles from the request header JWT data
+     */
+    obtainRolesFromJWT(request: any): Array<string> {
         try {
             console.log("obtainRolesFromKeycloakJWT process...");
             const token = extractTokenFromHeader(request.headers);
             const jwtDecoded = jwt.decode(token);
             console.log("RolesGuard.request.toke decoded:", jwtDecoded);
-
-            let clientRoles = [];
-
-            const key = this.globalConfig.get<string>('Keycloak_client_id');
-
-            if (jwtDecoded.resource_access[key] && jwtDecoded.resource_access[key].roles) {
-                if (jwtDecoded.resource_access[key].roles instanceof Array)
-                    clientRoles = jwtDecoded.resource_access[key].roles;
-            }
-
-            let accountRoles = [];
-
-            if (jwtDecoded.resource_access['account'] && jwtDecoded.resource_access['account'].roles) {
-                if (jwtDecoded.resource_access['account'].roles instanceof Array)
-                    clientRoles = jwtDecoded.resource_access['account'].roles;
-            }
 
             let roles = [];
 
@@ -71,16 +62,21 @@ export class RolesGuard implements CanActivate {
                     roles = jwtDecoded.roles;
             }
 
-            let rolesFromJWT: Array<string> = clientRoles.concat(accountRoles);
-            rolesFromJWT = rolesFromJWT.concat(roles);
+            console.log("RolesGuard.request.toke roles:", roles);
 
-            console.log("RolesGuard.request.toke roles:", rolesFromJWT);
-
-            return rolesFromJWT;
+            return roles;
         } catch (e) {
             console.log("RolesGuard exception:", e);
             return [];
         }
+    };
+
+    /**
+     * Validates if the user has any of the required roles
+     */
+    matchRoles(requiredRoles: Array<string>, userRoles: Array<string>): boolean {
+        let isMatch = userRoles.some(r => requiredRoles.indexOf(r) >= 0);
+        return isMatch;
     };
 
 }
