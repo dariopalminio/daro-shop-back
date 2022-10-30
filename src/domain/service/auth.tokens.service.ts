@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
-import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
@@ -36,8 +35,6 @@ export class AuthTokensService implements IAuthTokensService {
     private readonly userService: IUserService<User>,
     @Inject('IEmailSender')
     readonly sender: IEmailSender,
-    @Inject('ITranslator')
-    private readonly i18n: ITranslator,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) {
@@ -228,7 +225,7 @@ export class AuthTokensService implements IAuthTokensService {
     //grant_type=client_credentials
     try {
       if (!authClientDTO.client_id || !authClientDTO.client_secret || !authClientDTO.grant_type)
-        throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
+        throw new Error("Bad Request: Empty value!");
     } catch (error) {
       throw new InvalidClientCredentialsError(`The client_id, client_secret or grant_type is empty`,
         {}, ResponseCode.BAD_REQUEST);

@@ -16,7 +16,6 @@ import { UserService } from '../domain/service/user.service';
 import { UserController } from '../app/controller/user.controller';
 import { AuthController } from '../app/controller/auth.controller';
 import { EmailSmtpSenderAdapter } from '../infra/email/email-sender.adapter';
-import { TranslatorNestjsI18nImpl } from '../infra/i18n/translator-nestjs-i18n-impl';
 import { AuthMiddleware } from '../app/middleware/auth.middleware';
 import { ProductSchema } from '../infra/database/schema/product.schema';
 import { UserSchema } from '../infra/database/schema/user.schema';
@@ -38,16 +37,12 @@ import { GlobalConfigImpl } from '../infra/config/global-config-impl';
 
 //Mongo
 import { MongooseModule } from '@nestjs/mongoose';
-//i18n
-import { I18nModuleConfig } from '../infra/i18n/i18n-module-config';
 
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guard/roles.guard';
 import { AuthTokensController } from './controller/auth.token.controller';
 import { AuthTokensService } from 'src/domain/service/auth.tokens.service';
-//import { I18nRequestScopeService } from 'nestjs-i18n';
-import { TranslatorI18nImpl } from 'src/infra/i18n/TraslatorI18Impl';
-import { ServeStaticModule } from '@nestjs/serve-static'
+
 import { join } from 'path';
 import { ProfileSchema } from 'src/infra/database/schema/profile.schema';
 import { ProfileRepository } from 'src/infra/database/repository/profile.repository';
@@ -83,7 +78,6 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'Order', schema: OrderSchema },
       { name: 'PaymentMethod', schema: PaymentMethodSchema },
     ]),
-    I18nModuleConfig,
     /*ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../../public'),
       exclude: ['/api*'],
@@ -104,10 +98,6 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
     {
       provide: 'IGlobalConfig',
       useClass: GlobalConfigImpl,
-    },
-    {
-      provide: 'ITranslator',
-      useClass: TranslatorI18nImpl,
     },
     {
       provide: 'IAuthService',

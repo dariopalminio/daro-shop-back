@@ -1,4 +1,4 @@
-export class HeadersAuthorizationErrors extends Error {
+export class HeadersAuthorizationError extends Error {
 
     code: number; //the first step in handling errors is to provide a client with a proper status code.
     detail: string; //message more detailed of error with additional info

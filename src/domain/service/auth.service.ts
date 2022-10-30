@@ -10,7 +10,6 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';;
 import { DomainError } from 'src/domain/error/domain-error';
@@ -42,8 +41,6 @@ export class AuthService implements IAuthService {
     private readonly userService: IUserService<User>,
     @Inject('IEmailSender')
     readonly sender: IEmailSender,
-    @Inject('ITranslator')
-    private readonly i18n: ITranslator,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
     @Inject('IAuthTokensService')
@@ -133,9 +130,9 @@ export class AuthService implements IAuthService {
     // Data validation
     try {
       if (!validEmail(startConfirmEmailData.email))
-        throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
+        throw new Error("Bad Request: Invalid email!");
       if (!startConfirmEmailData.verificationPageLink)
-        throw new Error(await this.i18n.translate('auth.ERROR.INVALID_LINK',));
+        throw new Error("Bad Request: Invalid link!");
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
     };
@@ -144,7 +141,7 @@ export class AuthService implements IAuthService {
     try {
       // Get user
       user = await this.userService.getByQuery({ userName: startConfirmEmailData.userName });
-      if (!user) throw new Error(await this.i18n.translate('auth.ERROR.USER_NOT_FOUND',));
+      if (!user) throw new Error("User not found!");
     } catch (error) {
       throw new DomainError(ResponseCode.NOT_FOUND, error.message, error);
     };
@@ -155,7 +152,7 @@ export class AuthService implements IAuthService {
       user.verificationCode = newVerificationCode;
 
       const updatedOk: boolean = await this.userService.updateById(user._id, user);
-      if (!updatedOk) throw new Error(await this.i18n.translate('auth.ERROR.CAN_NOT_SAVE_VERIFICATION_CODE',));
+      if (!updatedOk) throw new Error("Can not save generated verification code!");
 
       const token: string = encodeToken(startConfirmEmailData.email, newVerificationCode);
       const verificationLink = createTokenLink(startConfirmEmailData.verificationPageLink, token);
@@ -165,14 +162,14 @@ export class AuthService implements IAuthService {
       paramsRegisterStart.name = startConfirmEmailData.name;
       paramsRegisterStart.company = this.globalConfig.get<string>('COMPANY_NAME');
       paramsRegisterStart.link = verificationLink;
-      const subject: string = await this.i18n.translate('auth.REGISTER_START_EMAIL.SUBJECT', { args: { company: paramsRegisterStart.company }, });
+      const subject: string = `[${paramsRegisterStart.company}] Password changed`;
 
       //Send email
       const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startConfirmEmailData.email, "register-start", paramsRegisterStart, locale);
       return {
         isSuccess: true,
         status: ResponseCode.OK,
-        message: await this.i18n.translate('auth.MESSAGE.SENT_VERIFICATION_EMAIL_SUCCESS',),
+        message: "An email-verification was sent to the user with a link the user can click to verify their email address!",
         data: emailResponse
       };
 
@@ -217,8 +214,7 @@ export class AuthService implements IAuthService {
     }
 
     //Successful response
-    const message = await this.i18n.translate('auth.MESSAGE.CONFIRM_WAS_SUCCESS',);
-    return { message: message };
+    return { message: "Account confirmed!" };
   };
 
   /**
@@ -232,8 +228,8 @@ export class AuthService implements IAuthService {
       //set params to template
       const paramsRegisterEnd = { name: name, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //Send email
-      const subject: string = await this.i18n.translate('auth.REGISTER_END_EMAIL.SUBJECT',
-        { args: { company: this.globalConfig.get<string>('COMPANY_NAME') }, });
+      const subject: string =  `[${this.globalConfig.get<string>('COMPANY_NAME')}] Registration successful`;
+    
       const emailResponse: any = this.sender.sendEmailWithTemplate(subject, email, "register-end", paramsRegisterEnd, lang);
       return emailResponse;
     } catch (error) {
@@ -250,7 +246,7 @@ export class AuthService implements IAuthService {
     const userAuthId: string = logoutForm.id;
     try {
       if (!userAuthId)
-        throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMPTY_VALUE',));
+        throw new Error("Bad Request: Empty value!");
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error.message, { error: error });
     };
@@ -266,12 +262,11 @@ export class AuthService implements IAuthService {
   async sendEmailToRecoveryPass(startRecoveryData: StartRecoveryDataType, lang: string): Promise<any> {
     console.log("sendEmailToRecoveryPass lang:", lang);
     try {
-      if (!validEmail(startRecoveryData.email)) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_EMAIL',));
-      if (!startRecoveryData.recoveryPageLink) throw new Error(await this.i18n.translate('auth.ERROR.INVALID_LINK',));
+      if (!validEmail(startRecoveryData.email)) throw new Error("Bad Request: Invalid email!");
+      if (!startRecoveryData.recoveryPageLink) throw new Error("Bad Request: Invalid link!");
     } catch (error) {
       throw new DomainError(ResponseCode.BAD_REQUEST, "Can not Send Email To Recovery Pass.", error);
     };
-
 
     //generate verification code
     const newVerificationCode = generateToken();
@@ -290,7 +285,7 @@ export class AuthService implements IAuthService {
       user.setStartVerificationCode(new Date());
 
       const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
-      if (!updatedOk) throw new Error(await this.i18n.translate('auth.ERROR.COULD_NOT_SAVE_VERIFICATION_CODE',));
+      if (!updatedOk) throw new Error( "Can not save generated verification code!");
 
       //send email with link and verification code
       const token: string = encodeToken(startRecoveryData.email, newVerificationCode);
@@ -299,13 +294,13 @@ export class AuthService implements IAuthService {
       //set params to email template
       const params = { recoverylink: recoveryPageLink, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //send email
-      const subject: string = await this.i18n.translate('auth.RECOVERY_START_EMAIL.SUBJECT',
-        { args: { company: this.globalConfig.get<string>('COMPANY_NAME') }, });
+      const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Recover your password`;
+      
       const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startRecoveryData.email, "recovery-start", params, lang);
       return {
         isSuccess: true,
         status: ResponseCode.OK,
-        message: await this.i18n.translate('auth.MESSAGE.RECOVERY_EMAIL_SENT',),
+        message: "Email was sent To Recovery Password!",
         data: emailResponse
       };
     } catch (error) {
@@ -362,8 +357,7 @@ export class AuthService implements IAuthService {
       //set params to email template
       const params = { name: name, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //Send email
-      const subject: string = await this.i18n.translate('auth.RECOVERY_END_EMAIL.SUBJECT',
-        { args: { company: this.globalConfig.get<string>('COMPANY_NAME') }, });
+      const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Password changed`;
 
       const emailResponse: any = this.sender.sendEmailWithTemplate(subject, email, "recovery-end", params, lang);
       return emailResponse;

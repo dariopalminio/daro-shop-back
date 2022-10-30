@@ -1,15 +1,12 @@
 import {
-  Controller, Get, Res, Post, Headers, Delete, Put, Body, Param, Query, Inject,
-  HttpStatus, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards, NotFoundException
+  Controller, Get, Res, Post, Headers, Body, Inject,
+  HttpStatus, InternalServerErrorException, UseGuards
 } from '@nestjs/common';
 import { IAuthService } from 'src/domain/incoming/auth.service.interface';
-import { StartConfirmEmailData } from 'src/domain/model/auth/register/start-confirm-email-data';
 import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
-import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';

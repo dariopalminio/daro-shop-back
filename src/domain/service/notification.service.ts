@@ -3,7 +3,6 @@ import { ContactMessage } from 'src/domain/model/notification/contact.message';
 import { INotificationService } from 'src/domain/incoming/notification.service.interface';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
 import { validEmail } from 'src/domain/helper/validators.helper';
-import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
@@ -23,8 +22,6 @@ export class NotificationService implements INotificationService {
   constructor(
     @Inject('IEmailSender')
     readonly sender: IEmailSender,
-    @Inject('ITranslator')
-    private readonly i18n: ITranslator,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,) {
   }
@@ -36,7 +33,7 @@ export class NotificationService implements INotificationService {
    */
   async sendContactEmail(contactMessage: ContactMessage, locale: string): Promise<any> {
 
-    if (!validEmail(contactMessage.email)) throw new Error(await this.i18n.translate('notification.ERROR.INVALID_EMAIL',));
+    if (!validEmail(contactMessage.email)) throw new Error("Invalid email!");
 
     try {
       const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Support`;
@@ -44,13 +41,12 @@ export class NotificationService implements INotificationService {
       const resp: any = {
         isSuccess: true,
         status: ResponseCode.OK,
-        message: await this.i18n.translate('notification.MESSAGE.EMAIL_SENT_SUCCESS',),
+        message: "Email sent successful!",
         data: infoReturned
       };
       return resp;
     } catch (error) {
-      const msg = await this.i18n.translate('notification.ERROR.EMAIL_COULD_NOT_SENT',);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, msg, '', error);
+      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, "Emal could not sent!", '', error);
     };
   };
 
@@ -64,7 +60,7 @@ export class NotificationService implements INotificationService {
       const resp: any = {
         isSuccess: true,
         status: ResponseCode.OK,
-        message: await this.i18n.translate('notification.MESSAGE.EMAIL_SENT_SUCCESS',),
+        message: "Email sent successful!",
         data: infoReturned
       };
       return resp;
@@ -72,7 +68,7 @@ export class NotificationService implements INotificationService {
       const resp: any = {
         isSuccess: false,
         status: ResponseCode.INTERNAL_SERVER_ERROR,
-        message: await this.i18n.translate('notification.ERROR.EMAIL_COULD_NOT_SENT',),
+        message: "Emal could not sent!",
         data: {},
         error: error};
       return resp;

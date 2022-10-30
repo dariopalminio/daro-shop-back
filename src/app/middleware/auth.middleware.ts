@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { HeadersAuthorizationErrors, UnauthorizedJwtError } from '../error/app-auth-errors';
+import { HeadersAuthorizationError, UnauthorizedJwtError } from '../error/app-auth-errors';
 import extractTokenFromHeader from '../helper/token.helper';
 
 /**
@@ -46,8 +46,7 @@ export class AuthMiddleware implements NestMiddleware {
 
         if (!req.headers || !req.headers.authorization) {
             //return res.status(400).json({ message: "Not authorized by the Auth Guard Middleware because no authorization data in Header." });
-            const e = new HeadersAuthorizationErrors();
-            throw new BadRequestException(new HeadersAuthorizationErrors());
+            throw new BadRequestException(new HeadersAuthorizationError());
         }
 
         try {

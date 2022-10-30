@@ -2,12 +2,7 @@ import { Controller, Get, Res, Inject, Headers, HttpStatus, BadRequestException 
 import { HealthCheck, HttpHealthIndicator, HealthCheckService, MongooseHealthIndicator } from "@nestjs/terminus";
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ITranslator } from 'src/domain/outgoing/translator.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { DomainError } from 'src/domain/error/domain-error';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { AppErrorHandler } from '../error/app-error-handler';
-
 
 /**
  * App controller
@@ -19,8 +14,6 @@ import { AppErrorHandler } from '../error/app-error-handler';
 export class AppController {
 
   constructor(
-    @Inject('ITranslator')
-    private readonly myI18n: ITranslator,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
     private healthCheckService: HealthCheckService,
@@ -58,7 +51,7 @@ export class AppController {
     const response: HelloWorldDTO = {
       isSuccess: true,
       status: 200,
-      message: await this.myI18n.translate('app.HELLO_MESSAGE', options),
+      message: "Hello!",
       name: this.globalConfig.get<string>('APP_NAME') as string,
       version: this.globalConfig.get<string>('VERSION') as string,
       date: new Date()
@@ -140,7 +133,7 @@ export class AppController {
     const response = {
       isSuccess: true,
       status: 200,
-      message: await this.myI18n.translate('app.HELLO_MESSAGE', options),
+      message: "Hello!",
       name: this.globalConfig.get<string>('APP_NAME') as string,
       version: this.globalConfig.get<string>('VERSION') as string,
       date: new Date(),
