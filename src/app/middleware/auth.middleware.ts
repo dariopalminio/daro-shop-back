@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { AppErrorHandler } from '../error/app-error-handler';
 import { HeadersAuthorizationErrors, UnauthorizedJwtError } from '../error/app-auth-errors';
 import extractTokenFromHeader from '../helper/token.helper';
 
