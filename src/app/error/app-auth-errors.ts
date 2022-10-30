@@ -29,7 +29,7 @@ export class UnauthorizedJwtError extends Error {
         super("Unauthorized, invalid JWT signature in HTTP headers.");
         // Ensure the name of this error is the same as the class name
         this.name = this.constructor.name;
-        this.code = 400;
+        this.code = 401;
         this.detail = detail? detail : "Not authorized by the Auth Guard Middleware because invalid token.";
         // This clips the constructor invocation from the stack trace.
         // It's not absolutely essential, but it does make the stack trace a little nicer.

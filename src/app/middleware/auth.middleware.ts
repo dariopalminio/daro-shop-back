@@ -41,22 +41,22 @@ export class AuthMiddleware implements NestMiddleware {
 
         const isAuthGuardActive: boolean = this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON');
 
-        if (isAuthGuardActive === true) {
-            if (!req.headers || !req.headers.authorization) {
-                //return res.status(400).json({ message: "Not authorized by the Auth Guard Middleware because no authorization data in Header." });
-                const e = new HeadersAuthorizationErrors();
-                throw new BadRequestException(new HeadersAuthorizationErrors());
-            }
+        if (isAuthGuardActive === false) next(); //does nothing
 
-            try {
-                var token = extractTokenFromHeader(req.headers);
-                const a = jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
-            } catch (error) {
-                const msg = `Not authorized by the Auth Guard Middleware because invalid token (${error.message})`;
-                //return res.status(401).send({ message: msg }); // Unauthorized, invalid signature
-                throw new UnauthorizedException(new UnauthorizedJwtError(msg));
-            };
+        if (!req.headers || !req.headers.authorization) {
+            //return res.status(400).json({ message: "Not authorized by the Auth Guard Middleware because no authorization data in Header." });
+            const e = new HeadersAuthorizationErrors();
+            throw new BadRequestException(new HeadersAuthorizationErrors());
         }
+
+        try {
+            var token = extractTokenFromHeader(req.headers);
+            const a = jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
+        } catch (error) {
+            const msg = `Not authorized by the Auth Guard Middleware because invalid token (${error.message})`;
+            //return res.status(401).send({ message: msg }); // Unauthorized, invalid signature
+            throw new UnauthorizedException(new UnauthorizedJwtError(msg));
+        };
 
         next();
     };
