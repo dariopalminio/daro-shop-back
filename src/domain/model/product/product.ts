@@ -119,28 +119,26 @@ export class Product extends Entity {
      * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
     public setFromAny(unmarshalled: any) {
-        this.setSku(unmarshalled.sku);
-        this.setBarcode(unmarshalled.barcode);
-        this.setName(unmarshalled.name);
-        this.setDescription(unmarshalled.description);
-        this.setImages(unmarshalled.images);
-        this.setCategory(unmarshalled.category);
-        this.setType(unmarshalled.type);
-        this.setBrand(unmarshalled.brand);
-        this.setColor(unmarshalled.color);
-        this.setModel(unmarshalled.model);
-        this.setGender(unmarshalled.gender);
-        this.setSize(unmarshalled.size);
-        this.setNetCost(unmarshalled.netCost);
-        this.setIvaAmountOnCost(unmarshalled.ivaAmountOnCost);
-        this.setGrossCost(unmarshalled.grossCost);
-        this.setNetPrice(unmarshalled.netPrice);
-        this.setIvaAmountOnPrice(unmarshalled.ivaAmountOnPrice);
-        this.setGrossPrice(unmarshalled.grossPrice);
-        this.setStock(unmarshalled.stock);
-        if (unmarshalled.active)
-            this.setActive(unmarshalled.active);
-        else this.active = true;
+        this.sku = unmarshalled.sku;
+        this.barcode = unmarshalled.barcode;
+        this.name = unmarshalled.name;
+        this.description = unmarshalled.description;
+        this.images = unmarshalled.images;
+        this.category = unmarshalled.category;
+        this.type = unmarshalled.type;
+        this.brand = unmarshalled.brand;
+        this.color = unmarshalled.color;
+        this.model = unmarshalled.model;
+        this.gender = unmarshalled.gender;
+        this.size = unmarshalled.size;
+        this.netCost = unmarshalled.netCost;
+        this.ivaAmountOnCost = unmarshalled.ivaAmountOnCost;
+        this.grossCost = unmarshalled.grossCost;
+        this.netPrice = unmarshalled.netPrice;
+        this.ivaAmountOnPrice = unmarshalled.ivaAmountOnPrice;
+        this.grossPrice = unmarshalled.grossPrice;
+        this.stock = unmarshalled.stock;
+        this.active = unmarshalled.active;
         this.setReservationsFromAny(unmarshalled);
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);

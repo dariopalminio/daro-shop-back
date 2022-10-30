@@ -39,21 +39,23 @@ export class AuthMiddleware implements NestMiddleware {
 
         const isAuthGuardActive: boolean = this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON');
 
-        if (!isAuthGuardActive) next(); //does nothing
+        if (isAuthGuardActive === true) {
+            if (!req.headers || !req.headers.authorization) {
+                console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header.");
+                return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
+            }
 
-        if (!req.headers || !req.headers.authorization) {
-            console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header.");
-            return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
+            try {
+                var token = extractTokenFromHeader(req.headers);
+                console.log("AuthMiddleware--->token:", token);
+                const a = jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
+                console.log("AuthMiddleware--->verify:", a);
+            } catch (error) {
+                console.log("401 Invalid token.");
+                const msg = `Not authorized by the Auth Guard because invalid token (${error.message})`;
+                return res.status(401).send({ message: msg }); // Unauthorized, invalid signature
+            };
         }
-
-        try {
-            var token = extractTokenFromHeader(req.headers);
-            console.log("AuthMiddleware. AuthMiddleware.token:", token);
-            jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
-        } catch (error) {
-            console.log("401 Invalid token.");
-            return res.status(401).send({ message: error.message }); // Unauthorized, invalid signature
-        };
 
         next();
     };
