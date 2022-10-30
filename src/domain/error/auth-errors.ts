@@ -47,7 +47,7 @@ export class RefreshTokenMalformedError extends DomainError {
     }
 };
 
-export class TokkensCreationError extends DomainError {
+export class TokensCreationError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
         const codeErr = code ? code : ResponseCode.BAD_REQUEST;
         const message = 'An error has occurred in token creation. Some data is wrong.';

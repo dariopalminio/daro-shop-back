@@ -15,7 +15,7 @@ import { IUserService } from 'src/domain/incoming/user.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
 import { User } from 'src/domain/model/user/user';
-import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError, TokkensCreationError } from 'src/domain/error/auth-errors';
+import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError, TokensCreationError } from 'src/domain/error/auth-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -57,6 +57,7 @@ export class AuthTokensService implements IAuthTokensService {
    * @returns 
    */
   createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType {
+
     try {
       let tokens: TokensType = {
         access_token: "",
@@ -72,7 +73,7 @@ export class AuthTokensService implements IAuthTokensService {
       const privateKEY: string = this._getPrivateKey();
 
       const issuer = 'Dario Palminio';
-      const subject = payload.id;
+      const subject = payload.id.toString();
       const audience = 'Dario Palminio';
 
       const accessSignOptions: any = {
@@ -101,7 +102,7 @@ export class AuthTokensService implements IAuthTokensService {
 
       return tokens;
     } catch (error) {
-      throw new TokkensCreationError(error.message);
+      throw new TokensCreationError(error.message);
     }
   };
 
