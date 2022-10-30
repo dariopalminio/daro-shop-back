@@ -25,14 +25,14 @@ export class AuthMiddleware implements NestMiddleware {
     ) { };
 
     /**
-     * Auth Middleware is a function which is called before the route handler to validate JWT Token. 
+     * Auth Middleware (for OAuth 2.0 Authorization) is a function which is called before the route handler to validate JWT Token. 
      * Specific routes will be authorized and available only when the caller (usually a specific authenticated user) has an enabling token.
      * AuthGuard we will now build assumes an authenticated user (and therefore a token is attached to the request headers). 
      * It will extract and validate the token and use the extracted information to determine whether or not the request can proceed.
      * In initialization phase microservice loads public key and signing algorithm
-     * from Auth server (Keycloak’s) well known config page. On each request microservice checks 
+     * from Auth server well known config page. On each request microservice checks 
      * the signature of the bearer token. Token validation is done offline without 
-     * going to Auth server (Keycloak).
+     * going to Auth server.
      */
     use(req: Request, res: Response, next: () => void) {
         console.log("AUTH_MIDDLEWARE_ON=", this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON'));
