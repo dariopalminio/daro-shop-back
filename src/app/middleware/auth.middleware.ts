@@ -41,7 +41,9 @@ export class AuthMiddleware implements NestMiddleware {
 
         const isAuthGuardActive: boolean = this.globalConfig.get<boolean>('AUTH_MIDDLEWARE_ON');
 
-        if (isAuthGuardActive === false) next(); //does nothing
+        if (isAuthGuardActive === false) {
+            next(); //does nothing
+        }
 
         if (!req.headers || !req.headers.authorization) {
             //return res.status(400).json({ message: "Not authorized by the Auth Guard Middleware because no authorization data in Header." });
