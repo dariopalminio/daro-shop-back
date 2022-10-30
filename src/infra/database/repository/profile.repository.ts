@@ -70,7 +70,7 @@ export class ProfileRepository implements IRepository<Profile> {
             arrayDoc = await this.profileModel.find(query).exec();
         }
 
-        return this.castArrayDocToUser(arrayDoc);
+        return arrayDoc;
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<Profile> {

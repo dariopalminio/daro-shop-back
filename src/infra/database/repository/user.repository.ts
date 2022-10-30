@@ -69,7 +69,7 @@ export class UserRepository implements IRepository<User> {
             arrayDoc = await this.userModel.find(query).exec();
         }
 
-        return this.castArrayDocToArrayDomainEntity(arrayDoc);
+        return arrayDoc;
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<User> {

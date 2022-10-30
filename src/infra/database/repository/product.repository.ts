@@ -51,7 +51,7 @@ export class ProductRepository implements IRepository<Product> {
         }
 
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
-    }
+    };
 
     /**
      * To exclude fields in response choose to return object with the field excluded with cero value. For example:
@@ -93,8 +93,8 @@ export class ProductRepository implements IRepository<Product> {
             arrayDoc = await this.productModel.find(query).exec();
         }
 
-        return this.castArrayDocToArrayDomainEntity(arrayDoc);
-    }
+        return arrayDoc;
+    };
 
     /**
      * getById
@@ -122,25 +122,25 @@ export class ProductRepository implements IRepository<Product> {
         const prodDoc: ProductDocument = await this.productModel.findOne(query);
         const objCasted: Product = new Product(prodDoc);
         return objCasted;
-    }
+    };
 
     async hasById(id: string): Promise<boolean> {
         const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
         if (!prodDoc) return false;
         return true;
-    }
+    };
 
     async hasByQuery(query: any): Promise<boolean> {
         const prodDoc: ProductDocument = await this.productModel.findOne(query);
         if (!prodDoc) return false;
         return true;
-    }
+    };
 
     async create(prod: Product): Promise<Product> {
         const docCreated: ProductDocument = await this.productModel.create(prod);
         const objCasted: Product = new Product(docCreated);
         return objCasted;
-    }
+    };
     
     async updateById(id: string, prod: Product): Promise<boolean> {
         const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(id, prod, { useFindAndModify: false }).exec();

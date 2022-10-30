@@ -1,5 +1,6 @@
 import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
+import { Validatable } from "../validatable.interface";
 
 /**
  * PaymentMethod domain object
@@ -11,7 +12,7 @@ import { Entity } from "../entity";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class PaymentMethod extends Entity {
+export class PaymentMethod extends Entity implements Validatable{
 
     protected key: string;
     protected name: string;
@@ -27,8 +28,8 @@ export class PaymentMethod extends Entity {
      * TypeScript does not support the implementation of multiple constructors directly. We have to use alternative ways to support multiple constructors.
      */
     public constructor();
-    public constructor(unmarshalled: any); 
-    public constructor(id: string, 
+    public constructor(unmarshalled: any);
+    public constructor(id: string,
         key: string, name: string, description: string, image: string, active: boolean, meta: any, updatedAt?: Date, createdAt?: Date);
     public constructor(...argumentsArray: any[]) {
         if (argumentsArray.length > 9) {
@@ -43,17 +44,17 @@ export class PaymentMethod extends Entity {
         }
         if (argumentsArray.length > 1) {
             super(argumentsArray[0]); //id
-            this.key=(argumentsArray[1]);
-            this.name=(argumentsArray[21]);
-            this.description=(argumentsArray[3]);
-            this.image=(argumentsArray[4]);
-            this.active=(argumentsArray[5]);
-            this.meta=(argumentsArray[6]);
+            this.key = (argumentsArray[1]);
+            this.name = (argumentsArray[21]);
+            this.description = (argumentsArray[3]);
+            this.image = (argumentsArray[4]);
+            this.active = (argumentsArray[5]);
+            this.meta = (argumentsArray[6]);
             if (argumentsArray[7]) {
-                this.updatedAt=(argumentsArray[7]);
+                this.updatedAt = (argumentsArray[7]);
             }
             if (argumentsArray[8]) {
-                this.createdAt=(argumentsArray[8]);
+                this.createdAt = (argumentsArray[8]);
             }
         }
     };
@@ -63,12 +64,12 @@ export class PaymentMethod extends Entity {
      * @param unmarshalled unmarshalled
      */
     public setFromAny(unmarshalled: any) {
-        this.key=(unmarshalled.key);
-        this.name=(unmarshalled.name);
-        this.description=(unmarshalled.description);
-        this.image=(unmarshalled.image);
-        this.active=(unmarshalled.active);
-        this.meta=(unmarshalled.meta);
+        this.key = (unmarshalled.key);
+        this.name = (unmarshalled.name);
+        this.description = (unmarshalled.description);
+        this.image = (unmarshalled.image);
+        this.active = (unmarshalled.active);
+        this.meta = (unmarshalled.meta);
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
@@ -147,8 +148,28 @@ export class PaymentMethod extends Entity {
 
     public setUpdatedAt(updatedAt: Date) {
         if (updatedAt === undefined || !(updatedAt instanceof Date))
-        throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
+            throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
+    };
+
+    /**
+    * Validate format throw Error if you do not meet any shippin price format requirement
+    */
+    public validateFormat() {
+        this.validateName();
+        this.validateDescription();
+    };
+
+    public validateName() {
+        if (this.name === undefined || (typeof this.name !== 'string') || this.name.length === 0) {
+            throw new Error('Field name in payment method has invalid format. The name field cannot be empty');
+        }
+    };
+
+    public validateDescription() {
+        if (this.description === undefined || (typeof this.description !== 'string') || this.description.length === 0) {
+            throw new Error('Field description in payment method has invalid format. The description field cannot be empty');
+        }
     };
 
 };

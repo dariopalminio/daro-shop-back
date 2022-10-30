@@ -1,4 +1,5 @@
 import { Entity } from "../entity";
+import { Validatable } from "../validatable.interface";
 
 /**
  * ShippingPrice domain object (Entity root)
@@ -11,7 +12,7 @@ import { Entity } from "../entity";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class ShippingPrice extends Entity {
+export class ShippingPrice extends Entity implements Validatable{
 
     protected location: string;
     protected price: number;
@@ -24,7 +25,7 @@ export class ShippingPrice extends Entity {
     */
     public constructor();
     public constructor(unmarshalled: any);
-    public constructor( id:string,  location: string, price: number, money: string, description: string );
+    public constructor(id: string, location: string, price: number, money: string, description: string);
     public constructor(...argumentsArray: any[]) {
         if (argumentsArray.length > 5) {
             throw new Error('Number of constructor arguments exceeded.');
@@ -67,8 +68,8 @@ export class ShippingPrice extends Entity {
     public setPrice(value: number) {
         if (value === undefined)
             throw new Error('Field price has invalid format because is undefined or null!');
-        if (Number.isNaN(value) || value < 0)
-            throw new Error('Field price has invalid format because is is not number type or is minor that zero!');
+        if (Number.isNaN(value))
+            throw new Error('Field price has invalid format because is is not number type!');
         this.price = value;
     };
 
@@ -98,5 +99,42 @@ export class ShippingPrice extends Entity {
     public getDescription(): string {
         return this.description;
     };
-    
+
+    /**
+    * Validate format throw Error if you do not meet any shippin price format requirement
+    */
+    public validateFormat() {
+        this.validateLocation();
+        this.validatePrice();
+        this.validateMoney();
+        this.validateDescription();
+    };
+
+    public validateLocation() {
+        if (this.location === undefined || (typeof this.location !== 'string')) {
+            throw new Error('Field location has invalid format because is undefined or is not string!');
+        }
+    }
+
+    public validatePrice() {
+        if (this.price === undefined) {
+            throw new Error('Field price has invalid format because is undefined or null!');
+        }
+        if (Number.isNaN(this.price) || this.price < 0) {
+            throw new Error('Field price has invalid format because is is not number type or is minor that zero!');
+        }
+
+    };
+
+    public validateMoney() {
+        if (this.money === undefined || (typeof this.money !== 'string')) {
+            throw new Error('Field money has invalid format because is undefined or is not string!');
+        }
+    }
+
+    public validateDescription() {
+        if (this.description === undefined || (typeof this.description !== 'string'))
+            throw new Error('Field description has invalid format because is undefined or is not string!');
+    };
+
 };

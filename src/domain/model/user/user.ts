@@ -1,5 +1,6 @@
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Entity } from '../entity';
+import { Validatable } from '../validatable.interface';
 
 export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
 /**
@@ -12,7 +13,7 @@ export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class User extends Entity {
+export class User extends Entity implements Validatable{
 
     protected enable: boolean;
     protected userName: string;
@@ -114,105 +115,77 @@ export class User extends Entity {
      * To limit the length of a user's name. Let's say that it can be no longer than 100 characters, and it must be at least 2 characters.
      */
     public setUserName(value: string) {
-        if (value === undefined || value === null || (typeof value !== 'string'))
+        if (value === undefined || value === null || (typeof value !== 'string')) {
             throw new Error('Field userName has invalid format because is undefined or is not string!');
-
-        if (value.length <= 2 || value.length > 100) {
-            throw new Error('User must be greater than 2 chars and less than 100.')
         }
-
         this.userName = value;
     };
 
     /**
-     * Setter method with Attributes/Properties Validation
+     * Setter method with basic Attributes/Properties Validation
      */
     public setFirstName(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) { //required
             throw new Error('Field firstName has invalid format because is undefined or is not string!');
+        }
         this.firstName = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setLastName(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) { //required
             throw new Error('Field lastName has invalid format because is undefined or is not string!');
+        }
         this.lastName = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setEmail(email: string) {
-        if (email === undefined || email.length === 0){
-            throw new Error('Field email has invalid format becuse is undefined or empty!');
-        }
-        if (email.length < 6){
-            throw new Error('The number of characters in user email is short, the email is very short!');
-        }
-        if (email.length > 254){
-            throw new Error('The number of characters in user email is too many, the email is too long!');
-        }
-        const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-        const emailValid: boolean = expresionsRegularEmail.test(email);
-        if (!emailValid){
-            throw new Error('Field user email has invalid format!');
+        if (email === undefined || (typeof email !== 'string')) { //required
+            throw new Error('Field email has invalid format becuse is undefined or not a string!');
         }
         this.email = email;
     }
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setPassword(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) {//required
             throw new Error('Field password has invalid format because is undefined or is not string!');
+        }
         this.password = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
-    public setRoles(value: string[]) {
-        if (value === undefined)
+    public setRoles(value: string[]) { //required
+        if (value === undefined) {
             throw new Error('Field roles has invalid format because is undefined!');
+        }
         const isAnArray: boolean = Array.isArray(value);
-        if (!isAnArray) throw new Error('Field roles has invalid format because is not array!');
+        if (!isAnArray) {
+            throw new Error('Field roles has invalid format because is not array!');
+        }
         this.roles = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setVerified(value: boolean) {
-        if (value === undefined || typeof value !== "boolean")
+        if (value === undefined || typeof value !== "boolean") { //required
             throw new Error('Field verified has invalid format because is undefined or is not boolean type!');
+        }
         this.verified = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setVerificationCode(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) { //required
             throw new Error('Field verificationCode has invalid format because is undefined or is not string!');
+        }
         this.verificationCode = value;
     };
 
-    /**
-     * Setter method with Attributes/Properties Validation
-     */
     public setStartVerificationCode(value: Date) {
-        if (value === undefined || !(value instanceof Date))
+        if (value === undefined || !(value instanceof Date)) { //required
             throw new Error('Field startVerificationCode has invalid format because is undefined or is not Date!');
-        else
-            this.startVerificationCode = value;
+        }
+        this.startVerificationCode = value;
     };
 
     public setUpdatedAt(updatedAt: Date) {
-        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        if (updatedAt === undefined || !(updatedAt instanceof Date)) //required
             throw new Error('Field updatedAt has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
@@ -269,5 +242,74 @@ export class User extends Entity {
         return this.roles.includes(rol);
     };
 
+    /**
+     * Validate format throw Error if if you do not meet any user format requirement
+     */
+    public validateFormat() {
+        this.validateUserName();
+        this.validateFirstName();
+        this.validateLastName();
+        this.validateEmail();
+        this.validatePassword();
+    };
+
+    public validateUserName() {
+        if (this.userName === undefined || this.userName === null || (typeof this.userName !== 'string')){
+            throw new Error('Field userName has invalid format because is undefined or is not string!');
+        }
+        if (this.userName.length <= 2 || this.userName.length > 100) {
+            throw new Error('Field userName must be greater than 2 chars and less than 100.')
+        }
+    };
+
+    public validateFirstName() {
+        if (this.firstName === undefined || (typeof this.firstName !== 'string')) { //required
+            throw new Error('Field firstName has invalid format because is undefined or is not string!');
+        }
+        if (this.firstName.length <= 2 || this.firstName.length > 100) {
+            throw new Error('Field firstName must be greater than 3 chars and less than 100.')
+        }
+    };
+
+    public validateLastName() {
+        if (this.lastName === undefined || (typeof this.lastName !== 'string')) { //required
+            throw new Error('Field lastName has invalid format because is undefined or is not string!');
+        }
+        if (this.lastName.length <= 2 || this.lastName.length > 100) {
+            throw new Error('Field lastName must be greater than 3 chars and less than 100.')
+        }
+    };
+
+    /**
+     * Validate email min: 6, max: 254 characters
+     */
+    public validateEmail() {
+        if (this.email === undefined || (typeof this.email !== 'string')) {
+            throw new Error('Field email in user has invalid format. Email must be a string.');
+        }
+        if (this.email.length === 0) {
+            throw new Error('Field email has invalid format becuse is empty! Email must be a string with length > 0.');
+        }
+        if (this.email.length < 6) {
+            throw new Error('The number of characters in user email is short, the email is very short!');
+        }
+        if (this.email.length > 254) {
+            throw new Error('The number of characters in user email is too many, the email is too long!');
+        }
+        const expresionsRegularEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        const emailValid: boolean = expresionsRegularEmail.test(this.email);
+        if (!emailValid) {
+            throw new Error('Field user email has invalid email format!');
+        }
+    };
+
+    public validatePassword() {
+        if (this.password === undefined || (typeof this.password !== 'string')) {
+            throw new Error('Field password has invalid format because is undefined or is not string!');
+        }
+        if (this.password.length <= 2 || this.password.length > 100) {
+            throw new Error('Field password must be greater than 2 chars and less than 100.')
+        }
+    };
 
 };

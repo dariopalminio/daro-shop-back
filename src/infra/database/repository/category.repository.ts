@@ -79,7 +79,6 @@ export class CategoryRepository implements IRepository<Category> {
             arrayDoc = await this.categoryModel.find(query).exec();
         }
 
-        //return this.castArrayDocToCategory(arrayDoc);
         return arrayDoc;
     };
     

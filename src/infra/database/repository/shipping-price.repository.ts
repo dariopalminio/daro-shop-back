@@ -70,7 +70,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
             arrayDoc = await this.shippingPriceModel.find(query).exec();
         }
 
-        return this.castArrayDocToArrayDomainEntity(arrayDoc);
+        return arrayDoc;
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<ShippingPrice> {

@@ -3,6 +3,7 @@ import { Client } from './client';
 import { Entity } from '../entity';
 import { OrderItem } from './order-item';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
+import { Validatable } from '../validatable.interface';
 
 /**
  * Order domain object (Entity root)
@@ -14,7 +15,7 @@ import { convertAnyToDate } from 'src/domain/helper/date.helper';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Order extends Entity {
+export class Order extends Entity implements Validatable {
 
     protected client: Client;
     protected orderItems: OrderItem[];
@@ -241,6 +242,10 @@ export class Order extends Entity {
         if (quantity < 0) throw new Error('The quantity to increase count in order is not positive.');
         this.count += quantity;
     };
+
+    public validateFormat(): void {
+        throw new Error('Method not implemented.');
+    }
 
 };
 

@@ -2,6 +2,7 @@ import { Reservation } from './reservation';
 import { Entity } from '../entity';
 import { throws } from 'assert';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
+import { Validatable } from '../validatable.interface';
 
 /**
  * Product domain object (Entity root)
@@ -12,7 +13,7 @@ import { convertAnyToDate } from 'src/domain/helper/date.helper';
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
-export class Product extends Entity {
+export class Product extends Entity implements Validatable{
 
     protected sku: string;
     protected barcode: string;
@@ -119,27 +120,29 @@ export class Product extends Entity {
      * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
     public setFromAny(unmarshalled: any) {
-        this.sku = unmarshalled.sku;
-        this.barcode = unmarshalled.barcode;
-        this.name = unmarshalled.name;
-        this.description = unmarshalled.description;
-        this.images = unmarshalled.images;
-        this.category = unmarshalled.category;
-        this.type = unmarshalled.type;
-        this.brand = unmarshalled.brand;
-        this.color = unmarshalled.color;
-        this.model = unmarshalled.model;
-        this.gender = unmarshalled.gender;
-        this.size = unmarshalled.size;
-        this.netCost = unmarshalled.netCost;
-        this.ivaAmountOnCost = unmarshalled.ivaAmountOnCost;
-        this.grossCost = unmarshalled.grossCost;
-        this.netPrice = unmarshalled.netPrice;
-        this.ivaAmountOnPrice = unmarshalled.ivaAmountOnPrice;
-        this.grossPrice = unmarshalled.grossPrice;
-        this.stock = unmarshalled.stock;
-        this.active = unmarshalled.active;
+        this.setSku(unmarshalled.sku);
+        this.setBarcode(unmarshalled.barcode);
+        this.setName(unmarshalled.name);
+        this.setDescription(unmarshalled.description);
+        this.setImages(unmarshalled.images);
+        this.setCategory(unmarshalled.category);
+        this.setType(unmarshalled.type);
+        this.setBrand(unmarshalled.brand);
+        this.setColor(unmarshalled.color);
+        this.setModel(unmarshalled.model);
+        this.setGender(unmarshalled.gender);
+        this.setSize(unmarshalled.size);
+        this.setNetCost(unmarshalled.netCost);
+        this.setIvaAmountOnCost(unmarshalled.ivaAmountOnCost);
+        this.setGrossCost(unmarshalled.grossCost);
+        this.setNetPrice(unmarshalled.netPrice);
+        this.setIvaAmountOnPrice(unmarshalled.ivaAmountOnPrice);
+        this.setGrossPrice(unmarshalled.grossPrice);
+        this.setStock(unmarshalled.stock);
         this.setReservationsFromAny(unmarshalled);
+        if (unmarshalled.active)
+        this.setActive(unmarshalled.active);
+    else this.active = true;
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
@@ -264,128 +267,128 @@ export class Product extends Entity {
      * Setter method with Attributes/Properties Validation
      */
     public setSku(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field sku in product has invalid format because is undefined or is not string!');
         this.sku = value;
     };
 
     public setBarcode(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field barcode in product has invalid format because is undefined or is not string!');
         this.barcode = value;
     };
 
     public setName(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field name  in product has invalid format because is undefined or is not string!');
         if (value.trim() === '') throw new Error('Field name has invalid because is empty string. A product must have a name!');
         this.name = value;
     };
 
     public setDescription(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field description in product has invalid format because is undefined or is not string!');
         this.description = value;
     };
 
     public setImages(value: string[]) {
-        const isAnArray: boolean = Array.isArray(value);
-        if (!isAnArray) throw new Error('Field images in product has invalid format because is not array!');
+        const isAnArray: boolean = Array.isArray(value); //required
+        if (value === undefined || !isAnArray) throw new Error('Field images in product has invalid format because is not array and is required!');
         this.images = value;
     };
 
     public setCategory(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field category in product has invalid format because is undefined or is not string!');
         this.category = value;
     };
 
     public setType(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field type in product has invalid format because is undefined or is not string!');
         this.type = value;
     };
 
     public setBrand(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field brand in product has invalid format because is undefined or is not string!');
         this.brand = value;
     };
 
     public setColor(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field color in product has invalid format because is undefined or is not string!');
         this.color = value;
     };
 
     public setModel(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field model in product has invalid format because is undefined or is not string!');
         this.model = value;
     };
 
     public setGender(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field gender in product has invalid format because is undefined or is not string!');
         this.gender = value;
     };
 
     public setSize(value: string) {
-        if (value === undefined || (typeof value !== 'string'))
+        if (value === undefined || (typeof value !== 'string')) //required
             throw new Error('Field size in product has invalid format because is undefined or is not string!');
         this.size = value;
     };
 
     public setNetCost(value: number) {
-        if (value === undefined || Number.isNaN(value) || value < 0)
+        if (value === undefined || Number.isNaN(value)) //required
             throw new Error('Field netCost in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.netCost = value;
     };
 
     public setIvaAmountOnCost(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field ivaAmountOnCost in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.ivaAmountOnCost = value;
     };
 
     public setGrossCost(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field grossCost in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.grossCost = value;
     };
 
     public setNetPrice(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field netPrice in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.netPrice = value;
     };
 
     public setIvaAmountOnPrice(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field ivaAmountOnPrice in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.ivaAmountOnPrice = value;
     };
 
     public setGrossPrice(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field grossPrice in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.grossPrice = value;
     };
 
     public setStock(value: number) {
-        if (value === undefined || isNaN(value) || value < 0)
+        if (value === undefined || isNaN(value)) //required
             throw new Error('Field stock in product has invalid format because is undefined, is not number type or is minor that zero!');
         this.stock = value;
     };
 
     public setActive(value: boolean) {
-        if (value === undefined || typeof value !== "boolean")
+        if (value === undefined || typeof value !== "boolean") //required
             throw new Error('Field active in product has invalid format because is undefined or is not boolean type!');
         this.active = value;
     };
 
     public setReservations(value: Reservation[]) {
-        if (value === undefined)
+        if (value === undefined) //required
             throw new Error('Field reservations in product has invalid format because is undefined!');
         const isAnArray: boolean = Array.isArray(value);
         if (!isAnArray) throw new Error('Field reservations has invalid format because is not array!');
@@ -393,7 +396,7 @@ export class Product extends Entity {
     };
 
     public setUpdatedAt(updatedAt: Date) {
-        if (updatedAt === undefined || !(updatedAt instanceof Date))
+        if (updatedAt === undefined || !(updatedAt instanceof Date)) //required
             throw new Error('Field updatedAt in product has invalid format because is undefined or is not Date!');
         this.updatedAt = updatedAt;
     };
@@ -459,6 +462,33 @@ export class Product extends Entity {
             return null; //not found
         }
         return this.reservations[reserveIndex];
+    };
+
+    /**
+     * Validate format throw Error if if you do not meet any product format requirement
+     */
+    public validateFormat() {
+        this.validateSku();
+        this.validateName();
+        this.validateDescription();
+    };
+
+    public validateSku() {
+        if (this.sku === undefined || (typeof this.sku !== 'string') || this.sku.length === 0) {
+            throw new Error('Field sku in product has invalid format. SKU must have a maximum length of 12 units and cannot be empty');
+        }
+    };
+
+    public validateName() {
+        if (this.name === undefined || (typeof this.name !== 'string') || this.name.length === 0) {
+            throw new Error('Field name in product has invalid format. The name field cannot be empty');
+        }
+    };
+
+    public validateDescription() {
+        if (this.description === undefined || (typeof this.description !== 'string') || this.description.length === 0) {
+            throw new Error('Field description in product has invalid format. The description field cannot be empty');
+        }
     };
 
 };
