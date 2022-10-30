@@ -1,8 +1,10 @@
-import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
+import { Injectable, NestMiddleware, Inject, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { AppErrorHandler } from '../error/app-error-handler';
+import { HeadersAuthorizationErrors, UnauthorizedJwtError } from '../error/app-auth-errors';
 import extractTokenFromHeader from '../helper/token.helper';
 
 /**
@@ -41,19 +43,18 @@ export class AuthMiddleware implements NestMiddleware {
 
         if (isAuthGuardActive === true) {
             if (!req.headers || !req.headers.authorization) {
-                console.log("AuthMiddleware. 401 Unauthorized! No authorization data in Header.");
-                return res.status(401).json({ message: "Unauthorized! No authorization data in Header." });
+                //return res.status(400).json({ message: "Not authorized by the Auth Guard Middleware because no authorization data in Header." });
+                const e = new HeadersAuthorizationErrors();
+                throw new BadRequestException(new HeadersAuthorizationErrors());
             }
 
             try {
                 var token = extractTokenFromHeader(req.headers);
-                console.log("AuthMiddleware--->token:", token);
                 const a = jwt.verify(token, this.authTokensService.getPEMPublicKey(), { algorithms: ['RS256'] });
-                console.log("AuthMiddleware--->verify:", a);
             } catch (error) {
-                console.log("401 Invalid token.");
-                const msg = `Not authorized by the Auth Guard because invalid token (${error.message})`;
-                return res.status(401).send({ message: msg }); // Unauthorized, invalid signature
+                const msg = `Not authorized by the Auth Guard Middleware because invalid token (${error.message})`;
+                //return res.status(401).send({ message: msg }); // Unauthorized, invalid signature
+                throw new UnauthorizedException(new UnauthorizedJwtError(msg));
             };
         }
 

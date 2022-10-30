@@ -203,7 +203,8 @@ export class AppModule implements OnModuleInit {
         { path: '/auth/tokens/login', method: RequestMethod.POST },
         { path: '/auth/tokens/login/', method: RequestMethod.POST },
       )
-      .forRoutes(AppController, AuthController, UserController, NotificationController, ProductController, CategoryController);
+      .forRoutes(AppController, AuthController, UserController, ProfileController, NotificationController,
+        ProductController, CategoryController, ShippingPriceController, OrderController, PaymentMethodController);
   };
 
   onModuleInit() {
