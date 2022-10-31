@@ -3,6 +3,7 @@ import { Entity } from '../entity';
 import { throws } from 'assert';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Validatable } from '../validatable.interface';
+import { Marshable } from '../marshable';
 
 /**
  * Product domain object (Entity root)
@@ -13,7 +14,7 @@ import { Validatable } from '../validatable.interface';
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
-export class Product extends Entity implements Validatable{
+export class Product extends Entity implements Validatable, Marshable {
 
     protected sku: string;
     protected barcode: string;
@@ -141,14 +142,45 @@ export class Product extends Entity implements Validatable{
         this.setStock(unmarshalled.stock);
         this.setReservationsFromAny(unmarshalled);
         if (unmarshalled.active)
-        this.setActive(unmarshalled.active);
-    else this.active = true;
+            this.setActive(unmarshalled.active);
+        else this.active = true;
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
         }
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    /**
+    * Unmarshal: extract attributes from marshalled to any
+    */
+    public convertToAny(): any {
+        return {
+            _id: this._id,
+            barcode: this.barcode,
+            name: this.name,
+            description: this.description,
+            images: this.images,
+            category: this.category,
+            type: this.type,
+            brand: this.brand,
+            color: this.color,
+            model: this.model,
+            gender: this.gender,
+            size: this.size,
+            netCost: this.netCost,
+            ivaAmountOnCost: this.ivaAmountOnCost,
+            grossCost: this.grossCost,
+            netPrice: this.netPrice,
+            ivaAmountOnPrice: this.ivaAmountOnPrice,
+            grossPrice: this.grossPrice,
+            stock: this.stock,
+            active: this.active,
+            reservations: this.reservations.map((res) => (res.convertToAny())),
+            updatedAt: this.updatedAt,
+            createdAt: this.createdAt
+        };
     };
 
     private setReservationsFromAny(unmarshalled: any) {

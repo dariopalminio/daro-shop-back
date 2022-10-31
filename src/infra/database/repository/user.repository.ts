@@ -115,8 +115,10 @@ export class UserRepository implements IRepository<User> {
         return objCasted;
     }
 
-    async updateById(id: string, doc: any): Promise<boolean> {
-        const docUpdated: UserDocument = await this.userModel.findByIdAndUpdate(id, doc, {useFindAndModify: false}).exec();
+    async updateById(id: string, entity: User): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: UserDocument = await this.userModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

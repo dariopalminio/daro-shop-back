@@ -1,4 +1,5 @@
 import { Entity } from '../entity';
+import { Marshable } from '../marshable';
 import { Validatable } from '../validatable.interface';
 
 /**
@@ -10,7 +11,7 @@ import { Validatable } from '../validatable.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Category extends Entity implements Validatable{
+export class Category extends Entity implements Validatable, Marshable {
 
     name: string;
     description: string;
@@ -39,6 +40,17 @@ export class Category extends Entity implements Validatable{
     public setFromAny(unmarshalled: any) {
         this.name = unmarshalled.name;
         this.description = unmarshalled.description;
+    };
+
+    /**
+     * Unmarshal: convert class object to unmarshalled any
+     */
+     public convertToAny(): any {
+        return {
+            _id: this._id,
+            name: this.name,
+            description: this.description
+        };
     };
 
     public validateFormat(): void {

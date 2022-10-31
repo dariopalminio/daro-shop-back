@@ -63,7 +63,7 @@ export class ProfileService implements IProfileService<Profile> {
   async updateById(id: string, profile: Profile): Promise<boolean> {
     const found: boolean = await this.profileRepository.hasById(id);
     if (!found) throw new ProfileNotFoundError();
-    const updated: boolean = await this.profileRepository.updateById(id, {...profile, updatedAt: new Date()});
+    const updated: boolean = await this.profileRepository.updateById(id, profile);
     return updated;
   };
 

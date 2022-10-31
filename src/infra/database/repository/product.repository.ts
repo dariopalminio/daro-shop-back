@@ -142,8 +142,10 @@ export class ProductRepository implements IRepository<Product> {
         return objCasted;
     };
     
-    async updateById(id: string, prod: Product): Promise<boolean> {
-        const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(id, prod, { useFindAndModify: false }).exec();
+    async updateById(id: string, entity: Product): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 

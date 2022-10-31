@@ -70,10 +70,10 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
     return deleted;
   };
 
-  async updateById(id: string, user: ShippingPrice): Promise<boolean> {
+  async updateById(id: string, entity: ShippingPrice): Promise<boolean> {
     const found: boolean = await this.shippingPriceRepository.hasById(id);
     if (!found) throw new ShippingPriceNotFoundError();
-    const updated: boolean = await this.shippingPriceRepository.updateById(id, user);
+    const updated: boolean = await this.shippingPriceRepository.updateById(id, entity);
     return updated;
   };
 

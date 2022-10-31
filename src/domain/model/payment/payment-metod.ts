@@ -1,5 +1,6 @@
 import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
+import { Marshable } from "../marshable";
 import { Validatable } from "../validatable.interface";
 
 /**
@@ -12,7 +13,7 @@ import { Validatable } from "../validatable.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class PaymentMethod extends Entity implements Validatable{
+export class PaymentMethod extends Entity implements Validatable, Marshable {
 
     protected key: string;
     protected name: string;
@@ -76,6 +77,23 @@ export class PaymentMethod extends Entity implements Validatable{
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    /**
+     * Unmarshal: convert class object to unmarshalled any
+     */
+    public convertToAny(): any {
+        return {
+            _id: this._id,
+            key: this.key,
+            name: this.name,
+            description: this.description,
+            image: this.image,
+            active: this.active,
+            meta: this.meta,
+            updatedAt: this.updatedAt,
+            createdAt: this.createdAt
+        };
     };
 
     public getKey(): string {

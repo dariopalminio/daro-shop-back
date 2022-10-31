@@ -118,7 +118,7 @@ export class ProductService implements IProductService<Product> {
   async updateById(id: string, product: Product): Promise<boolean> {
     const found: boolean = await this.productRepository.hasById(id);
     if (!found) throw new ProductNotFoundError();
-    const updatedProduct: boolean = await this.productRepository.updateById(id, { ...product, updatedAt: new Date() });
+    const updatedProduct: boolean = await this.productRepository.updateById(id, product);
     if (!updatedProduct) throw new Error("Could not update the indicated product.");
     return updatedProduct;
   };

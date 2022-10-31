@@ -1,3 +1,5 @@
+import { Marshable } from "../marshable";
+
 /**
  * Address Value Object
  * 
@@ -5,7 +7,7 @@
  * Value Object is a DDD concept that is immutable and doesn’t have its own identity. 
  * Since it is immutable, it does not have public setter methods.
  */
-export class Address {
+export class Address implements Marshable {
 
     protected country: string;
     protected state: string; //region
@@ -46,6 +48,17 @@ export class Address {
         this._setNeighborhood(addrsAny.neighborhood);
         this._setStreet(addrsAny.street);
         this._setDepartment(addrsAny.department);
+    };
+
+    public convertToAny(): any {
+        return {
+            country: this.country,
+            state: this.state,
+            city: this.city,
+            neighborhood: this.neighborhood,
+            street: this.street,
+            department: this.department
+        };
     };
 
     public getCountry(): string {

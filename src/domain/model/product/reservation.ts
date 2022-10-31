@@ -1,4 +1,5 @@
 import { convertAnyToDate } from '../../helper/date.helper';
+import { Marshable } from '../marshable';
 
 /**
 * Reservation Value Object
@@ -8,7 +9,7 @@ import { convertAnyToDate } from '../../helper/date.helper';
 * 
 * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
 */
-export class Reservation {
+export class Reservation implements Marshable {
 
     protected orderId: string; //order confirmed in a customer purchase attempt
     protected quantity: number; //number of items reserved
@@ -40,6 +41,17 @@ export class Reservation {
         this.setOrderId(unmarshalled.orderId);
         this.setQuantity(unmarshalled.quantity);
         this.date = convertAnyToDate(unmarshalled.date);
+    };
+
+    /**
+    * Unmarshal: extract attributes from marshalled to any
+    */
+    public convertToAny(): any {
+        return {
+            orderId: this.orderId,
+            quantity: this.quantity,
+            date: this.date
+        };
     };
 
     public getOrderId(): string {

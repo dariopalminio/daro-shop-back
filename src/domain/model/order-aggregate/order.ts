@@ -4,6 +4,7 @@ import { Entity } from '../entity';
 import { OrderItem } from './order-item';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Validatable } from '../validatable.interface';
+import { Marshable } from '../marshable';
 
 /**
  * Order domain object (Entity root)
@@ -15,7 +16,7 @@ import { Validatable } from '../validatable.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Order extends Entity implements Validatable {
+export class Order extends Entity implements Validatable, Marshable {
 
     protected client: Client;
     protected orderItems: OrderItem[];
@@ -57,7 +58,7 @@ export class Order extends Entity implements Validatable {
             this.setOrderItemsFromAny(argumentsArray[2]); //orderItems
             if (isNaN(argumentsArray[3])) throw new Error('Casting error: quantity field is not a number!');
             this.setCount(argumentsArray[3]);
-            this.setIncludesShipping(argumentsArray[4]); 
+            this.setIncludesShipping(argumentsArray[4]);
             let shippingAddress: Address = new Address(argumentsArray[5]);
             if (this.includesShipping) shippingAddress.validateFullAddress();
             this.setShippingAddress(shippingAddress);
@@ -106,6 +107,26 @@ export class Order extends Entity implements Validatable {
     };
 
     /**
+    * Unmarshal: convert class object to unmarshalled any
+    */
+    public convertToAny(): any {
+        return {
+            _id: this._id,
+            client: this.client.convertToAny(),
+            orderItems: this.orderItems.map((item) => (item.convertToAny())),
+            count: this.count,
+            includesShipping: this.includesShipping,
+            shippingAddress: this.shippingAddress.convertToAny(),
+            subTotal: this.subTotal,
+            shippingPrice: this.shippingPrice,
+            total: this.total,
+            status: this.status,
+            updatedAt: this.updatedAt,
+            createdAt: this.createdAt
+        };
+    };
+
+    /**
      * Setting for convert unmarshalled array of items to Domain Class
      * @param items unmarshalled items
      */
@@ -132,7 +153,7 @@ export class Order extends Entity implements Validatable {
     public getCount(): number {
         return this.count;
     };
-    
+
     public getIncludesShipping(): boolean {
         return this.includesShipping;
     };

@@ -118,8 +118,10 @@ export class CategoryRepository implements IRepository<Category> {
         return objCasted;
     }
     
-    async updateById(id: string, doc: any): Promise<boolean> {
-        const docUpdated: CategoryDocument = await this.categoryModel.findByIdAndUpdate(id, doc, { useFindAndModify: false }).exec();
+    async updateById(id: string, entity: Category): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: CategoryDocument = await this.categoryModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 

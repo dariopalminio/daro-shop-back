@@ -60,8 +60,8 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
     return deleted;
   };
 
-  async updateById(id: string, order: PaymentMethod): Promise<boolean> {
-    const updated: boolean = await this.paymentMethodRepo.updateById(id, { ...order, updatedAt: new Date() });
+  async updateById(id: string, entity: PaymentMethod): Promise<boolean> {
+    const updated: boolean = await this.paymentMethodRepo.updateById(id, entity);
     return updated;
   };
 

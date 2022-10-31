@@ -1,8 +1,10 @@
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Entity } from '../entity';
+import { Marshable } from '../marshable';
 import { Validatable } from '../validatable.interface';
 
 export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
+
 /**
  * User domain object as Entity
  * 
@@ -13,7 +15,7 @@ export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class User extends Entity implements Validatable{
+export class User extends Entity implements Validatable, Marshable {
 
     protected enable: boolean;
     protected userName: string;
@@ -99,6 +101,24 @@ export class User extends Entity implements Validatable{
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    public convertToAny(): any {
+        return {
+            _id: this._id,
+            enable: this.enable,
+            userName: this.userName,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            password: this.password,
+            roles: this.roles,
+            verified: this.verified,
+            verificationCode: this.verificationCode,
+            startVerificationCode: this.startVerificationCode,
+            updatedAt: this.updatedAt,
+            createdAt: this.createdAt
+        };
     };
 
     /**
@@ -254,7 +274,7 @@ export class User extends Entity implements Validatable{
     };
 
     public validateUserName() {
-        if (this.userName === undefined || this.userName === null || (typeof this.userName !== 'string')){
+        if (this.userName === undefined || this.userName === null || (typeof this.userName !== 'string')) {
             throw new Error('Field userName has invalid format because is undefined or is not string!');
         }
         if (this.userName.length <= 2 || this.userName.length > 100) {

@@ -1,4 +1,5 @@
 import { Entity } from "../entity";
+import { Marshable } from "../marshable";
 import { Validatable } from "../validatable.interface";
 
 /**
@@ -12,7 +13,7 @@ import { Validatable } from "../validatable.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class ShippingPrice extends Entity implements Validatable{
+export class ShippingPrice extends Entity implements Validatable, Marshable {
 
     protected location: string;
     protected price: number;
@@ -47,7 +48,7 @@ export class ShippingPrice extends Entity implements Validatable{
     };
 
     /**
-     * Set all attributes from Unmarshalled variable can be of any type 'any'.
+     * Marshal: Set all attributes from Unmarshalled variable can be of any type 'any'.
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
      * @param shippingPriceAny Unmarshalled, any is used to tell TypeScript that a variable can be of any type
      */
@@ -56,6 +57,18 @@ export class ShippingPrice extends Entity implements Validatable{
         this.setPrice(unmarshalled.price);
         this.setMoney(unmarshalled.money);
         this.setDescription(unmarshalled.description);
+    };
+
+    /**
+     * Unmarshal: extract attributes from marshalled to any
+     */
+    public convertToAny(): any {
+        return {
+            _id: this._id,
+            price: this.price,
+            money: this.money,
+            description: this.description
+        };
     };
 
     public setLocation(value: string) {

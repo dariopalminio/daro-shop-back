@@ -115,8 +115,10 @@ export class ProfileRepository implements IRepository<Profile> {
         return objCasted;
     }
 
-    async updateById(id: string, doc: any): Promise<boolean> {
-        const docUpdated: ProfileDocument = await this.profileModel.findByIdAndUpdate(id, doc, {useFindAndModify: false}).exec();
+    async updateById(id: string, entity: Profile): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: ProfileDocument = await this.profileModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

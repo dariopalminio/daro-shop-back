@@ -6,13 +6,13 @@
  */
 export class Entity {
 
-    protected readonly _id?: string; //_id: holds an ObjectId
+    protected readonly _id?: any; //_id: holds an ObjectId
 
-    constructor(id?: string) {
+    constructor(id?: any) {
         if (id !== undefined) this._id = id;
     }
 
-    public getId(): string {
+    public getId(): any {
         return this._id;
     }
 
@@ -37,9 +37,9 @@ export class Entity {
         return this._id == object._id
     }
 
-    isEntity = (v: Entity): v is Entity => {
+    public isEntity(v: Entity): v is Entity {
         return v instanceof Entity
-    }
+    };
 
 };
 

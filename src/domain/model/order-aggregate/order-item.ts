@@ -1,10 +1,11 @@
+import { Marshable } from "../marshable";
 
 /**
  * OrderItem Value Object
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */
-export class OrderItem {
+export class OrderItem implements Marshable {
 
     protected productId: string;
     protected imageUrl: string;
@@ -52,6 +53,20 @@ export class OrderItem {
         this.setGrossPrice(unmarshalled.grossPrice);
         this.setQuantity(unmarshalled.quantity);
         this.setAmount(unmarshalled.amount);
+    };
+
+    /**
+     * Unmarshal: convert class object to unmarshalled any
+     */
+     public convertToAny(): any {
+        return {
+            productId: this.productId,
+            imageUrl: this.imageUrl,
+            name: this.name,
+            grossPrice: this.grossPrice,
+            quantity: this.quantity,
+            amount: this.amount
+        };
     };
 
     public getProductId(): string {

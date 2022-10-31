@@ -118,8 +118,10 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         return objCasted;
     }
 
-    async updateById(id: string, doc: any): Promise<boolean> {
-        const docUpdated: ShippingPriceDocument = await this.shippingPriceModel.findByIdAndUpdate(id, doc, {useFindAndModify: false}).exec();
+    async updateById(id: string, entity: ShippingPrice): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: ShippingPriceDocument = await this.shippingPriceModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

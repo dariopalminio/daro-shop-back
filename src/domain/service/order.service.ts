@@ -223,8 +223,7 @@ export class OrderService implements IOrderService<Order> {
   async updateById(id: string, order: Order): Promise<boolean> {
     const exist: boolean = await this.orderRepository.hasById(id);
     if (!exist) throw new OrderNotFoundError();
-
-    const updated: boolean = await this.orderRepository.updateById(id, { ...order, updatedAt: new Date() });
+    const updated: boolean = await this.orderRepository.updateById(id, order);
     if (!updated) throw new Error("Could not update the indicated order.");
     return updated;
   };

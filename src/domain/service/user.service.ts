@@ -86,7 +86,7 @@ export class UserService implements IUserService<User> {
   async updateById(id: string, user: User): Promise<boolean> {
     const found: boolean = await this.userRepository.hasById(id);
     if (!found) throw new UserNotFoundError();
-    const updated: boolean = await this.userRepository.updateById(id, { ...user, updatedAt: new Date() });
+    const updated: boolean = await this.userRepository.updateById(id, user);
     return updated;
   };
 

@@ -1,9 +1,11 @@
+import { Marshable } from "../marshable";
+
 /**
  * Client Value Object
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */
-export class Client {
+export class Client implements Marshable {
     userId: string;
     firstName: string;
     lastName: string;
@@ -27,6 +29,21 @@ export class Client {
         this.telephone = clientObj.telephone ? clientObj.telephone : '';
 
     }
+
+    /**
+     * Unmarshal: convert class object to unmarshalled any
+     */
+     public convertToAny(): any {
+        return {
+            userId: this.userId,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            docType: this.docType,
+            document: this.document,
+            telephone: this.telephone
+        };
+    };
 
     /**
      * Setter method with Attributes/Properties Validation

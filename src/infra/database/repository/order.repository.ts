@@ -114,8 +114,10 @@ export class OrderRepository implements IRepository<Order> {
         return objCasted;
     };
 
-    async updateById(id: string, doc: any): Promise<boolean> {
-        const docUpdated: OrderDocument = await this.entityModel.findByIdAndUpdate(id, doc, { useFindAndModify: false }).exec();
+    async updateById(id: string, entity: Order): Promise<boolean> {
+        const unmarshalled: any = entity.convertToAny(); 
+        const {_id, ...values} = unmarshalled;
+        const docUpdated: OrderDocument = await this.entityModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
