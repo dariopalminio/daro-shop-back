@@ -1,6 +1,6 @@
 import { Entity } from '../entity';
-import { Marshable } from '../marshable';
-import { Validatable } from '../validatable.interface';
+import { IMarshable } from '../marshable.interface';
+import { IValidatable } from '../validatable.interface';
 
 /**
  * Category domain object
@@ -11,10 +11,10 @@ import { Validatable } from '../validatable.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Category extends Entity implements Validatable, Marshable {
+export class Category extends Entity implements IValidatable, IMarshable {
 
-    name: string;
-    description: string;
+    protected name: string;
+    protected description: string;
 
     public constructor();
     public constructor(unmarshalled: any);
@@ -27,7 +27,8 @@ export class Category extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) {
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -45,9 +46,9 @@ export class Category extends Entity implements Validatable, Marshable {
     /**
      * Unmarshal: convert class object to unmarshalled any
      */
-     public convertToAny(): any {
+    public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             name: this.name,
             description: this.description
         };
@@ -55,6 +56,27 @@ export class Category extends Entity implements Validatable, Marshable {
 
     public validateFormat(): void {
         throw new Error('Method not implemented.');
-    }
-    
+    };
+
+    public getName(): string {
+        return this.name;
+    };
+
+    public getDescription(): string {
+        return this.description;
+    };
+
+    public setName(value: string) {
+        if (value === undefined || (typeof value !== 'string')) //required
+            throw new Error('Field name in category has invalid format because is undefined or is not string!');
+        if (value.trim() === '') throw new Error('Field name has invalid because is empty string. A product must have a name!');
+        this.name = value;
+    };
+
+    public setDescription(value: string) {
+        if (value === undefined || (typeof value !== 'string')) //required
+            throw new Error('Field description in category has invalid format because is undefined or is not string!');
+        this.description = value;
+    };
+
 };

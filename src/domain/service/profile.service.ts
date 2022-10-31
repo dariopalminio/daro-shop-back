@@ -4,7 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateProfileError, ProfileNotFoundError } from '../error/profile-errors';
+import { DuplicateProfileError, ProfileFormatError, ProfileNotFoundError } from '../error/profile-errors';
 
 /**
  * Profile Service
@@ -40,10 +40,16 @@ export class ProfileService implements IProfileService<Profile> {
     return entity;
   };
 
-  async create(profileRegister: Profile): Promise<Profile> {
+  async create<IProfile>(profileDTO: IProfile): Promise<Profile> {
+    let profileEntity: Profile;
     try {
-      profileRegister.setEnable(true);
-      const entityNew: Profile = await this.profileRepository.create(profileRegister);
+      profileEntity = new Profile(profileDTO);
+    } catch (error) {
+      throw new ProfileFormatError('Profile data malformed:' + error.message);
+    }
+    try {
+      profileEntity.setEnable(true);
+      const entityNew: Profile = await this.profileRepository.create(profileEntity);
       return entityNew;
     } catch (error) { //MongoError 
       if (error.code && error.code === 11000) {

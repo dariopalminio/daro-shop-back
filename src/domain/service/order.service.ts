@@ -49,9 +49,15 @@ export class OrderService implements IOrderService<Order> {
     return user;
   };
 
-  async create(orderNew: Order): Promise<Order> {
+  async create<IOrder>(orderDTO: IOrder): Promise<Order> {
+    let orderEntity: Order;
     try {
-      const entityNew: Order = await this.orderRepository.create(orderNew);
+      orderEntity = new Order(orderDTO);
+    } catch (error) {
+      throw new OrderFormatError('Order data malformed: ' + error.message);
+    }
+    try {
+      const entityNew: Order = await this.orderRepository.create(orderEntity);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);

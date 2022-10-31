@@ -11,7 +11,7 @@ import { IsNotEmpty, IsString, IsEmail, IsOptional, IsBoolean, IsObject, IsArray
 export class OrderToInitializeDTO {
 
     @IsOptional()
-    _id?: string; //_id: holds an ObjectId.
+    id?: string;
 
     @IsNotEmpty()
     @IsObject()

@@ -1,6 +1,6 @@
 import { Entity } from "../entity";
-import { Marshable } from "../marshable";
-import { Validatable } from "../validatable.interface";
+import { IMarshable } from "../marshable.interface";
+import { IValidatable } from "../validatable.interface";
 
 /**
  * ShippingPrice domain object (Entity root)
@@ -13,7 +13,7 @@ import { Validatable } from "../validatable.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class ShippingPrice extends Entity implements Validatable, Marshable {
+export class ShippingPrice extends Entity implements IValidatable, IMarshable {
 
     protected location: string;
     protected price: number;
@@ -35,7 +35,8 @@ export class ShippingPrice extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) { //Constructor to unmarshalled input
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -64,7 +65,7 @@ export class ShippingPrice extends Entity implements Validatable, Marshable {
      */
     public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             price: this.price,
             money: this.money,
             description: this.description

@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
+import { IShippingPrice } from 'src/domain/model/shipping/shipping-price.interface';
 
 /**
  * ShippingPrice DTO
@@ -8,10 +9,10 @@ import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class ShippingPriceDTO {
+ export class ShippingPriceDTO  implements IShippingPrice {
 
     @IsOptional()
-    _id: string;
+    id: string;
 
     @IsString()
     @IsNotEmpty()

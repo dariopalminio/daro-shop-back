@@ -1,4 +1,4 @@
-export interface Validatable {
+export interface IValidatable {
 
     validateFormat(): void;
 

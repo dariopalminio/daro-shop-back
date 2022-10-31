@@ -1,11 +1,11 @@
-import { Marshable } from "../marshable";
+import { IMarshable } from "../marshable.interface";
 
 /**
  * Client Value Object
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */
-export class Client implements Marshable {
+export class Client implements IMarshable {
     userId: string;
     firstName: string;
     lastName: string;

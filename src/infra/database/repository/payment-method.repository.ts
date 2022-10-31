@@ -114,10 +114,10 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
         return objCasted;
     };
 
-    async updateById(id: string, entity: PaymentMethod): Promise<boolean> {
+    async updateById(entityId: string, entity: PaymentMethod): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny(); 
-        const {_id, ...values} = unmarshalled;
-        const docUpdated: PaymentMethodDocument = await this.entityModel.findByIdAndUpdate(id, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
+        const {id, ...values} = unmarshalled;
+        const docUpdated: PaymentMethodDocument = await this.entityModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 

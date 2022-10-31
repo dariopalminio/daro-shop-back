@@ -48,15 +48,9 @@ export class OrderController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() orderToCreateDTO: OrderToCreateDTO) {
-    let orderToCreate: Order;
-    try {
-      orderToCreate = new Order(orderToCreateDTO);
-    } catch (error) {
-      throw new BadRequestException('Order data malformed: ' + error.message);
-    }
     let objCreated: any;
     try {
-      objCreated = await this.orderService.create(orderToCreate);
+      objCreated = await this.orderService.create(orderToCreateDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

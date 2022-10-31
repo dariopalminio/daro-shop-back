@@ -1,7 +1,7 @@
 import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
-import { Marshable } from "../marshable";
-import { Validatable } from "../validatable.interface";
+import { IMarshable } from "../marshable.interface";
+import { IValidatable } from "../validatable.interface";
 import { Address } from "./address";
 
 /**
@@ -14,7 +14,7 @@ import { Address } from "./address";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Profile extends Entity implements Validatable, Marshable {
+export class Profile extends Entity implements IValidatable, IMarshable {
 
     protected userId: string;
     protected enable: boolean;
@@ -48,7 +48,8 @@ export class Profile extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) { //Constructor to unmarshalled input
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -75,7 +76,7 @@ export class Profile extends Entity implements Validatable, Marshable {
 
     public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             enable: this.enable,
             userName: this.userName,
             firstName: this.firstName,

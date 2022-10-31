@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'class-validator';
+import { IAddress } from 'src/domain/model/profile/address.interface';
+import { IProfile } from 'src/domain/model/profile/profile.interface';
 
 /**
  * Profile DTO
@@ -8,8 +10,11 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class ProfileDTO {
+ export class ProfileDTO implements IProfile {
 
+    @IsOptional()
+    id?: string;
+    
     @IsString()
     @IsNotEmpty()
     userId: string;
@@ -48,6 +53,12 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
     language: string;
 
     @IsArray()
-    addresses: any[];
+    addresses: IAddress[];
 
+    @IsOptional()
+    updatedAt?: Date;
+
+    @IsOptional()
+    createdAt?: Date;
+    
 };

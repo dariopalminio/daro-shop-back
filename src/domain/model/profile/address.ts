@@ -1,4 +1,4 @@
-import { Marshable } from "../marshable";
+import { IMarshable } from "../marshable.interface";
 
 /**
  * Address Value Object
@@ -7,7 +7,7 @@ import { Marshable } from "../marshable";
  * Value Object is a DDD concept that is immutable and doesn’t have its own identity. 
  * Since it is immutable, it does not have public setter methods.
  */
-export class Address implements Marshable {
+export class Address implements IMarshable {
 
     protected country: string;
     protected state: string; //region

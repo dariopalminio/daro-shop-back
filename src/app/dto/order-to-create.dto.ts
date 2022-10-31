@@ -1,4 +1,8 @@
 import { IsNotEmpty, IsOptional, IsBoolean, IsObject, IsArray } from 'class-validator';
+import { IClient } from 'src/domain/model/order-aggregate/client.interface';
+import { IOrderItem } from 'src/domain/model/order-aggregate/order-item.interface';
+import { IOrder } from 'src/domain/model/order-aggregate/order.interface';
+import { IAddress } from 'src/domain/model/profile/address.interface';
 
 /**
  * Order To Create DTO
@@ -8,18 +12,18 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsObject, IsArray } from 'class-vali
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
-export class OrderToCreateDTO {
+export class OrderToCreateDTO implements IOrder {
 
     @IsOptional()
-    _id?: string; //_id: holds an ObjectId.
+    id?: string; //_id: holds an ObjectId.
 
     @IsNotEmpty()
     @IsObject()
-    client: any;
+    client: IClient;
 
     @IsNotEmpty()
     @IsArray()
-    orderItems: any[];
+    orderItems: IOrderItem[];
 
     @IsNotEmpty()
     count: number;
@@ -30,7 +34,7 @@ export class OrderToCreateDTO {
 
     @IsNotEmpty()
     @IsObject()
-    shippingAddress: any;
+    shippingAddress: IAddress;
 
     @IsNotEmpty()
     subTotal: number;

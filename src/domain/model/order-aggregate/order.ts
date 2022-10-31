@@ -3,8 +3,8 @@ import { Client } from './client';
 import { Entity } from '../entity';
 import { OrderItem } from './order-item';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
-import { Validatable } from '../validatable.interface';
-import { Marshable } from '../marshable';
+import { IValidatable } from '../validatable.interface';
+import { IMarshable } from '../marshable.interface';
 
 /**
  * Order domain object (Entity root)
@@ -16,7 +16,7 @@ import { Marshable } from '../marshable';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Order extends Entity implements Validatable, Marshable {
+export class Order extends Entity implements IValidatable, IMarshable {
 
     protected client: Client;
     protected orderItems: OrderItem[];
@@ -47,7 +47,8 @@ export class Order extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) { //Constructor to unmarshalled input
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -111,7 +112,7 @@ export class Order extends Entity implements Validatable, Marshable {
     */
     public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             client: this.client.convertToAny(),
             orderItems: this.orderItems.map((item) => (item.convertToAny())),
             count: this.count,

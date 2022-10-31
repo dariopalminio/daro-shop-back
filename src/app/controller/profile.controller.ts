@@ -102,15 +102,9 @@ export class ProfileController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() profileDTO: ProfileDTO) {
-    let profile: Profile;
-    try {
-      profile = new Profile(profileDTO);
-    } catch (error) {
-      throw new BadRequestException('Profile data malformed:' + error.message);
-    }
     let newProfile: Profile;
     try {
-      newProfile = await this.profileService.create(profile);
+      newProfile = await this.profileService.create(profileDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

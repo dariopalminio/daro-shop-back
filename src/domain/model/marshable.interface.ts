@@ -1,4 +1,4 @@
-export interface Marshable {
+export interface IMarshable {
 
     setFromAny(unmarshalled: any): void;
     convertToAny(): any;

@@ -5,7 +5,7 @@ import { IShippingPriceService } from 'src/domain/incoming/shipping-price.servic
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Address } from 'src/domain/model/profile/address';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateShippingPriceError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
+import { DuplicateShippingPriceError, ShippingPriceFormatError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
 
 /**
  * Shipping Price Service
@@ -46,9 +46,15 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
     return entity;
   };
 
-  async create(shippingPriceRegister: ShippingPrice): Promise<ShippingPrice> {
+  async create<IShippingPrice>(shippingPriceDTO: IShippingPrice): Promise<ShippingPrice> {
+    let shippingPrice: ShippingPrice;
     try {
-      const entityNew: ShippingPrice = await this.shippingPriceRepository.create(shippingPriceRegister);
+      shippingPrice = new ShippingPrice(shippingPriceDTO);
+    } catch (error) {
+      throw new ShippingPriceFormatError('ShippingPrice data malformed:' + error.message);
+    }
+    try {
+      const entityNew: ShippingPrice = await this.shippingPriceRepository.create(shippingPrice);
       return entityNew;
     } catch (error) { 
       console.log("create error code:", error.code);

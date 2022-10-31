@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsArray, IsNumber } from 'class-validator';
+import { IProduct } from 'src/domain/model/product/product.interface';
+import { IReservation } from 'src/domain/model/product/reservation.interface';
 
 /**
  * Product DTO
@@ -8,76 +10,79 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsArray, IsNumber } from '
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
-export class ProductDTO {
+export class ProductDTO implements IProduct {
 
-    @IsString()
-    sku: string;
+  @IsOptional()
+  id?: string;
 
-    @IsString()
-    barcode: string;
+  @IsString()
+  sku: string;
 
-    @IsString()
-    @IsNotEmpty()
-    name: string;
+  @IsString()
+  barcode: string;
 
-    @IsString()
-    description: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsArray()
-    images: string[];
+  @IsString()
+  description: string;
 
-    @IsString()
-    category: string;
+  @IsArray()
+  images: string[];
 
-    @IsString()
-    type: string;
+  @IsString()
+  category: string;
 
-    @IsString()
-    brand: string;
+  @IsString()
+  type: string;
 
-    @IsString()
-    color: string;
+  @IsString()
+  brand: string;
 
-    @IsString()
-    model: string;
+  @IsString()
+  color: string;
 
-    @IsString()
-    gender: string;
+  @IsString()
+  model: string;
 
-    @IsString()
-    size: string;
+  @IsString()
+  gender: string;
 
-    @IsNumber()
-    netCost: number;
+  @IsString()
+  size: string;
 
-    @IsNumber()
-    ivaAmountOnCost: number;
+  @IsNumber()
+  netCost: number;
 
-    @IsNumber()
-    grossCost: number;
+  @IsNumber()
+  ivaAmountOnCost: number;
 
-    @IsNumber()
-    netPrice: number;
+  @IsNumber()
+  grossCost: number;
 
-    @IsNumber()
-    ivaAmountOnPrice: number;
+  @IsNumber()
+  netPrice: number;
 
-    @IsNumber()
-    grossPrice: number;
+  @IsNumber()
+  ivaAmountOnPrice: number;
 
-    @IsNumber()
-    stock: number;
+  @IsNumber()
+  grossPrice: number;
 
-    @IsOptional()
-    @IsBoolean()
-    active: boolean;
+  @IsNumber()
+  stock: number;
 
-    @IsOptional()
-    @IsArray()
-    reservations: any[];
+  @IsOptional()
+  @IsBoolean()
+  active: boolean;
 
-    @IsOptional()
-    @IsArray()
-    sales: any[];
+  @IsOptional()
+  @IsArray()
+  reservations: IReservation[];
 
-  };
+  @IsOptional()
+  @IsArray()
+  sales: any[];
+
+};

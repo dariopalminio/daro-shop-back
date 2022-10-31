@@ -90,15 +90,9 @@ export class UserController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createUser(@Res() res, @Body() userToCreateDTO: UserDTO) {
-    let user: User;
-    try {
-      user = new User(userToCreateDTO);
-    } catch (error) {
-      throw new BadRequestException('User data malformed:' + error.message);
-    }
     let created: User;
     try {
-       created = await this.userService.create(user);
+       created = await this.userService.create(userToCreateDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

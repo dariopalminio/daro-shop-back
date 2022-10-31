@@ -56,15 +56,9 @@ export class PaymentMethodController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() paymentMethodDTO: PaymentMethodDTO) {
-    let paymentMethod: PaymentMethod;
-    try {
-      paymentMethod = new PaymentMethod(paymentMethodDTO);
-    } catch (error) {
-      throw new BadRequestException('Payment Method data malformed:' + error.message);
-    }
     let objCreated;
     try {
-      objCreated = await this.paymentMethodService.create(paymentMethod);
+      objCreated = await this.paymentMethodService.create(paymentMethodDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

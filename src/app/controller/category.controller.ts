@@ -81,15 +81,9 @@ export class CategoryController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createCategory(@Res() res, @Body() createCategoryDTO: CategoryDTO) {
-    let category: Category;
-    try {
-      category = new Category(createCategoryDTO);
-    } catch (error) {
-      throw new BadRequestException('Category data malformed: ' + error.message);
-    }
     let newCat: Category;
     try {
-      newCat = await this.categoryService.create(category);
+      newCat = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

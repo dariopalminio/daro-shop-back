@@ -1,7 +1,7 @@
 import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
-import { Marshable } from "../marshable";
-import { Validatable } from "../validatable.interface";
+import { IMarshable } from "../marshable.interface";
+import { IValidatable } from "../validatable.interface";
 
 /**
  * PaymentMethod domain object
@@ -13,7 +13,7 @@ import { Validatable } from "../validatable.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class PaymentMethod extends Entity implements Validatable, Marshable {
+export class PaymentMethod extends Entity implements IValidatable, IMarshable {
 
     protected key: string;
     protected name: string;
@@ -40,7 +40,8 @@ export class PaymentMethod extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) { //unmarshalled
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -84,7 +85,7 @@ export class PaymentMethod extends Entity implements Validatable, Marshable {
      */
     public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             key: this.key,
             name: this.name,
             description: this.description,

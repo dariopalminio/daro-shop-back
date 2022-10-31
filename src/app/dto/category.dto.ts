@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'class-validator';
+import { ICategory } from 'src/domain/model/category/category.interface';
 
 /**
  * Category DTO
@@ -8,11 +9,11 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class CategoryDTO {
+ export class CategoryDTO  implements ICategory{
 
     @IsOptional()
     @IsString()
-    _id: string;
+    id?: string;
 
     @IsString()
     @IsNotEmpty()

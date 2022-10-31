@@ -69,15 +69,9 @@ export class ShippingPriceController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async createShippingPrice(@Res() res, @Body() shippingPriceDTO: ShippingPriceDTO) {
-    let shippingPrice: ShippingPrice;
-    try {
-      shippingPrice = new ShippingPrice(shippingPriceDTO);
-    } catch (error) {
-      throw new BadRequestException('ShippingPrice data malformed:' + error.message);
-    }
     let objCreatedId: ShippingPrice;
     try {
-      objCreatedId = await this.shippingPriceService.create(shippingPrice);
+      objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

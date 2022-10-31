@@ -151,15 +151,9 @@ export class ProductController {
   @Roles(RolesEnum.ADMIN)
   @Post('create')
   async create(@Res() res, @Body() productToCreateDTO: ProductDTO) {
-    let newProduct: Product;
-    try {
-      newProduct = new Product(productToCreateDTO);
-    } catch (error) {
-      throw new BadRequestException('Product data malformed:' + error.message);
-    }
     let productCreatedId: Product;
     try {
-      productCreatedId = await this.productService.create(newProduct);
+      productCreatedId = await this.productService.create(productToCreateDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

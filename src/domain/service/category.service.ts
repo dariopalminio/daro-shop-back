@@ -3,9 +3,10 @@ import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { ICategoryService } from 'src/domain/incoming/category.service.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Category } from 'src/domain/model/category/category';
-import { CategoryNotFoundError, DuplicateCategoryError } from '../error/category-errors';
+import { CategoryFormatError, CategoryNotFoundError, DuplicateCategoryError } from '../error/category-errors';
 import { DomainError } from '../error/domain-error';
 import { ResponseCode } from '../error/response-code.enum';
+import { ICategory } from '../model/category/category.interface';
 
 /**
  * Category Service
@@ -45,9 +46,15 @@ export class CategoryService implements ICategoryService<Category> {
     return entity;
   };
 
-  async create(entity: Category): Promise<Category> {
+  async create<ICategory>(categoryDTO: ICategory): Promise<Category> {
+    let categoryEntity: Category;
+    try {
+      categoryEntity = new Category(categoryDTO);
+    } catch (error) {
+      throw new CategoryFormatError('Category data malformed: ' + error.message);
+    }
     try{
-    const entityNew: Promise<Category> = this.categoryRepository.create(entity);
+    const entityNew: Promise<Category> = this.categoryRepository.create(categoryEntity);
     return entityNew;
   } catch (error) {
     if (error.code && error.code === 11000) {

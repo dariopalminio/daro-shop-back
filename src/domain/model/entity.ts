@@ -6,36 +6,32 @@
  */
 export class Entity {
 
-    protected readonly _id?: any; //_id: holds an ObjectId
+    protected readonly id?: string; //_id: holds an ObjectId
 
-    constructor(id?: any) {
-        if (id !== undefined) this._id = id;
+    constructor(id?: string) {
+        if (id !== undefined) this.id = id;
     }
 
-    public getId(): any {
-        return this._id;
-    }
-
-    get id(): string {
-        return this._id;
+    public getId(): string {
+        return this.id;
     }
 
 
     public equals(object?: Entity): boolean {
         if (object == null || object == undefined) {
-            return false
+            return false;
         }
 
         if (this === object) {
-            return true
+            return true;
         }
 
         if (!this.isEntity(object)) {
-            return false
+            return false;
         }
 
-        return this._id == object._id
-    }
+        return this.id == object.getId();
+    };
 
     public isEntity(v: Entity): v is Entity {
         return v instanceof Entity

@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'class-validator';
+import { IUser } from 'src/domain/model/user/user.interface';
 
 /**
  * UserDTO DTO
@@ -8,8 +9,11 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class UserDTO {
+ export class UserDTO implements IUser {
 
+    @IsOptional()
+    id?: string;
+    
     @IsOptional()
     enable: boolean;
 
@@ -45,5 +49,11 @@ import { IsNotEmpty, IsOptional, IsBoolean, IsString, IsEmail, IsArray } from 'c
 
     @IsOptional()
     startVerificationCode: Date;
+
+    @IsOptional()
+    updatedAt?: Date;
+
+    @IsOptional()
+    createdAt?: Date;
 
 };

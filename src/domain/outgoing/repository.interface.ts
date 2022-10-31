@@ -19,7 +19,7 @@ export interface IRepository<T> {
     hasById(id: string): Promise<boolean> ;
     hasByQuery(query: any): Promise<boolean>;
     create(doc: T): Promise< T>;
-    updateById<R>(id: string, doc: R | T): Promise<boolean>;
+    updateById<R>(entityId: string, doc: R | T): Promise<boolean>;
     update(query: any, valuesToSet: any): Promise<boolean>;
     delete(id: string): Promise<boolean>;
     findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]>;

@@ -3,6 +3,8 @@ import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IPaymentMethodService } from 'src/domain/incoming/payment-method.service.interface';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
+import { IPaymentMethod } from '../model/payment/payment-method.interface';
+import { PaymentMethodFormatError } from '../error/payment-method.errors';
 
 
 /**
@@ -38,9 +40,15 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
     return user;
   };
 
-  async create(paymentMethod: PaymentMethod): Promise<PaymentMethod> {
+  async create<IPaymentMethod>(paymentMethodDTO: IPaymentMethod): Promise<PaymentMethod> {
+    let paymentMethodEntity: PaymentMethod;
     try {
-      const entityNew: PaymentMethod = await this.paymentMethodRepo.create(paymentMethod);
+      paymentMethodEntity = new PaymentMethod(paymentMethodDTO);
+    } catch (error) {
+      throw new PaymentMethodFormatError('Payment Method data malformed:' + error.message);
+    }
+    try {
+      const entityNew: PaymentMethod = await this.paymentMethodRepo.create(paymentMethodEntity);
       return entityNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);

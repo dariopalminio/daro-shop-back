@@ -2,8 +2,8 @@ import { Reservation } from './reservation';
 import { Entity } from '../entity';
 import { throws } from 'assert';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
-import { Validatable } from '../validatable.interface';
-import { Marshable } from '../marshable';
+import { IValidatable } from '../validatable.interface';
+import { IMarshable } from '../marshable.interface';
 
 /**
  * Product domain object (Entity root)
@@ -14,7 +14,7 @@ import { Marshable } from '../marshable';
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
-export class Product extends Entity implements Validatable, Marshable {
+export class Product extends Entity implements IValidatable, IMarshable {
 
     protected sku: string;
     protected barcode: string;
@@ -79,7 +79,8 @@ export class Product extends Entity implements Validatable, Marshable {
             super();
         }
         if (argumentsArray.length === 1) { //Constructor to unmarshalled input
-            super(argumentsArray[0]._id);
+            const id: string = argumentsArray[0]._id ? argumentsArray[0]._id.toString() : argumentsArray[0].id;
+            super(id);
             this.setFromAny(argumentsArray[0]);
         }
         if (argumentsArray.length > 1) {
@@ -157,7 +158,7 @@ export class Product extends Entity implements Validatable, Marshable {
     */
     public convertToAny(): any {
         return {
-            _id: this._id,
+            id: this.id,
             barcode: this.barcode,
             name: this.name,
             description: this.description,
@@ -459,7 +460,7 @@ export class Product extends Entity implements Validatable, Marshable {
         //search reservation of orderId indicated
         const reserveIndex = this.reservations.findIndex((reservation) => reservation.getOrderId() === orderId);
         if (reserveIndex === -1) {
-            throw new Error(`Not found ${orderId} in reservation list of product ${this._id}`);
+            throw new Error(`Not found ${orderId} in reservation list of product ${this.getId()}`);
         }
         //increase stock with reserve quantity
         const qty = this.reservations[reserveIndex].getQuantity();

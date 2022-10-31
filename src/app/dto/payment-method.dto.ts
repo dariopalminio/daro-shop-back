@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
+import { IPaymentMethod } from 'src/domain/model/payment/payment-method.interface';
 
 /**
  * ShippingPrice DTO
@@ -8,10 +9,10 @@ import { IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
  * Note 2 (Validation): It is best practice to validate the correctness of any data sent into a web application. 
  * To automatically validate incoming requests, Nest provides several pipes available right out-of-the-box: ValidationPipe using class-validator.
  */
- export class PaymentMethodDTO {
+ export class PaymentMethodDTO implements IPaymentMethod {
 
     @IsOptional()
-    _id: string;
+    id: string;
 
     @IsString()
     @IsNotEmpty()
@@ -30,11 +31,14 @@ import { IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
     image: string;
 
     @IsBoolean()
-    active: string;
+    active: boolean;
 
     meta: any;
 
-    //createdAt?: Date;
-    //updatedAt?: Date;
+    @IsOptional()
+    createdAt?: Date;
+
+    @IsOptional()
+    updatedAt?: Date;
 
 };

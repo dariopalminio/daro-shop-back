@@ -1,5 +1,5 @@
 import { convertAnyToDate } from '../../helper/date.helper';
-import { Marshable } from '../marshable';
+import { IMarshable } from '../marshable.interface';
 
 /**
 * Reservation Value Object
@@ -9,7 +9,7 @@ import { Marshable } from '../marshable';
 * 
 * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
 */
-export class Reservation implements Marshable {
+export class Reservation implements IMarshable {
 
     protected orderId: string; //order confirmed in a customer purchase attempt
     protected quantity: number; //number of items reserved

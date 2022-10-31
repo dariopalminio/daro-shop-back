@@ -6,7 +6,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { generateToken } from 'src/domain/helper/token.helper';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { UserNotFoundError, DuplicateUserError } from '../error/user-errors';
+import { UserNotFoundError, DuplicateUserError, UserFormatError } from '../error/user-errors';
 
 /**
  * User Service
@@ -51,13 +51,19 @@ export class UserService implements IUserService<User> {
     return usr;
   };
 
-  async create(userRegister: User): Promise<User> {
+  async create<IUser>(userDTO: IUser): Promise<User> {
+    let userEntity: User;
     try {
-      userRegister.setVerified(false);
-      userRegister.setEnable(true);
-      userRegister.setVerificationCode(generateToken());
+      userEntity = new User(userDTO);
+    } catch (error) {
+      throw new UserFormatError('User data malformed:' + error.message);
+    }
+    try {
+      userEntity.setVerified(false);
+      userEntity.setEnable(true);
+      userEntity.setVerificationCode(generateToken());
 
-      if (this._areRolesInvalid(userRegister.getRoles())) {
+      if (this._areRolesInvalid(userEntity.getRoles())) {
         throw new Error('There is some invalid role!');
       };
 
@@ -65,7 +71,7 @@ export class UserService implements IUserService<User> {
       throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
     }
     try {
-      const userNew: User = await this.userRepository.create(userRegister);
+      const userNew: User = await this.userRepository.create(userEntity);
       return userNew;
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
