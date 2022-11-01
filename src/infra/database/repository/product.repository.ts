@@ -82,9 +82,9 @@ export class ProductRepository implements IRepository<Product> {
         let arrayDoc: ProductDocument[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
-            let mysort = {}; 
-            mysort[orderByField] = isAscending? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
-            const gap =  (page - 1) * limit;
+            let mysort = {};
+            mysort[orderByField] = isAscending ? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
+            const gap = (page - 1) * limit;
             //skip method will skip the document as per the number which was we have used with the skip method.
             const ascending = 1;
             arrayDoc = await this.productModel.find(query, fieldsToExclude).sort(mysort).skip(gap).limit(limit).exec();
@@ -112,8 +112,12 @@ export class ProductRepository implements IRepository<Product> {
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: ProductDocument = await this.productModel.findOne(query, fieldsToExclude);
-        return entryDoc;
+        const entryDoc: any = await this.productModel.findOne(query, fieldsToExclude);
+        let onlyEntityDoc: any;
+        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
+            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+        }
+        return onlyEntityDoc;
     };
 
     async getByQuery(query: any): Promise<Product> {
@@ -139,11 +143,11 @@ export class ProductRepository implements IRepository<Product> {
         const objCasted: Product = new Product(docCreated);
         return objCasted;
     };
-    
+
     async updateById(entityId: string, entity: Product): Promise<boolean> {
-        const unmarshalled: any = entity.convertToAny(); 
-        const {id, ...values} = unmarshalled;
-        const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
+        const unmarshalled: any = entity.convertToAny();
+        const { id, ...values } = unmarshalled;
+        const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
@@ -170,8 +174,8 @@ export class ProductRepository implements IRepository<Product> {
         return domainEntityArray;
     };
 
-    async count(query: any): Promise<number>{
-       return await this.productModel.count(query,);
+    async count(query: any): Promise<number> {
+        return await this.productModel.count(query,);
     };
 
 };

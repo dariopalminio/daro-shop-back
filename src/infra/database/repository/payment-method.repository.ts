@@ -86,8 +86,12 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: PaymentMethodDocument = await this.entityModel.findOne(query, fieldsToExclude);
-        return entryDoc;
+        const entryDoc: any = await this.entityModel.findOne(query, fieldsToExclude);
+        let onlyEntityDoc: any;
+        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
+            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+        }
+        return onlyEntityDoc;
     };
 
     async getByQuery(query: any): Promise<PaymentMethod> {

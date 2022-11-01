@@ -62,7 +62,14 @@ export class ProductService implements IProductService<Product> {
     let queryQuilter;
     if (category.trim() === '') queryQuilter = { active: "true" };
     else queryQuilter = { category: category, active: "true" };
-    const products: ProductOfCatalog[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
+
+    const docs: any[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
+    
+    let products: ProductOfCatalog[] = [];
+    docs.forEach(element => products.push(
+        new ProductOfCatalog(element)
+    ));
+    
     let filtered: PaginatedResult = new PaginatedResult();
     filtered.list = products;
     filtered.page = page;
@@ -82,7 +89,7 @@ export class ProductService implements IProductService<Product> {
     return entity;
   };
 
-  async getDetailById(id: string): Promise<Product> {
+  async getDetailById(id: string): Promise<any> {
     const fieldsToExclude = {
       netCost: 0,
       ivaAmountOnCost: 0,
@@ -90,9 +97,9 @@ export class ProductService implements IProductService<Product> {
       netPrice: 0,
       ivaAmountOnPrice: 0,
     };
-    const entity: Product = await this.productRepository.getById(id, fieldsToExclude);
-    if (!entity || entity === null) throw new ProductNotFoundError();
-    return entity;
+    let obj: any = await this.productRepository.getByQueryExcludingFields({_id: id}, fieldsToExclude);
+    if (!obj || obj === null) throw new ProductNotFoundError();
+    return obj;
   };
 
   async create<IProduct>(productDTO: IProduct): Promise<Product> {

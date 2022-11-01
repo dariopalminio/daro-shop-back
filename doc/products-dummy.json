@@ -1,6 +1,6 @@
 [
     {
-        "_id": "632ded6d5a88c40e4fa634e9",
+        "id": "632ded6d5a88c40e4fa634e9",
         "sku": "aaHRQ3979",
         "barcode": "aaHRQ3979",
         "name": "Magic unicorn toy",
@@ -26,7 +26,7 @@
         "__v": 0
     },
     {
-        "_id": "632df5a95a88c40e4fa634ef",
+        "id": "632df5a95a88c40e4fa634ef",
         "sku": "HIDON-Chaleco",
         "barcode": "5111407592",
         "name": "HIDON-Chalecon",
@@ -52,7 +52,7 @@
         "__v": 0
     },
     {
-        "_id": "632df6295a88c40e4fa634f2",
+        "id": "632df6295a88c40e4fa634f2",
         "sku": "Pulpo-Oct-Baby-Ein",
         "barcode": "5111407592",
         "name": "Pulpo Octoplush Baby Einstein",
@@ -78,7 +78,7 @@
         "__v": 0
     },
     {
-        "_id": "632df7695a88c40e4fa634f6",
+        "id": "632df7695a88c40e4fa634f6",
         "sku": "PIJAMAS-RABAH",
         "barcode": "5111407592",
         "name": "Pijama Unisex Bebé Vaca",
@@ -107,7 +107,7 @@
         "__v": 0
     },
     {
-        "_id": "632df90c5a88c40e4fa634f9",
+        "id": "632df90c5a88c40e4fa634f9",
         "sku": "YL-PERF-OP-EDP",
         "barcode": "5111407592",
         "name": "Perfume Mujer Black Opium EDP 90 ml",
@@ -133,7 +133,7 @@
         "__v": 0
     },
     {
-        "_id": "632dfa265a88c40e4fa634fb",
+        "id": "632dfa265a88c40e4fa634fb",
         "sku": "PERF-ICON-BANDERAS",
         "barcode": "5111407592",
         "name": "The Icon Antonio Banderas",
@@ -159,7 +159,7 @@
         "__v": 0
     },
     {
-        "_id": "632dfb955a88c40e4fa634fd",
+        "id": "632dfb955a88c40e4fa634fd",
         "sku": "2000382630817P",
         "barcode": "2000382630817P",
         "name": "BENETTON SISTERLAND PINK RASPBERRY EAU DE TOILETTE 80 ML",
@@ -187,7 +187,7 @@
         "__v": 0
     },
     {
-        "_id": "632dfc285a88c40e4fa634ff",
+        "id": "632dfc285a88c40e4fa634ff",
         "sku": "2000373972889P",
         "barcode": "2000373972889P",
         "name": "WOW GIRL AGATHA RUIZ DE LA PRADA 80 ML",
@@ -213,7 +213,7 @@
         "__v": 0
     },
     {
-        "_id": "6337a2b2159a34a28cdfef10",
+        "id": "6337a2b2159a34a28cdfef10",
         "sku": "Paper-Model-Bat-01",
         "barcode": "3432354345407592",
         "name": "Paper Model Maker Batman",

@@ -18,7 +18,7 @@ export interface IProductService<T> extends IPersistentAggregateService<T>{
     getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]>;
     generateSKU(type: string, brand: string, model: string, color: string, size: string ): Promise<string>;
     getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult>;
-    getDetailById(id: string): Promise<Product>;
+    getDetailById(id: string): Promise<any>;
     addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean>;
     revertStockReservation(productId: string, orderId: string): Promise<boolean>;
     concreteReservationBySale(productId: string, orderId: string): Promise<boolean>;

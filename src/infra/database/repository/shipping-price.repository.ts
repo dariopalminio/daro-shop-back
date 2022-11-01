@@ -88,8 +88,12 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: ShippingPriceDocument = await this.shippingPriceModel.findOne(query, fieldsToExclude);
-        return entryDoc;
+        const entryDoc: any = await this.shippingPriceModel.findOne(query, fieldsToExclude);
+        let onlyEntityDoc: any;
+        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
+            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+        }
+        return onlyEntityDoc;
     };
 
     async getByQuery(query: any): Promise<ShippingPrice> {
