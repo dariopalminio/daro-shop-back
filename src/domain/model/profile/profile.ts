@@ -14,7 +14,7 @@ import { Address } from "./address";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Profile extends Entity implements IValidatable, IMarshable {
+export class Profile extends Entity implements IValidatable, IMarshable<Profile> {
 
     protected userId: string;
     protected enable: boolean;
@@ -73,6 +73,10 @@ export class Profile extends Entity implements IValidatable, IMarshable {
             }
         }
     };
+
+    public createFromAny(unmarshalled: any): Profile {
+        return new Profile(unmarshalled);
+    }
 
     public convertToAny(): any {
         return {

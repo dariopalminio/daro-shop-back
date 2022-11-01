@@ -10,7 +10,7 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';;
 import { DomainError } from 'src/domain/error/domain-error';
 import { User } from 'src/domain/model/user/user';
@@ -20,7 +20,7 @@ import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 import { InvalidVerificationCodeError } from 'src/domain/error/auth-errors';
-import { DuplicateUserError, UserFormatError } from 'src/domain/error/user-errors';
+import { UserDuplicateError, UserFormatError } from 'src/domain/error/user-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -64,7 +64,7 @@ export class AuthService implements IAuthService {
     const isEmailExist: boolean = await this.userService.hasByQuery({ email: userRegisterData.email });
     if (isEmailExist) {
       //return res.status(400).json({error: 'Email ya registrado'})
-      throw new DuplicateUserError('The Email just was registered');
+      throw new UserDuplicateError('The Email just was registered');
     }
 
     // Create new user in user database
@@ -134,7 +134,7 @@ export class AuthService implements IAuthService {
       if (!startConfirmEmailData.verificationPageLink)
         throw new Error("Bad Request: Invalid link!");
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
+      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
     };
 
     let user;
@@ -143,7 +143,7 @@ export class AuthService implements IAuthService {
       user = await this.userService.getByQuery({ userName: startConfirmEmailData.userName });
       if (!user) throw new Error("User not found!");
     } catch (error) {
-      throw new DomainError(ResponseCode.NOT_FOUND, error.message, error);
+      throw new DomainError(ErrorCode.NOT_FOUND, error.message, error);
     };
 
     try {
@@ -168,13 +168,13 @@ export class AuthService implements IAuthService {
       const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startConfirmEmailData.email, "register-start", paramsRegisterStart, locale);
       return {
         isSuccess: true,
-        status: ResponseCode.OK,
+        status: ErrorCode.OK,
         message: "An email-verification was sent to the user with a link the user can click to verify their email address!",
         data: emailResponse
       };
 
     } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, error);
     };
   };
 
@@ -191,7 +191,7 @@ export class AuthService implements IAuthService {
     try {
       user = await this.verificateToken(verificationCodeData.token);
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
+      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
     };
 
     //Update in database
@@ -233,7 +233,7 @@ export class AuthService implements IAuthService {
       const emailResponse: any = this.sender.sendEmailWithTemplate(subject, email, "register-end", paramsRegisterEnd, lang);
       return emailResponse;
     } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, error);
     };
   };
 
@@ -248,7 +248,7 @@ export class AuthService implements IAuthService {
       if (!userAuthId)
         throw new Error("Bad Request: Empty value!");
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error.message, { error: error });
+      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error.message, { error: error });
     };
     return true;
   };
@@ -265,7 +265,7 @@ export class AuthService implements IAuthService {
       if (!validEmail(startRecoveryData.email)) throw new Error("Bad Request: Invalid email!");
       if (!startRecoveryData.recoveryPageLink) throw new Error("Bad Request: Invalid link!");
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, "Can not Send Email To Recovery Pass.", error);
+      throw new DomainError(ErrorCode.BAD_REQUEST, "Can not Send Email To Recovery Pass.", error);
     };
 
     //generate verification code
@@ -277,7 +277,7 @@ export class AuthService implements IAuthService {
       user = await this.userService.getByQuery({ userName: startRecoveryData.userName });
       if (!user) throw new Error("User not found!");
     } catch (error) {
-      throw new DomainError(ResponseCode.NOT_FOUND, error.message, error);
+      throw new DomainError(ErrorCode.NOT_FOUND, error.message, error);
     };
 
     try {
@@ -299,12 +299,12 @@ export class AuthService implements IAuthService {
       const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startRecoveryData.email, "recovery-start", params, lang);
       return {
         isSuccess: true,
-        status: ResponseCode.OK,
+        status: ErrorCode.OK,
         message: "Email was sent To Recovery Password!",
         data: emailResponse
       };
     } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, error);
     };
   };
 

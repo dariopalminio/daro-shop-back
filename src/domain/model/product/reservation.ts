@@ -9,7 +9,7 @@ import { IMarshable } from '../marshable.interface';
 * 
 * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
 */
-export class Reservation implements IMarshable {
+export class Reservation implements IMarshable<Reservation> {
 
     protected orderId: string; //order confirmed in a customer purchase attempt
     protected quantity: number; //number of items reserved
@@ -37,10 +37,14 @@ export class Reservation implements IMarshable {
      * It is used to convert (casting) and validate an input data type, such as a DTO or Json, to the data type of this class.
      * @param unmarshalled Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
-    public setFromAny(unmarshalled: any) {
+    private setFromAny(unmarshalled: any) {
         this.setOrderId(unmarshalled.orderId);
         this.setQuantity(unmarshalled.quantity);
         this.date = convertAnyToDate(unmarshalled.date);
+    };
+
+    public createFromAny(unmarshalled: any): Reservation {
+        return new Reservation(unmarshalled);
     };
 
     /**

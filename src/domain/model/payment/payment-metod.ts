@@ -13,7 +13,7 @@ import { IValidatable } from "../validatable.interface";
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class PaymentMethod extends Entity implements IValidatable, IMarshable {
+export class PaymentMethod extends Entity implements IValidatable, IMarshable<PaymentMethod> {
 
     protected key: string;
     protected name: string;
@@ -65,7 +65,7 @@ export class PaymentMethod extends Entity implements IValidatable, IMarshable {
      * Setting for Convert unmarshalled input to Domain Object Class
      * @param unmarshalled unmarshalled
      */
-    public setFromAny(unmarshalled: any) {
+    private setFromAny(unmarshalled: any) {
         this.key = (unmarshalled.key);
         this.name = (unmarshalled.name);
         this.description = (unmarshalled.description);
@@ -78,6 +78,11 @@ export class PaymentMethod extends Entity implements IValidatable, IMarshable {
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    
+    public createFromAny(unmarshalled: any): PaymentMethod {
+        return new PaymentMethod(unmarshalled);
     };
 
     /**

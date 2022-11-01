@@ -1,47 +1,30 @@
-import { DomainError } from "./domain-error";
-import { ResponseCode } from "./response-code.enum";
+import { DuplicateError, FormatError, NotFoundError } from "./domain-error";
 
-export class DuplicateCategoryError extends DomainError {
-    constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.CONFLICT;
-        const message = 'Duplicate Category Error: profile already exists!';
-        const detailed = detail ? detail : message;
-        const dat = data ? data : {};
-        super(codeErr, message, detailed, dat);
-        // Ensure the name of this error is the same as the class name
+
+export class CategoryFormatError extends FormatError {
+    constructor(detail?: string, data?: any) {
+        const message = 'The category has a format error, some attribute is wrong';
+        super(message, detail, data);
         this.name = this.constructor.name;
-        // This clips the constructor invocation from the stack trace.
-        // It's not absolutely essential, but it does make the stack trace a little nicer.
         Error.captureStackTrace(this, this.constructor);
     }
 };
 
-export class CategoryFormatError extends DomainError {
-    constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
-        const message = 'Category Format Error: This error is caused when you attempt to enter a badly formatted attribute.';
-        const detailed = detail ? detail : message;
-        const dat = data ? data : {};
-        super(codeErr, message, detailed, dat);
-        // Ensure the name of this error is the same as the class name
-        this.name = this.constructor.name;
-        // This clips the constructor invocation from the stack trace.
-        // It's not absolutely essential, but it does make the stack trace a little nicer.
-        Error.captureStackTrace(this, this.constructor);
-    }
-};
-
-export class CategoryNotFoundError extends DomainError {
-    constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
+export class CategoryNotFoundError extends NotFoundError {
+    constructor(detail?: string, data?: any) {
         const message = 'Category not found: could not find the indicated Category.';
-        const detailed = detail ? detail : message;
-        const dat = data ? data : {};
-        super(codeErr, message, detailed, dat);
-        // Ensure the name of this error is the same as the class name
+        super(message, detail, data);
         this.name = this.constructor.name;
-        // This clips the constructor invocation from the stack trace.
-        // It's not absolutely essential, but it does make the stack trace a little nicer.
         Error.captureStackTrace(this, this.constructor);
     }
 };
+
+export class DuplicateCategoryError extends DuplicateError {
+    constructor(detail?: string, data?: any) {
+        const message = 'Duplicate Category Error: profile already exists!';
+        super(message, detail, data);
+        this.name = this.constructor.name;
+        Error.captureStackTrace(this, this.constructor);
+    }
+};
+

@@ -3,8 +3,8 @@ import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateProfileError, ProfileFormatError, ProfileNotFoundError } from '../error/profile-errors';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
+import { ProfileDuplicateError, ProfileFormatError, ProfileNotFoundError } from '../error/profile-errors';
 
 /**
  * Profile Service
@@ -53,9 +53,9 @@ export class ProfileService implements IProfileService<Profile> {
       return entityNew;
     } catch (error) { //MongoError 
       if (error.code && error.code === 11000) {
-          throw new DuplicateProfileError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
+          throw new ProfileDuplicateError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
     }
   };
 

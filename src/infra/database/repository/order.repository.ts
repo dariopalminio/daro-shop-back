@@ -22,7 +22,7 @@ export class OrderRepository implements IRepository<Order> {
         if (page && limit && orderByField) {
             // All with pagination and sorting
             console.log(`getAll page ${page} /limit ${limit} orderByField ${orderByField}`);
-            const sort: Record<string, | 1 | -1 | {$meta: "textScore"}> = { reference: 1 };
+            const sort: Record<string, | 1 | -1 | { $meta: "textScore" }> = { reference: 1 };
             const direction: number = isAscending ? 1 : -1;
 
             //const mysort = [[orderByField, direction]]; //'string | { [key: string]: SortOrder | { $meta: "textScore"; }; }'
@@ -45,7 +45,7 @@ export class OrderRepository implements IRepository<Order> {
             // All with pagination and sorting
             const direction: number = isAscending ? 1 : -1;
             //const mysort = [[orderByField, direction]];
-            const mysort: Record<string, | 1 | -1 | {$meta: "textScore"}> = { reference: 1 };
+            const mysort: Record<string, | 1 | -1 | { $meta: "textScore" }> = { reference: 1 };
             const gap: number = (page - 1) * limit;
             arrayDoc = await this.entityModel.find(query).sort(mysort).skip(gap).limit(limit).exec();
         } else {
@@ -56,14 +56,14 @@ export class OrderRepository implements IRepository<Order> {
         return this.castArrayDocToArrayDomainEntity(arrayDoc);
     }
 
-    
+
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
         let arrayDoc: OrderDocument[];
 
         if (page && limit && orderByField) {
             // All with pagination and sorting
-            const mysort = {}; 
-            mysort[orderByField] = isAscending? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
+            const mysort = {};
+            mysort[orderByField] = isAscending ? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
             //const mysort = { description: 1 };
             const gap: number = (page - 1) * limit;
             //db.text.find({ $text : { $search : "cake" }},{ score: { $meta: "textScore" }})
@@ -77,7 +77,7 @@ export class OrderRepository implements IRepository<Order> {
 
         return arrayDoc;
     };
-    
+
     async getById(id: string, fieldsToExclude?: any): Promise<Order> {
         const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
@@ -85,12 +85,12 @@ export class OrderRepository implements IRepository<Order> {
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<Order> {
-        if (fieldsToExclude) {
-            const entryDoc: OrderDocument = await this.entityModel.findOne(query, fieldsToExclude);
-            const objCasted: Order = new Order(entryDoc);
-            return objCasted;
-        }
+    async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
+        const entryDoc: OrderDocument = await this.entityModel.findOne(query, fieldsToExclude);
+        return entryDoc;
+    };
+
+    async getByQuery(query: any): Promise<Order> {
         const entryDoc: OrderDocument = await this.entityModel.findOne(query);
         const objCasted: Order = new Order(entryDoc);
         return objCasted;
@@ -115,14 +115,14 @@ export class OrderRepository implements IRepository<Order> {
     };
 
     async updateById(entityId: string, entity: Order): Promise<boolean> {
-        const unmarshalled: any = entity.convertToAny(); 
-        const {id, ...values} = unmarshalled;
-        const docUpdated: OrderDocument = await this.entityModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, { useFindAndModify: false }).exec();
+        const unmarshalled: any = entity.convertToAny();
+        const { id, ...values } = unmarshalled;
+        const docUpdated: OrderDocument = await this.entityModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
     async update(query: any, valuesToSet: any): Promise<boolean> {
-        const docUpdated: OrderDocument = await this.entityModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
+        const docUpdated: OrderDocument = await this.entityModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
@@ -144,8 +144,8 @@ export class OrderRepository implements IRepository<Order> {
         return entitiesArray;
     };
 
-    async count(query: any): Promise<number>{
+    async count(query: any): Promise<number> {
         return await this.entityModel.count(query,);
-     };
+    };
 
 }

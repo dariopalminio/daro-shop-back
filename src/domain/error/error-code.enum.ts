@@ -1,12 +1,12 @@
-export enum ResponseCode {
+export enum ErrorCode {
     INTERNAL_SERVER_ERROR = 500,
     UNKNOWN = 0,
     UNAUTHORIZED = 401,
-    CONFLICT = 409, //CONFLICT: Username already exists!
-    BAD_REQUEST = 400,
+    CONFLICT = 409, //Username already exists! or Duplicated Entity
+    BAD_REQUEST = 400, //For format error
     ERR_CONNECTION_REFUSED = 102, //Network Error
     FORBIDDEN = 403,
-    NOT_FOUND = 404,
+    NOT_FOUND = 404, // Entity not found or search not found
     REQUEST_TIMEOUT = 408,
     UNSUPPORTED_MEDIA_TYPE = 415,
     NO_CONTENT = 204,

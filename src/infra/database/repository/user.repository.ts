@@ -85,12 +85,12 @@ export class UserRepository implements IRepository<User> {
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<User> {
-        if (fieldsToExclude) {
-            const userDoc: UserDocument =  await this.userModel.findOne(query, fieldsToExclude);
-            const objCasted: User = new User(userDoc);
-            return objCasted;
-        }
+    async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
+        const entryDoc: UserDocument = await this.userModel.findOne(query, fieldsToExclude);
+        return entryDoc;
+    };
+
+    async getByQuery(query: any): Promise<User> {
         const userDoc: UserDocument =  await this.userModel.findOne(query);
         const objCasted: User = new User(userDoc);
         return objCasted;

@@ -15,7 +15,7 @@ export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class User extends Entity implements IValidatable, IMarshable {
+export class User extends Entity implements IValidatable, IMarshable<User> {
 
     protected enable: boolean;
     protected userName: string;
@@ -77,7 +77,7 @@ export class User extends Entity implements IValidatable, IMarshable {
      * It is used to convert (casting) and validate an input data type, such as a DTO or schema data from database, to the data type of this class.
      * @param usr Unmarshalled or any is used to tell TypeScript that a variable can be of any type
      */
-    public setFromAny(unmarshalled: any) {
+    private setFromAny(unmarshalled: any) {
         this.setUserName(unmarshalled.userName);
         this.setFirstName(unmarshalled.firstName);
         this.setLastName(unmarshalled.lastName);
@@ -102,6 +102,10 @@ export class User extends Entity implements IValidatable, IMarshable {
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    public createFromAny(unmarshalled: any): User {
+         return new User(unmarshalled);
     };
 
     public convertToAny(): any {

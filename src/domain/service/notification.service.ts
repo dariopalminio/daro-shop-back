@@ -3,7 +3,7 @@ import { ContactMessage } from 'src/domain/model/notification/contact.message';
 import { INotificationService } from 'src/domain/incoming/notification.service.interface';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
 import { validEmail } from 'src/domain/helper/validators.helper';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 
@@ -40,13 +40,13 @@ export class NotificationService implements INotificationService {
       const infoReturned: any = await this.sender.sendEmailWithTemplate(subject, contactMessage.email, "contact", contactMessage, locale);
       const resp: any = {
         isSuccess: true,
-        status: ResponseCode.OK,
+        status: ErrorCode.OK,
         message: "Email sent successful!",
         data: infoReturned
       };
       return resp;
     } catch (error) {
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, "Emal could not sent!", '', error);
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, "Emal could not sent!", '', error);
     };
   };
 
@@ -59,7 +59,7 @@ export class NotificationService implements INotificationService {
       const infoReturned: any = await this.sender.sendEmail(subject, email, contentHTML);
       const resp: any = {
         isSuccess: true,
-        status: ResponseCode.OK,
+        status: ErrorCode.OK,
         message: "Email sent successful!",
         data: infoReturned
       };
@@ -67,7 +67,7 @@ export class NotificationService implements INotificationService {
     } catch (error) {
       const resp: any = {
         isSuccess: false,
-        status: ResponseCode.INTERNAL_SERVER_ERROR,
+        status: ErrorCode.INTERNAL_SERVER_ERROR,
         message: "Emal could not sent!",
         data: {},
         error: error};

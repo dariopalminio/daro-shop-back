@@ -1,5 +1,5 @@
-export interface IMarshable {
+export interface IMarshable<T> {
 
-    setFromAny(unmarshalled: any): void;
     convertToAny(): any;
+    createFromAny(unmarshalled: any): T;
 }

@@ -5,9 +5,9 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from 'src/domain/model/product/reservation';
 import { Product } from 'src/domain/model/product/product';
 import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DuplicateProductError, DuplicateSkuError, ProductFormatError, ProductNotFoundError, SkuGenerationError } from '../error/product-errors';
+import { ProductDuplicateError, DuplicateSkuError, ProductFormatError, ProductNotFoundError, SkuGenerationError } from '../error/product-errors';
 import { DomainError } from '../error/domain-error';
-import { ResponseCode } from '../error/response-code.enum';
+import { ErrorCode } from '../error/error-code.enum';
 
 /**
  * Product Service
@@ -102,14 +102,14 @@ export class ProductService implements IProductService<Product> {
     } catch (error) {
       throw new ProductFormatError('Product data malformed:' + error.message);
     }
-    let entityNew: Promise<Product>;
+    let entityNew: Product;
     try {
-      entityNew = this.productRepository.create(newProduct);
+      entityNew = await this.productRepository.create(newProduct);
     } catch (error) {
       if (error.code && error.code === 11000) {
-        throw new DuplicateProductError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
+        throw new ProductDuplicateError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); 
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, '', error); 
     }
     return entityNew;
   };

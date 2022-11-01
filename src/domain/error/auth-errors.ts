@@ -1,9 +1,9 @@
 import { DomainError } from "./domain-error";
-import { ResponseCode } from "./response-code.enum";
+import { ErrorCode } from "./error-code.enum";
 
 export class InvalidCredentialsError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.UNAUTHORIZED;
+        const codeErr = code ? code : ErrorCode.UNAUTHORIZED;
         const message = 'Invalid Credentials: unauthorized because username or password is incorrect';
         const detailed = detail ? detail : message;
         const dat = data ? data : {};
@@ -18,7 +18,7 @@ export class InvalidCredentialsError extends DomainError {
 
 export class InvalidClientCredentialsError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.UNAUTHORIZED;
+        const codeErr = code ? code : ErrorCode.UNAUTHORIZED;
         const message = 'Invalid Client Credentials: unauthorized because client_id, client_secret or grant_type is incorrect';
         const detailed = detail ? detail : message;
         const dat = data ? data : {};
@@ -34,7 +34,7 @@ export class InvalidClientCredentialsError extends DomainError {
 
 export class RefreshTokenMalformedError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
+        const codeErr = code ? code : ErrorCode.BAD_REQUEST;
         const message = 'Refresh Token Malformed Error. Missing or malformed data.';
         const detailed = detail ? detail : message;
         const dat = data ? data : {};
@@ -49,7 +49,7 @@ export class RefreshTokenMalformedError extends DomainError {
 
 export class TokensCreationError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
+        const codeErr = code ? code : ErrorCode.BAD_REQUEST;
         const message = 'An error has occurred in token creation. Some data is wrong.';
         const detailed = detail ? detail : message;
         const dat = data ? data : {};
@@ -64,7 +64,7 @@ export class TokensCreationError extends DomainError {
 
 export class InvalidVerificationCodeError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
+        const codeErr = code ? code : ErrorCode.BAD_REQUEST;
         const message = 'Failed to check verification code.';
         const detailed = detail ? detail : message;
         const dat = data ? data : {};

@@ -5,7 +5,7 @@ import { IMarshable } from "../marshable.interface";
  * 
  * Note: Value Object is a small object that represents a simple entity with no identity (no id) and depends on a main 'Entity' or 'Root Entity'.
  */
-export class Client implements IMarshable {
+export class Client implements IMarshable<Client> {
     userId: string;
     firstName: string;
     lastName: string;
@@ -29,6 +29,12 @@ export class Client implements IMarshable {
         this.telephone = clientObj.telephone ? clientObj.telephone : '';
 
     }
+
+    public createFromAny(unmarshalled: any): Client {
+        let c: Client = new Client();
+        c.setFromAny(unmarshalled);
+        return c;
+    };
 
     /**
      * Unmarshal: convert class object to unmarshalled any

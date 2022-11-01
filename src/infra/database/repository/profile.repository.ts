@@ -86,12 +86,12 @@ export class ProfileRepository implements IRepository<Profile> {
         return objCasted;
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<Profile> {
-        if (fieldsToExclude) {
-            const profileDoc: ProfileDocument =  await this.profileModel.findOne(query, fieldsToExclude);
-            const objCasted: Profile =  new Profile(profileDoc);
-            return objCasted;
-        }
+    async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
+        const entryDoc: ProfileDocument = await this.profileModel.findOne(query, fieldsToExclude);
+        return entryDoc;
+    };
+
+    async getByQuery(query: any): Promise<Profile> {
         const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
         const objCasted: Profile = new Profile(profileDoc);
         return objCasted;

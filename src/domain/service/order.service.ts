@@ -7,10 +7,10 @@ import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { OrderItem } from 'src/domain/model/order-aggregate/order-item';
 import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Product } from 'src/domain/model/product/product';
-import { DuplicateOrderError, OrderFormatError, OrderNotFoundError, OutOfStockError } from '../error/order-errors';
+import { OrderDuplicateError, OrderFormatError, OrderNotFoundError, OutOfStockError } from '../error/order-errors';
 
 /**
  * Order Service
@@ -125,7 +125,7 @@ export class OrderService implements IOrderService<Order> {
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DuplicateOrderError(error.message, error);
+          throw new OrderDuplicateError(error.message, error);
         default:
           //Internal server error
           throw new DomainError(500, error.message, error);
@@ -165,7 +165,7 @@ export class OrderService implements IOrderService<Order> {
       return confirmed;
     } catch (error) {
       if (error instanceof DomainError) throw error;
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order confirmation.', { error: error.message });
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order confirmation.', { error: error.message });
     }
   };
 
@@ -190,7 +190,7 @@ export class OrderService implements IOrderService<Order> {
       return aborted;
     } catch (error) {
       console.log("Order abort error:", error);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order aborting', { error: error.message });
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, 'Error in order aborting', { error: error.message });
     }
   }
 
@@ -213,7 +213,7 @@ export class OrderService implements IOrderService<Order> {
       return paid;
     } catch (error) {
       console.log("Order completePayment error:", error);
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, 'Error in complete payment.', { error: error.message });
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, 'Error in complete payment.', { error: error.message });
     }
   };
 

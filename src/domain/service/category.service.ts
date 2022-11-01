@@ -1,12 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { ICategoryService } from 'src/domain/incoming/category.service.interface';
-import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Category } from 'src/domain/model/category/category';
-import { CategoryFormatError, CategoryNotFoundError, DuplicateCategoryError } from '../error/category-errors';
-import { DomainError } from '../error/domain-error';
-import { ResponseCode } from '../error/response-code.enum';
 import { ICategory } from '../model/category/category.interface';
+import { CategoryEntityFactory } from '../model/category/category-entity.factory';
+import { GenericService } from './generic.service';
 
 /**
  * Category Service
@@ -20,95 +18,13 @@ import { ICategory } from '../model/category/category.interface';
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
 @Injectable()
-export class CategoryService implements ICategoryService<Category> {
+export class CategoryService extends GenericService<ICategory, Category> implements ICategoryService<Category> {
 
   constructor(
     @Inject('ICategoryRepository')
-    private readonly categoryRepository: IRepository<Category>,
-  ) { }
-
-
-  // Get all category
-  async getAll(): Promise<Category[]> {
-    const list: Category[] = await this.categoryRepository.getAll();
-    return list;
-  };
-
-  async find(query: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Category[]>{
-    const entity: Category[] = await this.categoryRepository.find(query, page, limit, orderByField, isAscending);
-    return entity;
-  };
-
-  // Get a single category
-  async getById(id: string): Promise<Category> {
-    const entity: Category = await this.categoryRepository.getById(id);
-    if (!entity || entity === null) throw new CategoryNotFoundError();
-    return entity;
-  };
-
-  async create<ICategory>(categoryDTO: ICategory): Promise<Category> {
-    let categoryEntity: Category;
-    try {
-      categoryEntity = new Category(categoryDTO);
-    } catch (error) {
-      throw new CategoryFormatError('Category data malformed: ' + error.message);
-    }
-    try{
-    const entityNew: Promise<Category> = this.categoryRepository.create(categoryEntity);
-    return entityNew;
-  } catch (error) {
-    if (error.code && error.code === 11000) {
-      throw new DuplicateCategoryError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
-    }
-    throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); 
+    categoryRepository: IRepository<Category>,
+  ) { 
+    super(categoryRepository, new CategoryEntityFactory());
   }
-  };
-
-  // Delete category return this.labelModel.deleteOne({ osCode }).exec();
-  async delete(id: string): Promise<boolean> {
-    const found: boolean = await this.categoryRepository.hasById(id);
-    if (!found) throw new CategoryNotFoundError();
-    const deleted: boolean = await this.categoryRepository.delete(id);
-    return deleted;
-  };
-
-  // Put a single category
-  async updateById(id: string, category: Category): Promise<boolean> {
-    const found: boolean = await this.categoryRepository.hasById(id);
-    if (!found) throw new CategoryNotFoundError();
-    const updatedProduct: boolean = await this.categoryRepository.updateById(id, category);
-    return updatedProduct;
-  };
-
-  async getByQuery(query: any): Promise<Category> {
-    const entity: Category =  await this.categoryRepository.getByQuery(query);
-    if (!entity || entity === null) throw new CategoryNotFoundError();
-    return entity;
-  };
-
-  async update(query: any, valuesToSet: any): Promise<boolean> {
-    const updatedProduct: boolean = await this.categoryRepository.update(query, valuesToSet);
-    if (!updatedProduct) throw new CategoryNotFoundError();
-    return updatedProduct;
-  };
-
-  async hasById(id: string): Promise<boolean> {
-    return await this.categoryRepository.hasById(id);
-  };
-
-  async hasByQuery(query: any): Promise<boolean> {
-    return await this.categoryRepository.hasByQuery(query);
-  };
-
-  async search(queryFilter?: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
-    const filter = queryFilter? queryFilter : {};
-    const cats: Category[] = await this.categoryRepository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
-    let filtered: PaginatedResult = new PaginatedResult();
-    filtered.list = cats;
-    filtered.page = page;
-    filtered.limit = limit;
-    filtered.count = await this.categoryRepository.count(filter);
-    return filtered;
-  };
 
 };

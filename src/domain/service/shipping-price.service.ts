@@ -4,8 +4,8 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Address } from 'src/domain/model/profile/address';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { DuplicateShippingPriceError, ShippingPriceFormatError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
+import { ShippingPriceDuplicateError, ShippingPriceFormatError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
 
 /**
  * Shipping Price Service
@@ -61,10 +61,10 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
       switch (error.code) {
         case 11000:
           //  duplicate key error collection
-          throw new DuplicateShippingPriceError(error.message, error);
+          throw new ShippingPriceDuplicateError(error.message, error);
         default:
           //Internal server error
-          throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, error);
+          throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, error);
       }
     }
   };

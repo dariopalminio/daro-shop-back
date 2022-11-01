@@ -16,7 +16,7 @@ import { IMarshable } from '../marshable.interface';
  * If you want to make a simple domain object class, you can design domain object without any behavioral methods and 
  * create use cases for each behavior of the domain object, it is up to you.
  */
-export class Order extends Entity implements IValidatable, IMarshable {
+export class Order extends Entity implements IValidatable, IMarshable<Order> {
 
     protected client: Client;
     protected orderItems: OrderItem[];
@@ -80,7 +80,7 @@ export class Order extends Entity implements IValidatable, IMarshable {
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
      * @param unmarshalled any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
-    public setFromAny(unmarshalled: any) {
+    private setFromAny(unmarshalled: any) {
         const hasAnArray: boolean = Array.isArray(unmarshalled.orderItems);
         if (!hasAnArray) throw new Error('The order has no items. The field named orderItems is no an Array!');
         let clientObject: Client = new Client();
@@ -105,6 +105,10 @@ export class Order extends Entity implements IValidatable, IMarshable {
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    public createFromAny(unmarshalled: any): Order {
+        return new Order(unmarshalled);
     };
 
     /**

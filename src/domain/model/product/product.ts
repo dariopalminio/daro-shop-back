@@ -14,7 +14,7 @@ import { IMarshable } from '../marshable.interface';
  * components part of model such as a 'Value Object'.
  * This Domain Object is persistence-ignorant objects, is a class which doesn't depend on any framework-specific base class. 
  */
-export class Product extends Entity implements IValidatable, IMarshable {
+export class Product extends Entity implements IValidatable, IMarshable<Product> {
 
     protected sku: string;
     protected barcode: string;
@@ -121,7 +121,7 @@ export class Product extends Entity implements IValidatable, IMarshable {
      * It is used to convert (casting) and validate an input data type, such as a DTO, to the data type of this class.
      * @param prod Unmarshalled, any is used to tell TypeScript that a variable can be of any type such as DTO or json object
      */
-    public setFromAny(unmarshalled: any) {
+    private setFromAny(unmarshalled: any) {
         this.setSku(unmarshalled.sku);
         this.setBarcode(unmarshalled.barcode);
         this.setName(unmarshalled.name);
@@ -151,6 +151,10 @@ export class Product extends Entity implements IValidatable, IMarshable {
         if (unmarshalled.createdAt) {
             this.createdAt = convertAnyToDate(unmarshalled.createdAt);
         }
+    };
+
+    public createFromAny(unmarshalled: any): Product {
+        return new Product(unmarshalled);
     };
 
     /**

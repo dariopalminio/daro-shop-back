@@ -56,7 +56,6 @@ export class CategoryController {
   async getAll(@Res() res) {
     try {
       const list: Category[] = await this.categoryService.getAll();
-      console.log("categories getAll", list);
       return res.status(HttpStatus.OK).json(list);
     } catch (error) {
       throw AppErrorHandler.createError(error);

@@ -87,16 +87,14 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
         //return this.conversorDocToCategory(catDoc);
     };
 
-    async getByQuery(query: any, fieldsToExclude?: any): Promise<ShippingPrice> {
-        console.log("ShippingPriceRepository--->getByQuery");
-        if (fieldsToExclude) {
-            const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query, fieldsToExclude);
-            const objCasted: ShippingPrice = new ShippingPrice(doc);
-            return objCasted;
-        }
+    async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
+        const entryDoc: ShippingPriceDocument = await this.shippingPriceModel.findOne(query, fieldsToExclude);
+        return entryDoc;
+    };
+
+    async getByQuery(query: any): Promise<ShippingPrice> {
         const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
         const objCasted: ShippingPrice = new ShippingPrice(doc);
-        console.log("ShippingPriceRepository--->objCasted");
         return objCasted;
     }
 

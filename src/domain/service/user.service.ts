@@ -5,8 +5,8 @@ import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { generateToken } from 'src/domain/helper/token.helper';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
-import { UserNotFoundError, DuplicateUserError, UserFormatError } from '../error/user-errors';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
+import { UserNotFoundError, UserDuplicateError, UserFormatError } from '../error/user-errors';
 
 /**
  * User Service
@@ -68,7 +68,7 @@ export class UserService implements IUserService<User> {
       };
 
     } catch (error) {
-      throw new DomainError(ResponseCode.BAD_REQUEST, error.message, error);
+      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
     }
     try {
       const userNew: User = await this.userRepository.create(userEntity);
@@ -76,9 +76,9 @@ export class UserService implements IUserService<User> {
     } catch (error) { //MongoError 
       console.log("create error code:", error.code);
       if (error.code && error.code === 11000) {
-        throw new DuplicateUserError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
+        throw new UserDuplicateError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
-      throw new DomainError(ResponseCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, '', error); //Internal server error
     }
   };
 

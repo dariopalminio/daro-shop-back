@@ -1,17 +1,28 @@
-import { DomainError } from "./domain-error";
-import { ResponseCode } from "./response-code.enum";
+import { DuplicateError, FormatError, NotFoundError } from "./domain-error";
 
-export class PaymentMethodFormatError extends DomainError {
-    constructor(detail?: string, data?: any, code?: number) {
-        const codeErr = code ? code : ResponseCode.BAD_REQUEST;
-        const message = 'Payment Method Format Error: This error is caused when you attempt to enter a badly formatted attribute.';
-        const detailed = detail ? detail : message;
-        const dat = data ? data : {};
-        super(codeErr, message, detailed, dat);
-        // Ensure the name of this error is the same as the class name
+export class PaymentMethodFormatError extends FormatError {
+    constructor(detail?: string, data?: any) {
+        const message = 'The Payment Method has a format error, some attribute is wrong';
+        super(message, detail, data);
         this.name = this.constructor.name;
-        // This clips the constructor invocation from the stack trace.
-        // It's not absolutely essential, but it does make the stack trace a little nicer.
+        Error.captureStackTrace(this, this.constructor);
+    }
+};
+
+export class PaymentMethodNotFoundError extends NotFoundError {
+    constructor(detail?: string, data?: any) {
+        const message = 'Payment Method not found: could not find the indicated Payment Method.';
+        super(message, detail, data);
+        this.name = this.constructor.name;
+        Error.captureStackTrace(this, this.constructor);
+    }
+};
+
+export class PaymentMethodDuplicateError extends DuplicateError {
+    constructor(detail?: string, data?: any) {
+        const message = 'PaymentMethod Duplicate Error: PaymentMethod already exists!';
+        super(message, detail, data);
+        this.name = this.constructor.name;
         Error.captureStackTrace(this, this.constructor);
     }
 };

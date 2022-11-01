@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
-import { ResponseCode } from 'src/domain/error/response-code.enum';
+import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { DomainError } from 'src/domain/error/domain-error';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
@@ -228,13 +228,13 @@ export class AuthTokensService implements IAuthTokensService {
         throw new Error("Bad Request: Empty value!");
     } catch (error) {
       throw new InvalidClientCredentialsError(`The client_id, client_secret or grant_type is empty`,
-        {}, ResponseCode.BAD_REQUEST);
+        {}, ErrorCode.BAD_REQUEST);
     };
 
     const isClient: boolean = this.verifyClient(authClientDTO.client_id, authClientDTO.client_secret);
     if (!isClient)
       throw new InvalidClientCredentialsError(`Is not a client! Client id and client secret are invalid!`,
-        {}, ResponseCode.BAD_REQUEST);
+        {}, ErrorCode.BAD_REQUEST);
 
     const payload: PayloadType = {
       id: authClientDTO.client_id,

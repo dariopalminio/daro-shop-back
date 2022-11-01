@@ -18,6 +18,9 @@ export class ProductRepositoryNegativeStub implements IRepository<Product> {
     async getById(id: string): Promise<Product> {
         return null;
     };
+    async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
+        return null;
+    };
     async getByQuery(query: any): Promise<Product> {
         return null;
     }

@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, ForbiddenException, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException, ConflictException, ForbiddenException, HttpException,
+    HttpStatus, InternalServerErrorException, NotFoundException,
+    UnauthorizedException
+} from "@nestjs/common";
 import { DomainError } from "src/domain/error/domain-error";
 
 export class AppErrorHandler {
