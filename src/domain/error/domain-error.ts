@@ -89,3 +89,18 @@ export class DuplicateError extends DomainError {
       Error.captureStackTrace(this, this.constructor);
   }
 };
+
+/**
+ * Defines an Generic Domain Error for Duplicate (Conflict) type errors.
+ */
+ export class IdFormatError extends DomainError {
+  constructor(message: string, detail?: string, data?: any) {
+      const codeErr = ErrorCode.BAD_REQUEST;
+      const msg = 'Id format is wrong. The id field is undefined or its length exceeds the maximum allowed. ' + message;
+      const detailed = detail ? detail : message;
+      const dat = data ? data : {};
+      super(codeErr, msg, detailed, dat);
+      this.name = this.constructor.name;
+      Error.captureStackTrace(this, this.constructor);
+  }
+};

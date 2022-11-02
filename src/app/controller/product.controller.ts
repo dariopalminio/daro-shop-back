@@ -188,16 +188,12 @@ export class ProductController {
   @Roles('admin', 'manage-account')
   @Put('update')
   async update(@Res() res, @Body() productDTO: ProductDTO, @Query('id') id) {
-    if (!id) throw new BadRequestException('Param id not specified!');
-    let modifiedProduct: Product;
-    try {
-      modifiedProduct = new Product(productDTO);
-    } catch (error) {
-      throw new BadRequestException('Product data malformed:' + error.message);
+    if (!id) {
+      throw new BadRequestException('Param id not specified!');
     }
     let updatedProduct: boolean;
     try {
-      updatedProduct = await this.productService.updateById(id, modifiedProduct);
+      updatedProduct = await this.productService.updateById(id, productDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     };

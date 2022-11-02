@@ -94,7 +94,7 @@ export class ProductService implements IProductService<Product> {
   };
 
   async getDetailById(id: string): Promise<any> {
-    console.log("--------->service getDetailById...:");
+
     const fieldsToExclude = {
       netCost: 0,
       ivaAmountOnCost: 0,
@@ -102,9 +102,11 @@ export class ProductService implements IProductService<Product> {
       netPrice: 0,
       ivaAmountOnPrice: 0,
     };
+
     let obj: any = await this.productRepository.getByQueryExcludingFields({_id: id}, fieldsToExclude);
-    console.log("--------->service getDetailById...obj:", obj);
+    
     if (!obj || obj === null) throw new ProductNotFoundError();
+    
     return obj;
   };
 
@@ -134,10 +136,20 @@ export class ProductService implements IProductService<Product> {
     return deleted;
   };
 
-  async updateById(id: string, product: Product): Promise<boolean> {
+  async updateById<IProduct>(id: string, productDTO: IProduct): Promise<boolean> {
+    let modifiedProduct: Product;
+    try {
+      modifiedProduct = new Product(productDTO);
+    } catch (error) {
+      throw new ProductFormatError('Product data malformed:' + error.message);
+    }
+console.log("modifiedProduct:",modifiedProduct);
     const found: boolean = await this.productRepository.hasById(id);
-    if (!found) throw new ProductNotFoundError();
-    const updatedProduct: boolean = await this.productRepository.updateById(id, product);
+    if (!found) {
+      throw new ProductNotFoundError();
+    }
+
+    const updatedProduct: boolean = await this.productRepository.updateById(id, modifiedProduct);
     if (!updatedProduct) throw new Error("Could not update the indicated product.");
     return updatedProduct;
   };

@@ -163,6 +163,7 @@ export class Product extends Entity implements IValidatable, IMarshable<Product>
     public convertToAny(): any {
         return {
             id: this.id,
+            sku: this.sku,
             barcode: this.barcode,
             name: this.name,
             description: this.description,

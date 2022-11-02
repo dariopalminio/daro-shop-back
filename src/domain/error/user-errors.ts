@@ -12,7 +12,7 @@ export class UserFormatError extends FormatError {
 
 export class UserNotFoundError extends NotFoundError {
     constructor(detail?: string, data?: any) {
-        const message = 'User not found: could not find the indicated product.';
+        const message = 'User not found: could not find the indicated user.';
         super(message, detail, data);
         this.name = this.constructor.name;
         Error.captureStackTrace(this, this.constructor);

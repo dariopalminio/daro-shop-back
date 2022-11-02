@@ -21,7 +21,7 @@ export class ShippingPriceNotFoundError extends NotFoundError {
 
 export class ShippingPriceDuplicateError extends DuplicateError {
     constructor(detail?: string, data?: any) {
-        const message = 'Duplicate ShippingPrice Error: profile already exists!';
+        const message = 'Duplicate ShippingPrice Error: ShippingPrice already exists!';
         super(message, detail, data);
         this.name = this.constructor.name;
         Error.captureStackTrace(this, this.constructor);

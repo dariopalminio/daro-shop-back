@@ -3,37 +3,37 @@ import { Module, OnModuleInit, MiddlewareConsumer, RequestMethod } from '@nestjs
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { TerminusModule } from '@nestjs/terminus';
 import { APP_FILTER } from '@nestjs/core';
-import { ExceptionsAllFilter } from '../app/filter/exception.filter';
-import { AppController } from '../app/controller/app.controller';
-import { NotificationController } from '../app/controller/notification.controller';
-import { ProductController } from '../app/controller/product.controller';
-import { CategoryController } from '../app/controller/category.controller';
-import { NotificationService } from '../domain/service/notification.service';
-import { ProductService } from '../domain/service/product.service';
-import { CategoryService } from '../domain/service/category.service';
-import { AuthService } from '../domain/service/auth.service';
-import { UserService } from '../domain/service/user.service';
-import { UserController } from '../app/controller/user.controller';
-import { AuthController } from '../app/controller/auth.controller';
-import { EmailSmtpSenderAdapter } from '../infra/email/email-sender.adapter';
-import { AuthMiddleware } from '../app/middleware/auth.middleware';
-import { ProductSchema } from '../infra/database/schema/product.schema';
-import { UserSchema } from '../infra/database/schema/user.schema';
+import { ExceptionsAllFilter } from 'src/app/filter/exception.filter';
+import { AppController } from 'src/app/controller/app.controller';
+import { NotificationController } from 'src/app/controller/notification.controller';
+import { ProductController } from 'src/app/controller/product.controller';
+import { CategoryController } from 'src/app/controller/category.controller';
+import { NotificationService } from 'src/domain/service/notification.service';
+import { ProductService } from 'src/domain/service/product.service';
+import { CategoryService } from 'src/domain/service/category.service';
+import { AuthService } from 'src/domain/service/auth.service';
+import { UserService } from 'src/domain/service/user.service';
+import { UserController } from 'src/app/controller/user.controller';
+import { AuthController } from 'src/app/controller/auth.controller';
+import { EmailSmtpSenderAdapter } from 'src/infra/email/email-sender.adapter';
+import { AuthMiddleware } from 'src/app/middleware/auth.middleware';
+import { ProductSchema } from 'src/infra/database/schema/product.schema';
+import { UserSchema } from 'src/infra/database/schema/user.schema';
 
-import { CategorySchema } from '../infra/database/schema/category.schema';
-import DB_CONNECTION from '../infra/database/db.connection.string';
+import { CategorySchema } from 'src/infra/database/schema/category.schema';
+import DB_CONNECTION from 'src/infra/database/db.connection.string';
 import {
   UserRepository
-} from '../infra/database/repository/user.repository';
+} from 'src/infra/database/repository/user.repository';
 import {
   CategoryRepository
-} from '../infra/database/repository/category.repository';
+} from 'src/infra/database/repository/category.repository';
 import {
   ProductRepository
-} from '../infra/database/repository/product.repository';
-import LoggerHelper from '../infra/logger/logger.helper';
+} from 'src/infra/database/repository/product.repository';
+import LoggerHelper from 'src/infra/logger/logger.helper';
 
-import { GlobalConfigImpl } from '../infra/config/global-config-impl';
+import { GlobalConfigImpl } from 'src/infra/config/global-config-impl';
 
 //Mongo
 import { MongooseModule } from '@nestjs/mongoose';
@@ -46,20 +46,20 @@ import { AuthTokensService } from 'src/domain/service/auth.tokens.service';
 import { join } from 'path';
 import { ProfileSchema } from 'src/infra/database/schema/profile.schema';
 import { ProfileRepository } from 'src/infra/database/repository/profile.repository';
-import { ProfileController } from './controller/profile.controller';
-import { ProfileService } from '../domain/service/profile.service';
-import { ShippingPriceService } from '../domain/service/shipping-price.service';
-import { ShippingPriceController } from './controller/shipping-price.controller';
+import { ProfileController } from 'src/app/controller/profile.controller';
+import { ProfileService } from 'src/domain/service/profile.service';
+import { ShippingPriceService } from 'src/domain/service/shipping-price.service';
+import { ShippingPriceController } from 'src/app/controller/shipping-price.controller';
 import { ShippingPriceSchema } from 'src/infra/database/schema/shipping-price.schema';
 import { ShippingPriceRepository } from 'src/infra/database/repository/shipping-price.repository';
 import { OrderRepository } from 'src/infra/database/repository/order.repository';
 import { OrderService } from 'src/domain/service/order.service';
-import { OrderController } from './controller/order.controller';
+import { OrderController } from 'src/app/controller/order.controller';
 import { OrderSchema } from 'src/infra/database/schema/order.schema';
 import { PaymentMethodSchema } from 'src/infra/database/schema/payment-method.schema';
 import { PaymentMethodRepository } from 'src/infra/database/repository/payment-method.repository';
 import { PaymentMethodService } from 'src/domain/service/payment-method.service';
-import { PaymentMethodController } from './controller/payment-method.controller';
+import { PaymentMethodController } from 'src/app/controller/payment-method.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
