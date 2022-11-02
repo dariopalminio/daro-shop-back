@@ -134,6 +134,7 @@ export class ProductRepository implements IRepository<Product> {
 
     async getByQuery(query: any): Promise<Product> {
         const prodDoc: ProductDocument | null = await this.productModel.findOne(query);
+        if (prodDoc === null) throw new Error('Product not found');
         const objCasted: Product = new Product(prodDoc);
         return objCasted;
     };

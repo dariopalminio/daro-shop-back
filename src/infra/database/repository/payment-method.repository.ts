@@ -96,6 +96,7 @@ export class PaymentMethodRepository implements IRepository<PaymentMethod> {
 
     async getByQuery(query: any): Promise<PaymentMethod> {
         const entryDoc: PaymentMethodDocument | null = await this.entityModel.findOne(query);
+        if (entryDoc === null) throw new Error('PaymentMethod not found');
         const objCasted: PaymentMethod = new PaymentMethod(entryDoc);
         return objCasted;
     }

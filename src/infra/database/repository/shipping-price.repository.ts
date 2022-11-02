@@ -105,6 +105,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
 
     async getByQuery(query: any): Promise<ShippingPrice> {
         const doc: ShippingPriceDocument | null = await this.shippingPriceModel.findOne(query);
+        if (doc === null) throw new Error('ShippingPrice not found');
         const objCasted: ShippingPrice = new ShippingPrice(doc);
         return objCasted;
     }

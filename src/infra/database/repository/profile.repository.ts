@@ -105,6 +105,7 @@ export class ProfileRepository implements IRepository<Profile> {
 
     async getByQuery(query: any): Promise<Profile> {
         const profileDoc: ProfileDocument | null = await this.profileModel.findOne(query);
+        if (profileDoc === null) throw new Error('Profile not found');
         const objCasted: Profile = new Profile(profileDoc);
         return objCasted;
     }

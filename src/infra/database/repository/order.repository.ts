@@ -98,6 +98,7 @@ export class OrderRepository implements IRepository<Order> {
 
     async getByQuery(query: any): Promise<Order> {
         const entryDoc: OrderDocument | null = await this.entityModel.findOne(query);
+        if (entryDoc === null) throw new Error('Order not found');
         const objCasted: Order = new Order(entryDoc);
         return objCasted;
     }

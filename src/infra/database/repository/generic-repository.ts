@@ -128,6 +128,7 @@ export class GenericRepository<D, T extends IMarshable<T>> implements IRepositor
 
     async getByQuery(query: any): Promise<T> {
         const doc: D | null = await this.model.findOne(query);
+        if (doc === null) throw new Error('Entity not found');
         const objCasted: T = this.factory.createInstance(doc);
         return objCasted;
     };

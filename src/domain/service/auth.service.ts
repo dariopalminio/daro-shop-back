@@ -63,7 +63,6 @@ export class AuthService implements IAuthService {
     //const isEmailExist = await User.findOne({ email: req.body.email });
     const isEmailExist: boolean = await this.userService.hasByQuery({ email: userRegisterData.email });
     if (isEmailExist) {
-      //return res.status(400).json({error: 'Email ya registrado'})
       throw new UserDuplicateError('The Email just was registered');
     }
 
@@ -119,7 +118,7 @@ export class AuthService implements IAuthService {
       email: userCreated.getEmail()
     };
 
-    const tokens: TokensType = this.authTokensService.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.authTokensService.createTokens(payload);
 
     return tokens;
   };
@@ -134,30 +133,33 @@ export class AuthService implements IAuthService {
   async sendStartEmailConfirm(startConfirmEmailData: StartConfirmEmailData, locale: string): Promise<any> {
 
     // Data validation
-    try {
-      if (!validEmail(startConfirmEmailData.email))
-        throw new Error("Bad Request: Invalid email!");
-      if (!startConfirmEmailData.verificationPageLink)
-        throw new Error("Bad Request: Invalid link!");
-    } catch (error) {
-      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
-    };
 
-    let user;
+    if (!validEmail(startConfirmEmailData.email)) {
+      throw new UserFormatError("Invalid email to email confirmation!");
+    }
+
+    if (!startConfirmEmailData.verificationPageLink) {
+      throw new UserFormatError("Invalid link to email confirmation!");
+    }
+
+    let user: User;
     try {
       // Get user
       user = await this.userService.getByQuery({ userName: startConfirmEmailData.userName });
       if (!user) throw new Error("User not found!");
     } catch (error) {
-      throw new DomainError(ErrorCode.NOT_FOUND, error.message, error);
+      throw new UserNotFoundError(error.message, error);
     };
 
     try {
       // Generate new verification code
       const newVerificationCode = generateToken();
-      user.verificationCode = newVerificationCode;
+      user.setVerificationCode(newVerificationCode);
 
-      const updatedOk: boolean = await this.userService.updateById(user._id, user);
+      const userId: string | undefined = user.getId();
+      if (userId === undefined) throw new UserNotFoundError('User with out Id.');
+
+      const updatedOk: boolean = await this.userService.updateById(userId, user);
       if (!updatedOk) throw new Error("Can not save generated verification code!");
 
       const token: string = encodeToken(startConfirmEmailData.email, newVerificationCode);
@@ -194,14 +196,10 @@ export class AuthService implements IAuthService {
   async confirmAccount(verificationCodeData: VerificationCodeDataType, lang: string): Promise<any> {
 
     let user: User;
-    try {
-      user = await this.verificateToken(verificationCodeData.token);
-    } catch (error) {
-      throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
-    };
+
+    user = await this.verificateToken(verificationCodeData.token);
 
     const userId: string | undefined = user.getId();
-
     if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
 
     //Update in database
@@ -271,12 +269,14 @@ export class AuthService implements IAuthService {
    */
   async sendEmailToRecoveryPass(startRecoveryData: StartRecoveryDataType, lang: string): Promise<any> {
     console.log("sendEmailToRecoveryPass lang:", lang);
-    try {
-      if (!validEmail(startRecoveryData.email)) throw new Error("Bad Request: Invalid email!");
-      if (!startRecoveryData.recoveryPageLink) throw new Error("Bad Request: Invalid link!");
-    } catch (error) {
-      throw new DomainError(ErrorCode.BAD_REQUEST, "Can not Send Email To Recovery Pass.", error);
-    };
+
+    if (!validEmail(startRecoveryData.email)) {
+      throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid email!");
+    }
+
+    if (!startRecoveryData.recoveryPageLink) {
+      throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid link!");
+    }
 
     //generate verification code
     const newVerificationCode = generateToken();
@@ -285,7 +285,7 @@ export class AuthService implements IAuthService {
     //save verification code
     try {
       user = await this.userService.getByQuery({ userName: startRecoveryData.userName });
-      if (!user) throw new Error("User not found!");
+      if (!user || user === null) throw new Error("User not found!");
     } catch (error) {
       throw new UserNotFoundError(error.message, error);
     };

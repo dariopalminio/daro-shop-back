@@ -103,6 +103,7 @@ export class UserRepository implements IRepository<User> {
 
     async getByQuery(query: any): Promise<User> {
         const userDoc: UserDocument | null = await this.userModel.findOne(query);
+        if (userDoc === null) throw new Error('User not found');
         const objCasted: User = new User(userDoc);
         return objCasted;
     }

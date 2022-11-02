@@ -31,6 +31,9 @@ const bcrypt = require('bcrypt');
 @Injectable()
 export class AuthTokensService implements IAuthTokensService {
 
+  private accessExpiresIn: number;
+  private refreshExpireIn: number;
+
   constructor(
     @Inject('IUserService')
     private readonly userService: IUserService<User>,
@@ -39,6 +42,8 @@ export class AuthTokensService implements IAuthTokensService {
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
   ) {
+    this.accessExpiresIn = 86400;
+    this.refreshExpireIn = 86400 * 2;
   }
 
   async test() {
@@ -54,7 +59,7 @@ export class AuthTokensService implements IAuthTokensService {
    * @param payload profile data
    * @returns 
    */
-  createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType {
+  createTokens(payload: PayloadType, accessExpiresIn?: number, refreshExpireIn?: number): TokensType {
 
     try {
       let tokens: TokensType = {
@@ -78,7 +83,7 @@ export class AuthTokensService implements IAuthTokensService {
         issuer: issuer,
         subject: subject,
         audience: audience,
-        expiresIn: accessExpiresIn,
+        expiresIn: accessExpiresIn? accessExpiresIn : this.accessExpiresIn,
         algorithm: "RS256"
       };
 
@@ -90,7 +95,7 @@ export class AuthTokensService implements IAuthTokensService {
         issuer: issuer,
         subject: subject,
         audience: audience,
-        expiresIn: refreshExpireIn, // 2 days
+        expiresIn: refreshExpireIn ? refreshExpireIn : this.refreshExpireIn, 
         algorithm: "RS256"
       };
 
@@ -172,7 +177,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: user.getEmail()
     };
 
-    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, this.accessExpiresIn, this.refreshExpireIn);
 
     return tokens;
   };
@@ -184,8 +189,9 @@ export class AuthTokensService implements IAuthTokensService {
 
     //grant_type=password
     const isClient: boolean = this.verifyClient(body.client_id, body.client_secret);
-    if (!isClient)
+    if (isClient === false) {
       throw new InvalidClientCredentialsError(`Is not a client! Client id or client secret are invalid!`);
+    }
 
     let user: User;
     try {
@@ -194,19 +200,24 @@ export class AuthTokensService implements IAuthTokensService {
       if (error instanceof DomainError) throw error;
       throw new InvalidCredentialsError(`Unauthorized. User ${body.userName} not found! Cannot obtain user from data base!`);
     }
-    if (!user)
+    if (!user) {
       throw new InvalidCredentialsError(`Unauthorized. User ${body.userName} not found!`);
+    }
 
     const validPassword = await bcrypt.compare(body.password, user.getPassword());
 
-    if (!validPassword)
+    if (!validPassword) {
       throw new InvalidCredentialsError(`Unauthorized. Password is invalid!`);
+    }
 
-    if (!user.hasRole(RolesEnum.ADMIN))
+    if (!user.hasRole(RolesEnum.ADMIN)) {
       throw new InvalidCredentialsError(`User is not Admin! To grant an admin token the user must be an admin`);
+    }
 
     const userId: string | undefined = user.getId();
-    if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+    if (userId === undefined) {
+      throw new UserNotFoundError('Cannot obtain user id from data base!');
+    }
 
     const payload: PayloadType = {
       id: userId,
@@ -219,7 +230,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: user.getEmail()
     };
 
-    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, this.accessExpiresIn, this.refreshExpireIn);
 
     return tokens;
   };
@@ -254,7 +265,7 @@ export class AuthTokensService implements IAuthTokensService {
       email: authClientDTO.client_id
     };
 
-    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, this.accessExpiresIn, this.refreshExpireIn);
 
     return tokens;
   };
@@ -296,7 +307,7 @@ export class AuthTokensService implements IAuthTokensService {
       throw new RefreshTokenMalformedError("JWT in Refresh token malformed!");
     };
 
-    const tokens: TokensType = this.createTokens(payload, 86400, 86400 * 2);
+    const tokens: TokensType = this.createTokens(payload, this.accessExpiresIn, this.refreshExpireIn);
 
     return tokens;
   };

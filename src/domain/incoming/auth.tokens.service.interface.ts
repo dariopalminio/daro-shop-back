@@ -21,6 +21,6 @@ export interface IAuthTokensService {
     getAdminToken(body: NewAdminTokenRequestType): Promise<any>;
     getRefreshToken(body: RequestRefreshTokenType): Promise<any>;
     getPEMPublicKey(): string;
-    createTokens(payload: PayloadType, accessExpiresIn: number, refreshExpireIn: number): TokensType;
+    createTokens(payload: PayloadType, accessExpiresIn?: number, refreshExpireIn?: number): TokensType;
     
 };
