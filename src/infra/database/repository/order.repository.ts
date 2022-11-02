@@ -86,11 +86,13 @@ export class OrderRepository implements IRepository<Order> {
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: any = await this.entityModel.findOne(query, fieldsToExclude);
-        let onlyEntityDoc: any;
-        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
-            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+        const entryDoc: any | null = await this.entityModel.findOne(query, fieldsToExclude);
+
+        let onlyEntityDoc: any = entryDoc;
+        if (entryDoc !== null && entryDoc._doc && entryDoc._doc._id) {
+            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id.toString() }
         }
+
         return onlyEntityDoc;
     };
 

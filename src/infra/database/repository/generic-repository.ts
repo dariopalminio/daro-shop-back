@@ -74,7 +74,7 @@ export class GenericRepository<D, T extends IMarshable<T>> implements IRepositor
      * @returns 
      */
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
-        let arrayDoc: D[];
+        let arrayDoc: any[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
             let mysort = {};
@@ -88,35 +88,46 @@ export class GenericRepository<D, T extends IMarshable<T>> implements IRepositor
             arrayDoc = await this.model.find(query).exec();
         }
 
+        //Convertion
+        let resultArray: any[] = [];
+        arrayDoc.forEach((element) => {
+            //Extract doc object as result and add 'id' to result
+            let itemResult: any = element;
+            if (element !== null && element._doc && element._doc._id) {
+                const {_id, ...data} = element._doc; //remove '_id'
+                itemResult = { ...data, "id": element._doc._id.toString() } //add 'id'
+            }
+            resultArray.push(itemResult)
+        });
+
         return arrayDoc;
     };
-
+    
     /**
      * getById
      * If it does not find it, it returns null
      */
-    async getById(id: string, fieldsToExclude?: any): Promise<T> {
-        if (fieldsToExclude) {
-            const prodDoc: D | null = await this.model.findById(id, fieldsToExclude).exec();
-            const objCasted: T = this.factory.createInstance(prodDoc);
-            return objCasted;
-        }
+    async getById(id: string): Promise<T> {
         const doc: D | null = await this.model.findById(id).exec();
         const objCasted: T = this.factory.createInstance(doc);
         return objCasted;
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entereDocum: any = await this.model.findOne(query, fieldsToExclude);
-        let onlyEntityDoc: any;
-        if (entereDocum && entereDocum._doc && entereDocum._doc._id) {
-            onlyEntityDoc = { ...entereDocum._doc, "id": entereDocum._doc._id }
+        const document: any | null = await this.model.findOne(query, fieldsToExclude);
+
+        //Extract doc object as result and add 'id' to result
+        let result: any = document;
+        if (document !== null && document._doc && document._doc._id) {
+            const {_id, ...data} = document._doc; //remove '_id'
+            result = { ...data, "id": document._doc._id.toString() }
         }
-        return onlyEntityDoc;
+
+        return result;
     };
 
     async getByQuery(query: any): Promise<T> {
-        const doc: D  | null= await this.model.findOne(query);
+        const doc: D | null = await this.model.findOne(query);
         const objCasted: T = this.factory.createInstance(doc);
         return objCasted;
     };
@@ -128,7 +139,7 @@ export class GenericRepository<D, T extends IMarshable<T>> implements IRepositor
     };
 
     async hasByQuery(query: any): Promise<boolean> {
-        const prodDoc: D  | null= await this.model.findOne(query);
+        const prodDoc: D | null = await this.model.findOne(query);
         if (!prodDoc) return false;
         return true;
     };

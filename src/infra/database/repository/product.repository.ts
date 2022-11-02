@@ -79,7 +79,7 @@ export class ProductRepository implements IRepository<Product> {
      * @returns 
      */
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
-        let arrayDoc: ProductDocument[];
+        let arrayDoc: any[];
         if (page && limit && orderByField) {
             // All with pagination and sorting
             let mysort = {};
@@ -93,31 +93,43 @@ export class ProductRepository implements IRepository<Product> {
             arrayDoc = await this.productModel.find(query).exec();
         }
 
-        return arrayDoc;
+        //Convertion
+        let resultArray: any[] = [];
+        arrayDoc.forEach((element) => {
+            //Extract doc object as result and add 'id' to result
+            let itemResult: any = element;
+            if (element !== null && element._doc && element._doc._id) {
+                const {_id, ...data} = element._doc; //remove '_id'
+                itemResult = { ...data, "id": element._doc._id.toString() }
+            }
+            resultArray.push(itemResult)
+        });
+
+        return resultArray;
     };
 
     /**
      * getById
      * If it does not find it, it returns null
      */
-    async getById(id: string, fieldsToExclude?: any): Promise<Product> {
-        if (fieldsToExclude) {
-            const prodDoc: ProductDocument | null = await this.productModel.findById(id, fieldsToExclude).exec();
-            const objCasted: Product = new Product(prodDoc);
-            return objCasted;
-        }
+    async getById(id: string): Promise<Product> {
         const prodDoc: ProductDocument | null = await this.productModel.findById(id).exec();
         const objCasted: Product = new Product(prodDoc);
         return objCasted;
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: any = await this.productModel.findOne(query, fieldsToExclude);
-        let onlyEntityDoc: any;
-        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
-            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+
+        const document: any | null = await this.productModel.findOne(query, fieldsToExclude);
+
+        //Extract doc object as result and add 'id' to result
+        let result: any = document;
+        if (document !== null && document._doc && document._doc._id) {
+            const {_id, ...data} = document._doc; //remove '_id'
+            result = { ...data, "id": document._doc._id.toString() } //add 'id'
         }
-        return onlyEntityDoc;
+
+        return result;
     };
 
     async getByQuery(query: any): Promise<Product> {

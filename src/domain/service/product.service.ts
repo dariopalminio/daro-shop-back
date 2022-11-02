@@ -65,11 +65,13 @@ export class ProductService implements IProductService<Product> {
 
     const docs: any[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
     
+    //Convert to ProductOfCatalog array
     let products: ProductOfCatalog[] = [];
     docs.forEach(element => products.push(
         new ProductOfCatalog(element)
     ));
     
+    //compose result
     let filtered: PaginatedResult = new PaginatedResult();
     const count = await this.productRepository.count(queryQuilter);
     filtered.list = products;
@@ -92,6 +94,7 @@ export class ProductService implements IProductService<Product> {
   };
 
   async getDetailById(id: string): Promise<any> {
+    console.log("--------->service getDetailById...:");
     const fieldsToExclude = {
       netCost: 0,
       ivaAmountOnCost: 0,
@@ -100,6 +103,7 @@ export class ProductService implements IProductService<Product> {
       ivaAmountOnPrice: 0,
     };
     let obj: any = await this.productRepository.getByQueryExcludingFields({_id: id}, fieldsToExclude);
+    console.log("--------->service getDetailById...obj:", obj);
     if (!obj || obj === null) throw new ProductNotFoundError();
     return obj;
   };

@@ -15,7 +15,7 @@ export class UserRepository implements IRepository<User> {
         @InjectModel('User')
         private readonly userModel: Model<UserDocument>,
     ) { }
-   
+
 
     async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
         let arrayDoc: UserDocument[];
@@ -24,7 +24,7 @@ export class UserRepository implements IRepository<User> {
             // All with pagination and sorting
             const direction: number = isAscending ? 1 : -1;
             //const mysort = [[orderByField, direction]];
-            const mysort: Record<string, | 1 | -1 | {$meta: "textScore"}> = { reference: 1 };
+            const mysort: Record<string, | 1 | -1 | { $meta: "textScore" }> = { reference: 1 };
             const gap: number = (page - 1) * limit;
             arrayDoc = await this.userModel.find({}).sort(mysort).skip(gap).limit(limit).exec();
             //similar to arrayDoc.slice((page - 1) * limit, page * limit);
@@ -43,7 +43,7 @@ export class UserRepository implements IRepository<User> {
             // All with pagination and sorting
             const direction: number = isAscending ? 1 : -1;
             //const mysort = [[orderByField, direction]];
-            const mysort: Record<string, | 1 | -1 | {$meta: "textScore"}> = { reference: 1 };
+            const mysort: Record<string, | 1 | -1 | { $meta: "textScore" }> = { reference: 1 };
             const gap: number = (page - 1) * limit;
             arrayDoc = await this.userModel.find(query).sort(mysort).skip(gap).limit(limit).exec();
         } else {
@@ -55,13 +55,13 @@ export class UserRepository implements IRepository<User> {
     }
 
     async findExcludingFields(query: any, fieldsToExclude: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<any[]> {
-        let arrayDoc: UserDocument[];
+        let arrayDoc: any[];
 
         if (page && limit && orderByField) {
             // All with pagination and sorting
             const direction: number = isAscending ? 1 : -1;
-            let mysort = {}; 
-            mysort[orderByField] = isAscending? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
+            let mysort = {};
+            mysort[orderByField] = isAscending ? 1 : -1; //Record<string, | 1 | -1 | {$meta: "textScore"}>
             const gap: number = (page - 1) * limit;
             arrayDoc = await this.userModel.find(query, fieldsToExclude).sort(mysort).skip(gap).limit(limit).exec();
         } else {
@@ -69,16 +69,22 @@ export class UserRepository implements IRepository<User> {
             arrayDoc = await this.userModel.find(query).exec();
         }
 
+        //Convertion
+        let resultArray: any[] = [];
+        arrayDoc.forEach((element) => {
+            //Extract doc object as result and add 'id' to result
+            let itemResult: any = element;
+            if (element !== null && element._doc && element._doc._id) {
+                const {_id, ...data} = element._doc; //remove '_id'
+                itemResult = { ...data, "id": element._doc._id.toString() }; //add 'id'
+            }
+            resultArray.push(itemResult)
+        });
+
         return arrayDoc;
     };
 
-    async getById(id: string, fieldsToExclude?: any): Promise<User> {
-        if (fieldsToExclude) {
-            const userDoc: UserDocument | null = await this.userModel.findById(id, fieldsToExclude).exec();
-            //Doc has id name "_id"
-            const objCasted: User = new User(userDoc);
-            return objCasted;
-        }
+    async getById(id: string): Promise<User> {
         const userDoc: UserDocument | null = await this.userModel.findById(id).exec();
         //Doc has id name "_id"
         const objCasted: User = new User(userDoc);
@@ -86,28 +92,29 @@ export class UserRepository implements IRepository<User> {
     };
 
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
-        const entryDoc: any = await this.userModel.findOne(query, fieldsToExclude);
-        let onlyEntityDoc: any;
-        if (entryDoc && entryDoc._doc && entryDoc._doc._id) {
-            onlyEntityDoc = { ...entryDoc._doc, "id": entryDoc._doc._id }
+        const entryDoc: any | null = await this.userModel.findOne(query, fieldsToExclude);
+        let onlyEntityDoc: any = entryDoc;
+        if (entryDoc !== null && entryDoc._doc && entryDoc._doc._id) {
+            const {_id, ...data} = entryDoc._doc; //remove '_id'
+            onlyEntityDoc = { ...data, "id": entryDoc._doc._id.toString() }
         }
         return onlyEntityDoc;
     };
 
     async getByQuery(query: any): Promise<User> {
-        const userDoc: UserDocument | null =  await this.userModel.findOne(query);
+        const userDoc: UserDocument | null = await this.userModel.findOne(query);
         const objCasted: User = new User(userDoc);
         return objCasted;
     }
 
     async hasById(id: string): Promise<boolean> {
-        const userDoc: UserDocument | null= await this.userModel.findById(id).exec();
+        const userDoc: UserDocument | null = await this.userModel.findById(id).exec();
         if (!userDoc) return false;
         return true;
     }
 
     async hasByQuery(query: any): Promise<boolean> {
-        const userDoc: UserDocument | null =  await this.userModel.findOne(query);
+        const userDoc: UserDocument | null = await this.userModel.findOne(query);
         if (!userDoc) return false;
         return true;
     }
@@ -120,9 +127,9 @@ export class UserRepository implements IRepository<User> {
     }
 
     async updateById(entityId: string, entity: User): Promise<boolean> {
-        const unmarshalled: any = entity.convertToAny(); 
-        const {id, ...values} = unmarshalled;
-        const docUpdated: UserDocument | null = await this.userModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
+        const unmarshalled: any = entity.convertToAny();
+        const { id, ...values } = unmarshalled;
+        const docUpdated: UserDocument | null = await this.userModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
@@ -138,14 +145,14 @@ export class UserRepository implements IRepository<User> {
     async update(query: any, valuesToSet: any): Promise<boolean> {
         //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
         //Replace update() with updateOne(), updateMany(), or replaceOne()
-        const docUpdated: UserDocument | null = await this.userModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
+        const docUpdated: UserDocument | null = await this.userModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
 
     async delete(id: string): Promise<boolean> {
         //Replace remove() with deleteOne() or deleteMany().
-        const docDeleted = await this.userModel.findByIdAndDelete(id, {useFindAndModify: false}).exec();
+        const docDeleted = await this.userModel.findByIdAndDelete(id, { useFindAndModify: false }).exec();
         return !!docDeleted; //doc is not null
     };
 
@@ -163,8 +170,8 @@ export class UserRepository implements IRepository<User> {
         return entityArray;
     };
 
-    async count(query: any): Promise<number>{
+    async count(query: any): Promise<number> {
         return await this.userModel.count(query,);
-     };
+    };
 
 }
