@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import * as pack from "../../../package.json"
+import { GlobalConfigSuperclass } from './global-config-superclass';
 
 require('dotenv').config();
 
@@ -8,12 +9,12 @@ require('dotenv').config();
  * GlobalConfigImpl
  */
 @Injectable()
-export class GlobalConfigImpl implements IGlobalConfig{
+export class GlobalConfigImpl extends GlobalConfigSuperclass implements IGlobalConfig{
     
-    variables: Map<string, any> = new Map();
 
     constructor(
     ) { 
+        super();
         this.loadDefaultValues();
     };
 
@@ -83,18 +84,6 @@ export class GlobalConfigImpl implements IGlobalConfig{
         this.set('Keycloak_path_users',  `${APIEndpoints_auth}/auth/admin/realms/${Keycloak_realm}/users`);
         this.set('Keycloak_path_token', `${APIEndpoints_auth}/auth/realms/${Keycloak_realm}/protocol/openid-connect/token`);
 
-    };
-
-    get<R>(key: string): R {
-        return this.variables.get(key) as R;
-    };
-
-    set<R>(key: string, value: R): void {
-        this.variables.set(key,value);
-    };
-
-    stringify(): string {
-        return JSON.stringify(Object.fromEntries(this.variables)); 
     };
 
 };

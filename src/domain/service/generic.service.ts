@@ -1,6 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { ICategoryService } from 'src/domain/incoming/category.service.interface';
 import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { DomainError, DuplicateError, FormatError, NotFoundError } from '../error/domain-error';
 import { ErrorCode } from '../error/error-code.enum';
@@ -18,7 +16,6 @@ import { IPersistentAggregateService } from './interface/persistent.aggregate.in
  * The service only accesses the database or external services through the infrastructure using interfaces.
  * A service is an orchestrator of domain objects to accomplish a goal.
  */
-@Injectable()
 export class GenericService<D, T> implements IPersistentAggregateService<T> {
 
     constructor(
