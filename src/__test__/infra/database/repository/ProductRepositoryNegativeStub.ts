@@ -34,7 +34,7 @@ export class ProductRepositoryNegativeStub implements IRepository<Product> {
         throw new Error();
     };
     async updateById(id: string, product: Product): Promise<boolean> {
-        return false;
+        throw new Error();
     };
     async update(query: any, valuesToSet: any): Promise<boolean> {
         return false;

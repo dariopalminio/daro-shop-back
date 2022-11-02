@@ -126,15 +126,9 @@ export class UserController {
   @Put('update')
   async updateUser(@Res() res, @Body() userDTO: UserDTO, @Query('id') id) {
     if (!id) throw new BadRequestException('id not specified!');
-    let user: User;
-    try {
-      user = new User(userDTO);
-    } catch (error) {
-      throw new BadRequestException('User data malformed:' + error.message);
-    }
     let updatedUser: any;
     try {
-       updatedUser = await this.userService.updateById(id, user);
+       updatedUser = await this.userService.updateById(id, userDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     }

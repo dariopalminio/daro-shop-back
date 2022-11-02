@@ -160,7 +160,7 @@ export class AuthService implements IAuthService {
       if (userId === undefined) throw new UserNotFoundError('User with out Id.');
 
       const updatedOk: boolean = await this.userService.updateById(userId, user);
-      if (!updatedOk) throw new Error("Can not save generated verification code!");
+      if (updatedOk === false) throw new Error("Can not save generated verification code!");
 
       const token: string = encodeToken(startConfirmEmailData.email, newVerificationCode);
       const verificationLink = createTokenLink(startConfirmEmailData.verificationPageLink, token);
@@ -208,7 +208,7 @@ export class AuthService implements IAuthService {
     user.setVerificationCode(discardVerificationCode); //verification code to invalidate future uses
     const updatedOk: boolean = await this.userService.updateById(userId, user);
 
-    if (!updatedOk) {
+    if (updatedOk === false) {
       console.log("Can not update email verified in data base for user:", user);
     }
 
@@ -298,7 +298,7 @@ export class AuthService implements IAuthService {
       if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
 
       const updatedOk: boolean = await this.userService.updateById(userId, user);
-      if (!updatedOk) throw new Error("Can not save generated verification code!");
+      if (updatedOk === false) throw new Error("Can not save generated verification code!");
 
       //send email with link and verification code
       const token: string = encodeToken(startRecoveryData.email, newVerificationCode);
@@ -346,7 +346,7 @@ export class AuthService implements IAuthService {
     user.setPassword(newPasswordEncrypted);
     const updatedOk: boolean = await this.userService.updateById(userId, user);
 
-    if (!updatedOk) {
+    if (updatedOk === false) {
       console.log("Can not to reset verification code in data base for user:", user);
     }
 

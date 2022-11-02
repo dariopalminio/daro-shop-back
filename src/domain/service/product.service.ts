@@ -64,19 +64,19 @@ export class ProductService implements IProductService<Product> {
     else queryQuilter = { category: category, active: "true" };
 
     const docs: any[] = await this.productRepository.findExcludingFields(queryQuilter, fieldsToExclude, page, limit, orderByField, isAscending);
-    
+
     //Convert to ProductOfCatalog array
     let products: ProductOfCatalog[] = [];
     docs.forEach(element => products.push(
-        new ProductOfCatalog(element)
+      new ProductOfCatalog(element)
     ));
-    
+
     //compose result
     let filtered: PaginatedResult = new PaginatedResult();
     const count = await this.productRepository.count(queryQuilter);
     filtered.list = products;
-    filtered.page = page? page : 1;
-    filtered.limit = limit? limit : count;
+    filtered.page = page ? page : 1;
+    filtered.limit = limit ? limit : count;
     filtered.count = count;
 
     return filtered;
@@ -103,10 +103,10 @@ export class ProductService implements IProductService<Product> {
       ivaAmountOnPrice: 0,
     };
 
-    let obj: any = await this.productRepository.getByQueryExcludingFields({_id: id}, fieldsToExclude);
-    
+    let obj: any = await this.productRepository.getByQueryExcludingFields({ _id: id }, fieldsToExclude);
+
     if (!obj || obj === null) throw new ProductNotFoundError();
-    
+
     return obj;
   };
 
@@ -124,7 +124,7 @@ export class ProductService implements IProductService<Product> {
       if (error.code && error.code === 11000) {
         throw new ProductDuplicateError(`Database error: Duplicate key error collection or index problem. ${error.message}`);
       }
-      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, '', error); 
+      throw new DomainError(ErrorCode.INTERNAL_SERVER_ERROR, error.message, '', error);
     }
     return entityNew;
   };
@@ -143,7 +143,7 @@ export class ProductService implements IProductService<Product> {
     } catch (error) {
       throw new ProductFormatError('Product data malformed:' + error.message);
     }
-console.log("modifiedProduct:",modifiedProduct);
+
     const found: boolean = await this.productRepository.hasById(id);
     if (!found) {
       throw new ProductNotFoundError();

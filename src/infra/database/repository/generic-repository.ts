@@ -1,17 +1,20 @@
 import { Model } from 'mongoose';
-import { FormatError, IdFormatError } from 'src/domain/error/domain-error';
+import { FormatError, IdFormatError, NotFoundError } from 'src/domain/error/domain-error';
 import { IEntityFactory } from 'src/domain/model/entity-factory.interface';
 import { IMarshable } from 'src/domain/model/marshable.interface';
 import { IRepository } from '../../../domain/outgoing/repository.interface';
 
 /**
  * Product Mongo repository implementation
+ * 
+ * D: Mongoose Document type
+ * T: Entity class type
  */
 export class GenericRepository<D, T extends IMarshable<T>> implements IRepository<T> {
 
     constructor(
-        private readonly model: Model<D>,
-        private factory: IEntityFactory<T>
+        private readonly model: Model<D>, // Model Schema
+        private factory: IEntityFactory<T> // Entity factory to convert from mongo to Domain class
     ) { }
 
     async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Array<T>> {
@@ -222,6 +225,7 @@ export class GenericRepository<D, T extends IMarshable<T>> implements IRepositor
             const unmarshalled: any = entity.convertToAny();
             const { id, ...values } = unmarshalled;
             const docUpdated: D | null = await this.model.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
+            if (docUpdated === null) throw new NotFoundError('', `The ${entityId} not found or problem to save changes!`);
             return !!docUpdated;
         } catch (error) {
             if ((error.name === 'CastError') && (error.path === '_id')) {

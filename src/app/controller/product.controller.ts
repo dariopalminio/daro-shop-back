@@ -14,6 +14,7 @@ import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ProductDTO } from '../dto/product.dto';
 import { AppErrorHandler } from '../error/app-error-handler';
+import { IProduct } from 'src/domain/model/product/product.interface';
 
 /**
  * Product controller
@@ -191,7 +192,7 @@ export class ProductController {
     if (!id) {
       throw new BadRequestException('Param id not specified!');
     }
-    let updatedProduct: boolean;
+    let updatedProduct: any;
     try {
       updatedProduct = await this.productService.updateById(id, productDTO);
     } catch (error) {

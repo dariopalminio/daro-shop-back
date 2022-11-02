@@ -4,7 +4,7 @@ import { DomainError } from 'src/domain/error/domain-error';
 import { IPaymentMethodService } from 'src/domain/incoming/payment-method.service.interface';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
 import { IPaymentMethod } from '../model/payment/payment-method.interface';
-import { PaymentMethodFormatError } from '../error/payment-method.errors';
+import { PaymentMethodFormatError, PaymentMethodNotFoundError } from '../error/payment-method.errors';
 
 
 /**
@@ -68,8 +68,20 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
     return deleted;
   };
 
-  async updateById(id: string, entity: PaymentMethod): Promise<boolean> {
-    const updated: boolean = await this.paymentMethodRepo.updateById(id, entity);
+  async updateById<IPaymentMethod>(id: string, entityDTO: IPaymentMethod): Promise<boolean> {
+    let paymentMethod: PaymentMethod;
+    try {
+      paymentMethod = new PaymentMethod(entityDTO);
+    } catch (error) {
+      throw new PaymentMethodFormatError('Payment Method data malformed:' + error.message, error);
+    }
+
+    const found: boolean = await this.paymentMethodRepo.hasById(id);
+    if (!found) {
+      throw new PaymentMethodNotFoundError();
+    }
+
+    const updated: boolean = await this.paymentMethodRepo.updateById(id, paymentMethod);
     return updated;
   };
 

@@ -89,10 +89,16 @@ export class UserService implements IUserService<User> {
     return deleted;
   };
 
-  async updateById(id: string, user: User): Promise<boolean> {
+  async updateById<IUser>(id: string, userDTO: IUser): Promise<boolean> {
+    let userToUpdate: User;
+    try {
+      userToUpdate = new User(userDTO);
+    } catch (error) {
+      throw new UserFormatError('User data malformed:' + error.message);
+    }
     const found: boolean = await this.userRepository.hasById(id);
     if (!found) throw new UserNotFoundError();
-    const updated: boolean = await this.userRepository.updateById(id, user);
+    const updated: boolean = await this.userRepository.updateById(id, userToUpdate);
     return updated;
   };
 

@@ -111,7 +111,7 @@ export class ShippingPriceController {
       throw new BadRequestException('ShippingPrice data malformed:' + error.message);
     }
     const query = { location: shippingPriceDTO.location };
-    let updatedObj;
+    let updatedObj: any;
     try {
       updatedObj = await this.shippingPriceService.update(query, shippingPrice);
     } catch (error) {

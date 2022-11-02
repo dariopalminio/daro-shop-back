@@ -69,10 +69,18 @@ export class GenericService<D, T> implements IPersistentAggregateService<T> {
         return deleted;
     };
 
-    async updateById(id: string, category: T): Promise<boolean> {
+    async updateById<R>(id: string, entityDTO: R): Promise<boolean> {
+
+        let entity: T;
+        try {
+            entity = this.factory.createInstance(entityDTO);
+        } catch (error) {
+          throw new FormatError('','Entity data malformed:' + error.message, error);
+        }
+
         const found: boolean = await this.repository.hasById(id);
         if (!found) throw new NotFoundError('The updateById method did not find the indicated entity.');
-        const updatedProduct: boolean = await this.repository.updateById(id, category);
+        const updatedProduct: boolean = await this.repository.updateById(id, entity);
         return updatedProduct;
     };
 

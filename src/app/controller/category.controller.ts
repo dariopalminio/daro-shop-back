@@ -118,15 +118,17 @@ export class CategoryController {
   @Put('update')
   async updateCategory(@Res() res, @Body() categoryDTO: CategoryDTO, @Query('id') id) {
     if (!id) throw new BadRequestException('Param id not specified!');
+    /*
     let category: Category;
     try {
       category = new Category(categoryDTO);
     } catch (error) {
       throw new BadRequestException('Category data malformed: ' + error.message);
     }
-    let updatedCategory: boolean;
+    */
+    let updatedCategory: any;
     try {
-      updatedCategory = await this.categoryService.updateById(id, category);
+      updatedCategory = await this.categoryService.updateById(id, categoryDTO);
     } catch (error) {
       throw AppErrorHandler.createError(error);
     };
