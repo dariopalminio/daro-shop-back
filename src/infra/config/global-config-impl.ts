@@ -57,7 +57,6 @@ export class GlobalConfigImpl implements IGlobalConfig{
         this.set('EMAIL_FROM', process.env.SERVER_BFF_EMAIL_FROM as string);
         this.set('EMAIL_APP_NAME', process.env.SERVER_BFF_EMAIL_APP_NAME as string);
 
-        this.set('PUBLIC_KEY', process.env.SERVER_BFF_KEYCLOAK_PUBLIC_KEY as string);
 
         this.set('AUTH_PRIVATE_KEY', process.env.SERVER_BFF_AUTH_PRIVATE_KEY as string);
         this.set('AUTH_PUBLIC_KEY', process.env.SERVER_BFF_AUTH_PUBLIC_KEY as string);
