@@ -76,3 +76,9 @@ export class InvalidVerificationCodeError extends DomainError {
         Error.captureStackTrace(this, this.constructor);
     }
 };
+
+
+//ConfirmationTimeExpiredError: Confirm time expired
+//FailedLoginAttemptsError: failed login attempts happen when someone tries to log in the site using the wrong credentials by 3 attempts
+//Unconfirmed account error
+//RecoveryTimeExpired
