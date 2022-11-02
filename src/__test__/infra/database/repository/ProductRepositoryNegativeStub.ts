@@ -16,13 +16,13 @@ export class ProductRepositoryNegativeStub implements IRepository<Product> {
         return [];
     }
     async getById(id: string): Promise<Product> {
-        return null;
+        throw new Error();
     };
     async getByQueryExcludingFields(query: any, fieldsToExclude: any): Promise<any> {
         return null;
     };
     async getByQuery(query: any): Promise<Product> {
-        return null;
+         throw new Error();
     }
     async hasById(id: string): Promise<boolean> {
         return false;
@@ -31,7 +31,7 @@ export class ProductRepositoryNegativeStub implements IRepository<Product> {
         return false;
     }
     async create<IProduct>(product: IProduct): Promise<Product> {
-        return null;
+        throw new Error();
     };
     async updateById(id: string, product: Product): Promise<boolean> {
         return false;

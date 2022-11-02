@@ -126,11 +126,11 @@ export class PaymentMethod extends Entity implements IValidatable, IMarshable<Pa
         return this.meta;
     };
 
-    public getUpdatedAt(): Date {
+    public getUpdatedAt(): Date | undefined {
         return this.updatedAt;
     };
 
-    public getCreatedAt(): Date {
+    public getCreatedAt(): Date | undefined {
         return this.createdAt;
     };
 

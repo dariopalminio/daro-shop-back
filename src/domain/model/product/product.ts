@@ -288,11 +288,11 @@ export class Product extends Entity implements IValidatable, IMarshable<Product>
         return this.active;
     };
 
-    public getUpdatedAt(): Date {
+    public getUpdatedAt(): Date | undefined {
         return this.updatedAt;
     };
 
-    public getCreatedAt(): Date {
+    public getCreatedAt(): Date | undefined {
         return this.createdAt;
     };
 

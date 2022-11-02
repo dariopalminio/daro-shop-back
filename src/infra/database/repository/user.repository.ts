@@ -74,12 +74,12 @@ export class UserRepository implements IRepository<User> {
 
     async getById(id: string, fieldsToExclude?: any): Promise<User> {
         if (fieldsToExclude) {
-            const userDoc: UserDocument = await this.userModel.findById(id, fieldsToExclude).exec();
+            const userDoc: UserDocument | null = await this.userModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
             const objCasted: User = new User(userDoc);
             return objCasted;
         }
-        const userDoc: UserDocument = await this.userModel.findById(id).exec();
+        const userDoc: UserDocument | null = await this.userModel.findById(id).exec();
         //Doc has id name "_id"
         const objCasted: User = new User(userDoc);
         return objCasted;
@@ -95,19 +95,19 @@ export class UserRepository implements IRepository<User> {
     };
 
     async getByQuery(query: any): Promise<User> {
-        const userDoc: UserDocument =  await this.userModel.findOne(query);
+        const userDoc: UserDocument | null =  await this.userModel.findOne(query);
         const objCasted: User = new User(userDoc);
         return objCasted;
     }
 
     async hasById(id: string): Promise<boolean> {
-        const userDoc: UserDocument = await this.userModel.findById(id).exec();
+        const userDoc: UserDocument | null= await this.userModel.findById(id).exec();
         if (!userDoc) return false;
         return true;
     }
 
     async hasByQuery(query: any): Promise<boolean> {
-        const userDoc: UserDocument =  await this.userModel.findOne(query);
+        const userDoc: UserDocument | null =  await this.userModel.findOne(query);
         if (!userDoc) return false;
         return true;
     }
@@ -122,7 +122,7 @@ export class UserRepository implements IRepository<User> {
     async updateById(entityId: string, entity: User): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny(); 
         const {id, ...values} = unmarshalled;
-        const docUpdated: UserDocument = await this.userModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
+        const docUpdated: UserDocument | null = await this.userModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 
@@ -138,7 +138,7 @@ export class UserRepository implements IRepository<User> {
     async update(query: any, valuesToSet: any): Promise<boolean> {
         //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
         //Replace update() with updateOne(), updateMany(), or replaceOne()
-        const docUpdated: UserDocument = await this.userModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
+        const docUpdated: UserDocument | null = await this.userModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

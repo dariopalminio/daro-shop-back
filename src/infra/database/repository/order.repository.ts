@@ -79,7 +79,7 @@ export class OrderRepository implements IRepository<Order> {
     };
 
     async getById(id: string, fieldsToExclude?: any): Promise<Order> {
-        const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
+        const entryDoc: OrderDocument | null = await this.entityModel.findById(id).exec();
         //Doc has id name "_id"
         const objCasted: Order = new Order(entryDoc);
         return objCasted;
@@ -95,19 +95,19 @@ export class OrderRepository implements IRepository<Order> {
     };
 
     async getByQuery(query: any): Promise<Order> {
-        const entryDoc: OrderDocument = await this.entityModel.findOne(query);
+        const entryDoc: OrderDocument | null = await this.entityModel.findOne(query);
         const objCasted: Order = new Order(entryDoc);
         return objCasted;
     }
 
     async hasById(id: string): Promise<boolean> {
-        const entryDoc: OrderDocument = await this.entityModel.findById(id).exec();
+        const entryDoc: OrderDocument | null = await this.entityModel.findById(id).exec();
         if (!entryDoc) return false;
         return true;
     }
 
     async hasByQuery(query: any): Promise<boolean> {
-        const entryDoc: OrderDocument = await this.entityModel.findOne(query);
+        const entryDoc: OrderDocument | null = await this.entityModel.findOne(query);
         if (!entryDoc) return false;
         return true;
     }
@@ -121,12 +121,12 @@ export class OrderRepository implements IRepository<Order> {
     async updateById(entityId: string, entity: Order): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny();
         const { id, ...values } = unmarshalled;
-        const docUpdated: OrderDocument = await this.entityModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
+        const docUpdated: OrderDocument | null = await this.entityModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
     async update(query: any, valuesToSet: any): Promise<boolean> {
-        const docUpdated: OrderDocument = await this.entityModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
+        const docUpdated: OrderDocument | null = await this.entityModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 

@@ -169,11 +169,11 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
         return this.addresses;
     };
 
-    public getUpdatedAt(): Date {
+    public getUpdatedAt(): Date | undefined {
         return this.updatedAt;
     };
 
-    public getCreatedAt(): Date {
+    public getCreatedAt(): Date | undefined {
         return this.createdAt;
     };
 

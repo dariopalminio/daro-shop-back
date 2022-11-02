@@ -75,12 +75,12 @@ export class ProfileRepository implements IRepository<Profile> {
 
     async getById(id: string, fieldsToExclude?: any): Promise<Profile> {
         if (fieldsToExclude) {
-            const profileDoc: ProfileDocument = await this.profileModel.findById(id, fieldsToExclude).exec();
+            const profileDoc: ProfileDocument | null = await this.profileModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
             const objCasted: Profile = new Profile(profileDoc);
             return objCasted;
         }
-        const profileDoc: ProfileDocument = await this.profileModel.findById(id).exec();
+        const profileDoc: ProfileDocument | null = await this.profileModel.findById(id).exec();
         //Doc has id name "_id"
         const objCasted: Profile = new Profile(profileDoc);
         return objCasted;
@@ -96,19 +96,19 @@ export class ProfileRepository implements IRepository<Profile> {
     };
 
     async getByQuery(query: any): Promise<Profile> {
-        const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
+        const profileDoc: ProfileDocument | null =  await this.profileModel.findOne(query);
         const objCasted: Profile = new Profile(profileDoc);
         return objCasted;
     }
 
     async hasById(id: string): Promise<boolean> {
-        const profileDoc: ProfileDocument = await this.profileModel.findById(id).exec();
+        const profileDoc: ProfileDocument | null = await this.profileModel.findById(id).exec();
         if (!profileDoc) return false;
         return true;
     }
 
     async hasByQuery(query: any): Promise<boolean> {
-        const profileDoc: ProfileDocument =  await this.profileModel.findOne(query);
+        const profileDoc: ProfileDocument | null =  await this.profileModel.findOne(query);
         if (!profileDoc) return false;
         return true;
     }
@@ -122,7 +122,7 @@ export class ProfileRepository implements IRepository<Profile> {
     async updateById(entityId: string, entity: Profile): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny(); 
         const {id, ...values} = unmarshalled;
-        const docUpdated: ProfileDocument = await this.profileModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
+        const docUpdated: ProfileDocument | null = await this.profileModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 
@@ -138,7 +138,7 @@ export class ProfileRepository implements IRepository<Profile> {
     async update(query: any, valuesToSet: any): Promise<boolean> {
         //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
         //Replace update() with updateOne(), updateMany(), or replaceOne()
-        const docUpdated: ProfileDocument = await this.profileModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
+        const docUpdated: ProfileDocument | null = await this.profileModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

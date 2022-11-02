@@ -75,12 +75,12 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
 
     async getById(id: string, fieldsToExclude?: any): Promise<ShippingPrice> {
         if (fieldsToExclude) {
-            const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id, fieldsToExclude).exec();
+            const profileDoc: ShippingPriceDocument | null = await this.shippingPriceModel.findById(id, fieldsToExclude).exec();
             //Doc has id name "_id"
             const objCasted: ShippingPrice = new ShippingPrice(profileDoc);
             return objCasted;
         }
-        const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id).exec();
+        const profileDoc: ShippingPriceDocument | null = await this.shippingPriceModel.findById(id).exec();
         //Doc has id name "_id"
         const objCasted: ShippingPrice = new ShippingPrice(profileDoc);
         return objCasted;
@@ -97,19 +97,19 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     };
 
     async getByQuery(query: any): Promise<ShippingPrice> {
-        const doc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
+        const doc: ShippingPriceDocument | null =  await this.shippingPriceModel.findOne(query);
         const objCasted: ShippingPrice = new ShippingPrice(doc);
         return objCasted;
     }
 
     async hasById(id: string): Promise<boolean> {
-        const profileDoc: ShippingPriceDocument = await this.shippingPriceModel.findById(id).exec();
+        const profileDoc: ShippingPriceDocument | null = await this.shippingPriceModel.findById(id).exec();
         if (!profileDoc) return false;
         return true;
     }
 
     async hasByQuery(query: any): Promise<boolean> {
-        const profileDoc: ShippingPriceDocument =  await this.shippingPriceModel.findOne(query);
+        const profileDoc: ShippingPriceDocument | null =  await this.shippingPriceModel.findOne(query);
         if (!profileDoc) return false;
         return true;
     }
@@ -123,7 +123,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     async updateById(entityId: string, entity: ShippingPrice): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny(); 
         const {id, ...values} = unmarshalled;
-        const docUpdated: ShippingPriceDocument = await this.shippingPriceModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
+        const docUpdated: ShippingPriceDocument | null = await this.shippingPriceModel.findByIdAndUpdate(entityId, {...values, updatedAt: new Date()}, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 
@@ -139,7 +139,7 @@ export class ShippingPriceRepository implements IRepository<ShippingPrice> {
     async update(query: any, valuesToSet: any): Promise<boolean> {
         //DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
         //Replace update() with updateOne(), updateMany(), or replaceOne()
-        const docUpdated: ShippingPriceDocument = await this.shippingPriceModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
+        const docUpdated: ShippingPriceDocument | null = await this.shippingPriceModel.findOneAndUpdate(query, valuesToSet, {useFindAndModify: false}).exec();
         return !!docUpdated;
     };
 

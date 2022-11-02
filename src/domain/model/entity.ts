@@ -12,10 +12,9 @@ export class Entity {
         if (id !== undefined) this.id = id;
     }
 
-    public getId(): string {
+    public getId(): string | undefined{
         return this.id;
     }
-
 
     public equals(object?: Entity): boolean {
         if (object == null || object == undefined) {

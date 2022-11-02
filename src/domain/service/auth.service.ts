@@ -20,7 +20,7 @@ import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 import { InvalidVerificationCodeError } from 'src/domain/error/auth-errors';
-import { UserDuplicateError, UserFormatError } from 'src/domain/error/user-errors';
+import { UserDuplicateError, UserFormatError, UserNotFoundError } from 'src/domain/error/user-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -90,20 +90,26 @@ export class AuthService implements IAuthService {
 
     userNew = await this.userService.create(newObj);
 
-    let userCreated: User;
+    let userCreated: User | null = null;
+    let payload: PayloadType | null = null;
     if (userNew) {
       try {
         userCreated = await this.userService.getUserJustRegister(userRegisterData.email);
       } catch (error) {
         console.log("Cannot retrieve created user in registration process!");
-        return { message: 'Cannot obtain user from data base!' }
+        throw new UserNotFoundError('Cannot obtain user from data base!');
       }
-      if (!userCreated)
-        return { message: 'Cannot obtain user from data base!' }
     }
 
-    const payload: PayloadType = {
-      id: userCreated.getId(),
+    if (!userCreated || userCreated === null)
+      return { message: 'Cannot obtain user from data base!' }
+
+    const userId: string | undefined = userCreated.getId();
+
+    if (userId === undefined) throw new UserNotFoundError('User Id is undefined!');
+
+    payload = {
+      id: userId ? userId : '',
       typ: "Bearer",
       roles: userCreated.getRoles(),
       email_verified: userCreated.getVerified(),
@@ -187,18 +193,22 @@ export class AuthService implements IAuthService {
    */
   async confirmAccount(verificationCodeData: VerificationCodeDataType, lang: string): Promise<any> {
 
-    let user: User = null;
+    let user: User;
     try {
       user = await this.verificateToken(verificationCodeData.token);
     } catch (error) {
       throw new DomainError(ErrorCode.BAD_REQUEST, error.message, error);
     };
 
+    const userId: string | undefined = user.getId();
+
+    if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+
     //Update in database
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
     user.setVerified(true);
     user.setVerificationCode(discardVerificationCode); //verification code to invalidate future uses
-    const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
+    const updatedOk: boolean = await this.userService.updateById(userId, user);
 
     if (!updatedOk) {
       console.log("Can not update email verified in data base for user:", user);
@@ -228,8 +238,8 @@ export class AuthService implements IAuthService {
       //set params to template
       const paramsRegisterEnd = { name: name, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //Send email
-      const subject: string =  `[${this.globalConfig.get<string>('COMPANY_NAME')}] Registration successful`;
-    
+      const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Registration successful`;
+
       const emailResponse: any = this.sender.sendEmailWithTemplate(subject, email, "register-end", paramsRegisterEnd, lang);
       return emailResponse;
     } catch (error) {
@@ -277,15 +287,18 @@ export class AuthService implements IAuthService {
       user = await this.userService.getByQuery({ userName: startRecoveryData.userName });
       if (!user) throw new Error("User not found!");
     } catch (error) {
-      throw new DomainError(ErrorCode.NOT_FOUND, error.message, error);
+      throw new UserNotFoundError(error.message, error);
     };
 
     try {
       user.setVerificationCode(newVerificationCode);
       user.setStartVerificationCode(new Date());
 
-      const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
-      if (!updatedOk) throw new Error( "Can not save generated verification code!");
+      const userId: string | undefined = user.getId();
+      if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+
+      const updatedOk: boolean = await this.userService.updateById(userId, user);
+      if (!updatedOk) throw new Error("Can not save generated verification code!");
 
       //send email with link and verification code
       const token: string = encodeToken(startRecoveryData.email, newVerificationCode);
@@ -295,7 +308,7 @@ export class AuthService implements IAuthService {
       const params = { recoverylink: recoveryPageLink, company: this.globalConfig.get<string>('COMPANY_NAME') };
       //send email
       const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Recover your password`;
-      
+
       const emailResponse: any = await this.sender.sendEmailWithTemplate(subject, startRecoveryData.email, "recovery-start", params, lang);
       return {
         isSuccess: true,
@@ -316,7 +329,7 @@ export class AuthService implements IAuthService {
    */
   async recoveryUpdatePassword(recoveryUpdateData: RecoveryUpdateDataType, lang: string): Promise<any> {
 
-    let user: User = null;
+    let user: User;
 
     user = await this.verificateToken(recoveryUpdateData.token);
 
@@ -324,11 +337,14 @@ export class AuthService implements IAuthService {
     const salt = await bcrypt.genSalt(10);
     const newPasswordEncrypted: string = await bcrypt.hash(recoveryUpdateData.password, salt);
 
+    const userId: string | undefined = user.getId();
+    if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+
     //Update in database
     const discardVerificationCode = generateToken(); //generate verification code to invalidate future uses
     user.setVerificationCode(discardVerificationCode); //set verification code to invalidate future uses
     user.setPassword(newPasswordEncrypted);
-    const updatedOk: boolean = await this.userService.updateById(user.getId(), user);
+    const updatedOk: boolean = await this.userService.updateById(userId, user);
 
     if (!updatedOk) {
       console.log("Can not to reset verification code in data base for user:", user);

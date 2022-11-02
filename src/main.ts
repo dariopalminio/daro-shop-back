@@ -25,12 +25,15 @@ async function bootstrap() {
   });
 
   console.log('SET app route', process.env.SERVER_BFF_PREFIX_ROUTE);
+
+  if (!process.env.SERVER_BFF_PREFIX_ROUTE) throw new Error('The env variable named SERVER_BFF_PREFIX_ROUTE is undefined');
   app.setGlobalPrefix(process.env.SERVER_BFF_PREFIX_ROUTE);
 
   console.log('load swagger module');
   setupDocModule(app);
 
   console.log("Server running in port:", process.env.SERVER_BFF_PORT);
+  if (!process.env.SERVER_BFF_PORT) throw new Error('The env variable named SERVER_BFF_PORT is undefined');
   await app.listen(process.env.SERVER_BFF_PORT);
 
   const url =`${process.env.SERVER_BFF_DOMAIN}:${process.env.SERVER_BFF_PORT}${process.env.SERVER_BFF_PREFIX_ROUTE}`;

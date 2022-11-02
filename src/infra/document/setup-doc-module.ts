@@ -12,8 +12,8 @@ export const setupDocModule = (app: any) => {
       .setTitle('Api doc ' + process.env.SERVER_BFF_APP_NAME)
       .setDescription('Api as backend')
       //.addBearerAuth()
-      .setVersion(process.env.SERVER_BFF_VERSION)
-      .addTag(process.env.SERVER_BFF_APP_NAME)
+      .setVersion(process.env.SERVER_BFF_VERSION? process.env.SERVER_BFF_VERSION : '0.1')
+      .addTag(process.env.SERVER_BFF_APP_NAME? process.env.SERVER_BFF_APP_NAME : 'Daro 2022')
       .build();
     const document = SwaggerModule.createDocument(app, docConfig, {
       ignoreGlobalPrefix: false,

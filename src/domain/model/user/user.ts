@@ -255,11 +255,11 @@ export class User extends Entity implements IValidatable, IMarshable<User> {
         return this.startVerificationCode;
     };
 
-    public getUpdatedAt(): Date {
+    public getUpdatedAt(): Date | undefined {
         return this.updatedAt;
     };
 
-    public getCreatedAt(): Date {
+    public getCreatedAt(): Date | undefined {
         return this.createdAt;
     };
 

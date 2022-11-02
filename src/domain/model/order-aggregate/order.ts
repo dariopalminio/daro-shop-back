@@ -183,6 +183,14 @@ export class Order extends Entity implements IValidatable, IMarshable<Order> {
         return this.status;
     };
 
+    public getUpdatedAt(): Date | undefined {
+        return this.updatedAt;
+    };
+
+    public getCreatedAt(): Date | undefined {
+        return this.createdAt;
+    };
+    
     /**
      * Setter method with Attributes/Properties Validation
      */

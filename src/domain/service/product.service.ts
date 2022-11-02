@@ -71,10 +71,12 @@ export class ProductService implements IProductService<Product> {
     ));
     
     let filtered: PaginatedResult = new PaginatedResult();
+    const count = await this.productRepository.count(queryQuilter);
     filtered.list = products;
-    filtered.page = page;
-    filtered.limit = limit;
-    filtered.count = await this.productRepository.count(queryQuilter);
+    filtered.page = page? page : 1;
+    filtered.limit = limit? limit : count;
+    filtered.count = count;
+
     return filtered;
   };
 

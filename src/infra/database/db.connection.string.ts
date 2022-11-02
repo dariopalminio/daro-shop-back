@@ -6,6 +6,8 @@ require('dotenv').config();
  */
 let DB_CONNECTION: string = '';
 
+if (!process.env.SERVER_BFF_MONGO_USERPASSWORD) throw Error('Env variable SERVER_BFF_MONGO_USERPASSWORD is undefined');
+
 if (process.env.SERVER_BFF_MONGO_ON_SERVER === 'false') {
     //Running in Localhost 
     //Example: mongodb://testadmin:testadmin123@127.0.0.1:27017/?authSource=bdTest

@@ -33,7 +33,11 @@ export class GlobalConfigImpl implements IGlobalConfig{
         this.set('DOMAIN', (process.env.SERVER_BFF_DOMAIN) as string);
 
         this.set('PREFIX_ROUTE', process.env.SERVER_BFF_PREFIX_ROUTE as string);
+        if (process.env.SERVER_BFF_AUTH_MIDDLEWARE_ON){
         this.set('AUTH_MIDDLEWARE_ON', (process.env.SERVER_BFF_AUTH_MIDDLEWARE_ON.toLowerCase() == 'true' ? true : false) as boolean); 
+        }else{
+            this.set('AUTH_MIDDLEWARE_ON', false as boolean); 
+        }
         this.set('EXPIRATION_DAYS_LIMIT', Number(process.env.SERVER_BFF_AUTH_EXPIRATION_DAYS_LIMIT) as number);
 
         // Data base params

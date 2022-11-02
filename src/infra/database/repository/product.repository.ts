@@ -102,11 +102,11 @@ export class ProductRepository implements IRepository<Product> {
      */
     async getById(id: string, fieldsToExclude?: any): Promise<Product> {
         if (fieldsToExclude) {
-            const prodDoc: ProductDocument = await this.productModel.findById(id, fieldsToExclude).exec();
+            const prodDoc: ProductDocument | null = await this.productModel.findById(id, fieldsToExclude).exec();
             const objCasted: Product = new Product(prodDoc);
             return objCasted;
         }
-        const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
+        const prodDoc: ProductDocument | null = await this.productModel.findById(id).exec();
         const objCasted: Product = new Product(prodDoc);
         return objCasted;
     };
@@ -121,19 +121,19 @@ export class ProductRepository implements IRepository<Product> {
     };
 
     async getByQuery(query: any): Promise<Product> {
-        const prodDoc: ProductDocument = await this.productModel.findOne(query);
+        const prodDoc: ProductDocument | null = await this.productModel.findOne(query);
         const objCasted: Product = new Product(prodDoc);
         return objCasted;
     };
 
     async hasById(id: string): Promise<boolean> {
-        const prodDoc: ProductDocument = await this.productModel.findById(id).exec();
+        const prodDoc: ProductDocument | null = await this.productModel.findById(id).exec();
         if (!prodDoc) return false;
         return true;
     };
 
     async hasByQuery(query: any): Promise<boolean> {
-        const prodDoc: ProductDocument = await this.productModel.findOne(query);
+        const prodDoc: ProductDocument | null = await this.productModel.findOne(query);
         if (!prodDoc) return false;
         return true;
     };
@@ -147,12 +147,12 @@ export class ProductRepository implements IRepository<Product> {
     async updateById(entityId: string, entity: Product): Promise<boolean> {
         const unmarshalled: any = entity.convertToAny();
         const { id, ...values } = unmarshalled;
-        const docUpdated: ProductDocument = await this.productModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
+        const docUpdated: ProductDocument | null = await this.productModel.findByIdAndUpdate(entityId, { ...values, updatedAt: new Date() }, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 
     async update(query: any, valuesToSet: any): Promise<boolean> {
-        const docUpdated: ProductDocument = await this.productModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
+        const docUpdated: ProductDocument | null = await this.productModel.findOneAndUpdate(query, valuesToSet, { useFindAndModify: false }).exec();
         return !!docUpdated;
     };
 

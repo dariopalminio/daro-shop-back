@@ -98,12 +98,13 @@ export class GenericService<D, T> implements IPersistentAggregateService<T> {
 
     async search(queryFilter?: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
         const filter = queryFilter ? queryFilter : {};
-        const cats: T[] = await this.repository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
+        const arrayLista: T[] = await this.repository.findExcludingFields(filter, {}, page, limit, orderByField, isAscending);
         let filtered: PaginatedResult = new PaginatedResult();
-        filtered.list = cats;
-        filtered.page = page;
-        filtered.limit = limit;
-        filtered.count = await this.repository.count(filter);
+        const count = await this.repository.count(filter);
+        filtered.list = arrayLista;
+        filtered.page = page? page : 1;
+        filtered.limit = limit? limit : count;
+        filtered.count = count;
         return filtered;
     };
 

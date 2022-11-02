@@ -15,6 +15,7 @@ import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
 import { User } from 'src/domain/model/user/user';
 import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError, TokensCreationError } from 'src/domain/error/auth-errors';
+import { UserNotFoundError } from '../error/user-errors';
 const bcrypt = require('bcrypt');
 
 /**
@@ -157,8 +158,11 @@ export class AuthTokensService implements IAuthTokensService {
     if (!validPassword)
       throw new InvalidCredentialsError(`Unauthorized. Password is invalid!`);
 
+    const userId: string | undefined = user.getId();
+    if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+
     const payload: PayloadType = {
-      id: user.getId(),
+      id: userId,
       typ: "Bearer",
       roles: user.getRoles(),
       email_verified: user.getVerified(),
@@ -201,8 +205,11 @@ export class AuthTokensService implements IAuthTokensService {
     if (!user.hasRole(RolesEnum.ADMIN))
       throw new InvalidCredentialsError(`User is not Admin! To grant an admin token the user must be an admin`);
 
+    const userId: string | undefined = user.getId();
+    if (userId === undefined) throw new UserNotFoundError('Cannot obtain user id from data base!');
+
     const payload: PayloadType = {
-      id: user.getId(),
+      id: userId,
       typ: "Bearer",
       roles: user.getRoles(),
       email_verified: user.getVerified(),
