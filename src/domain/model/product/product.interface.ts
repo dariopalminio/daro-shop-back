@@ -2,6 +2,7 @@ import { IReservation } from "./reservation.interface";
 
 export interface IProduct {
 
+    id?: string;
     sku: string;
     barcode: string;
     name: string;

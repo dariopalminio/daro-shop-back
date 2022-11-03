@@ -1,6 +1,7 @@
 import { Entity } from "../entity";
 import { IMarshable } from "../marshable.interface";
 import { IValidatable } from "../validatable.interface";
+import { IShippingPrice } from "./shipping-price.interface";
 
 /**
  * ShippingPrice domain object (Entity root)
@@ -68,12 +69,14 @@ export class ShippingPrice extends Entity implements IValidatable, IMarshable<Sh
      * Unmarshal: extract attributes from marshalled to any
      */
     public convertToAny(): any {
-        return {
+        const unmarshalled: IShippingPrice = {
             id: this.id,
+            location: this.location,
             price: this.price,
             money: this.money,
             description: this.description
         };
+        return unmarshalled;
     };
 
     public setLocation(value: string) {

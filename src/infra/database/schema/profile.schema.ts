@@ -49,9 +49,6 @@ export class Profile implements IProfile {
   telephone: string;
 
   @Prop()
-  language: string;
-
-  @Prop()
   addresses: AddressDocument[]
 
   @Prop({ required: true, default: new Date() })

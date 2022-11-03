@@ -2,6 +2,7 @@ import { convertAnyToDate } from "src/domain/helper/date.helper";
 import { Entity } from "../entity";
 import { IMarshable } from "../marshable.interface";
 import { IValidatable } from "../validatable.interface";
+import { IPaymentMethod } from "./payment-method.interface";
 
 /**
  * PaymentMethod domain object
@@ -89,7 +90,7 @@ export class PaymentMethod extends Entity implements IValidatable, IMarshable<Pa
      * Unmarshal: convert class object to unmarshalled any
      */
     public convertToAny(): any {
-        return {
+        const unmarshalled: IPaymentMethod =  {
             id: this.id,
             key: this.key,
             name: this.name,
@@ -100,6 +101,7 @@ export class PaymentMethod extends Entity implements IValidatable, IMarshable<Pa
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
         };
+        return unmarshalled;
     };
 
     public getKey(): string {

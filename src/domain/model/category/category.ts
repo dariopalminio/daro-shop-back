@@ -1,6 +1,7 @@
 import { Entity } from '../entity';
 import { IMarshable } from '../marshable.interface';
 import { IValidatable } from '../validatable.interface';
+import { ICategory } from './category.interface';
 
 /**
  * Category domain object
@@ -51,11 +52,12 @@ export class Category extends Entity implements IValidatable, IMarshable<Categor
      * Unmarshal: convert class object to unmarshalled any
      */
     public convertToAny(): any {
-        return {
+        const unmarshalled: ICategory = {
             id: this.id,
             name: this.name,
             description: this.description
         };
+        return unmarshalled;
     };
 
     public validateFormat(): void {

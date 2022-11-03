@@ -2,6 +2,7 @@ import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { Entity } from '../entity';
 import { IMarshable } from '../marshable.interface';
 import { IValidatable } from '../validatable.interface';
+import { IUser } from './user.interface';
 
 export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';
 
@@ -109,7 +110,7 @@ export class User extends Entity implements IValidatable, IMarshable<User> {
     };
 
     public convertToAny(): any {
-        return {
+        const unmarshalled: IUser = {
             id: this.id,
             enable: this.enable,
             userName: this.userName,
@@ -124,6 +125,7 @@ export class User extends Entity implements IValidatable, IMarshable<User> {
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
         };
+        return unmarshalled;
     };
 
     /**

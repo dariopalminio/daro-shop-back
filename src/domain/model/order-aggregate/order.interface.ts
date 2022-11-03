@@ -4,6 +4,7 @@ import { IOrderItem } from "./order-item.interface";
 
 export interface IOrder {
 
+     id?: string;
      client: IClient;
      orderItems: IOrderItem[];
      count: number;

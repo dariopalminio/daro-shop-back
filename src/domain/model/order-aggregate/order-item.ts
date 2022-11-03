@@ -1,4 +1,5 @@
 import { IMarshable } from "../marshable.interface";
+import { IOrderItem } from "./order-item.interface";
 
 /**
  * OrderItem Value Object
@@ -63,7 +64,7 @@ export class OrderItem implements IMarshable<OrderItem> {
      * Unmarshal: convert class object to unmarshalled any
      */
      public convertToAny(): any {
-        return {
+        const unmarshalled: IOrderItem = {
             productId: this.productId,
             imageUrl: this.imageUrl,
             name: this.name,
@@ -71,6 +72,7 @@ export class OrderItem implements IMarshable<OrderItem> {
             quantity: this.quantity,
             amount: this.amount
         };
+        return unmarshalled;
     };
 
     public getProductId(): string {

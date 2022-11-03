@@ -4,6 +4,7 @@ import { throws } from 'assert';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { IValidatable } from '../validatable.interface';
 import { IMarshable } from '../marshable.interface';
+import { IProduct } from './product.interface';
 
 /**
  * Product domain object (Entity root)
@@ -161,7 +162,7 @@ export class Product extends Entity implements IValidatable, IMarshable<Product>
     * Unmarshal: extract attributes from marshalled to any
     */
     public convertToAny(): any {
-        return {
+        const unmarshalled: IProduct = {
             id: this.id,
             sku: this.sku,
             barcode: this.barcode,
@@ -187,6 +188,7 @@ export class Product extends Entity implements IValidatable, IMarshable<Product>
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
         };
+        return unmarshalled;
     };
 
     private setReservationsFromAny(unmarshalled: any) {

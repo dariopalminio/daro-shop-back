@@ -49,9 +49,6 @@ import { IProfile } from 'src/domain/model/profile/profile.interface';
     @IsString()
     telephone: string;
 
-    @IsString()
-    language: string;
-
     @IsArray()
     addresses: IAddress[];
 

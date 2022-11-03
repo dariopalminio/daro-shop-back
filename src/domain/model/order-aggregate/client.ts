@@ -1,4 +1,5 @@
 import { IMarshable } from "../marshable.interface";
+import { IClient } from "./client.interface";
 
 /**
  * Client Value Object
@@ -40,7 +41,7 @@ export class Client implements IMarshable<Client> {
      * Unmarshal: convert class object to unmarshalled any
      */
      public convertToAny(): any {
-        return {
+        const unmarshalled: IClient = {
             userId: this.userId,
             firstName: this.firstName,
             lastName: this.lastName,
@@ -49,6 +50,7 @@ export class Client implements IMarshable<Client> {
             document: this.document,
             telephone: this.telephone
         };
+        return unmarshalled;
     };
 
     /**

@@ -5,6 +5,7 @@ import { OrderItem } from './order-item';
 import { convertAnyToDate } from 'src/domain/helper/date.helper';
 import { IValidatable } from '../validatable.interface';
 import { IMarshable } from '../marshable.interface';
+import { IOrder } from './order.interface';
 
 /**
  * Order domain object (Entity root)
@@ -115,7 +116,7 @@ export class Order extends Entity implements IValidatable, IMarshable<Order> {
     * Unmarshal: convert class object to unmarshalled any
     */
     public convertToAny(): any {
-        return {
+        const unmarshalled: IOrder =  {
             id: this.id,
             client: this.client.convertToAny(),
             orderItems: this.orderItems.map((item) => (item.convertToAny())),
@@ -129,6 +130,7 @@ export class Order extends Entity implements IValidatable, IMarshable<Order> {
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
         };
+        return unmarshalled;
     };
 
     /**

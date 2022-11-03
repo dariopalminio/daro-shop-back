@@ -3,6 +3,7 @@ import { Entity } from "../entity";
 import { IMarshable } from "../marshable.interface";
 import { IValidatable } from "../validatable.interface";
 import { Address } from "./address";
+import { IProfile } from "./profile.interface";
 
 /**
  * Profile domain object
@@ -25,7 +26,6 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
     protected docType: string;  //docType (RUT|DNI)
     protected document: string;
     protected telephone: string;
-    protected language: string;
     protected addresses: Address[];
     protected updatedAt?: Date;
     protected createdAt?: Date;
@@ -38,10 +38,10 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
     public constructor(unmarshalled: any);
     public constructor(id: string,
         userId: string, enable: boolean, userName: string, firstName: string, lastName: string, email: string, docType: string,
-        document: string, telephone: string, language: string, addresses: Address[], updatedAt?: Date, createdAt?: Date
+        document: string, telephone: string, addresses: Address[], updatedAt?: Date, createdAt?: Date
     );
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 14) {
+        if (argumentsArray.length > 13) {
             throw new Error('Number of constructor arguments exceeded.');
         }
         if (argumentsArray.length === 0) {
@@ -63,7 +63,6 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
             this.setDocType(argumentsArray[7]);
             this.setDocument(argumentsArray[8]);
             this.setTelephone(argumentsArray[9]);
-            this.setLanguage(argumentsArray[10]);
             this.setAddresses(argumentsArray[11]);
             if (argumentsArray[12]) {
                 this.updatedAt = (argumentsArray[12]);
@@ -79,8 +78,9 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
     }
 
     public convertToAny(): any {
-        return {
+        const unmarshalled: IProfile =  {
             id: this.id,
+            userId: this.userId,
             enable: this.enable,
             userName: this.userName,
             firstName: this.firstName,
@@ -89,11 +89,11 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
             docType: this.docType,
             document: this.document,
             telephone: this.telephone,
-            language: this.language,
             addresses: this.addresses.map((addrs) => (addrs.convertToAny())),
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
         };
+        return unmarshalled;
     };
 
     /**
@@ -115,7 +115,6 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
         this.setDocType(unmarshalled.docType);
         this.setDocument(unmarshalled.document);
         this.setTelephone(unmarshalled.telephone);
-        this.setLanguage(unmarshalled.language);
         this.setAddresses(unmarshalled.addresses);
         if (unmarshalled.updatedAt) {
             this.updatedAt = convertAnyToDate(unmarshalled.updatedAt);
@@ -159,10 +158,6 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
 
     public getTelephone(): string {
         return this.telephone;
-    };
-
-    public getLanguage(): string {
-        return this.language;
     };
 
     public getAddresses(): Address[] {
@@ -249,13 +244,6 @@ export class Profile extends Entity implements IValidatable, IMarshable<Profile>
             throw new Error('Field telephone has invalid format because is undefined or is not string!');
         }
         this.telephone = value;
-    };
-
-    public setLanguage(value: string) {
-        if (value === undefined || (typeof value !== 'string')) { //required
-            throw new Error('Field language has invalid format because is undefined or is not string!');
-        }
-        this.language = value;
     };
 
     public setUpdatedAt(updatedAt: Date) {

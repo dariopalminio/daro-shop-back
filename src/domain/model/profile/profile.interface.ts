@@ -3,6 +3,7 @@ import { IAddress } from "./address.interface";
 
 export interface IProfile {
 
+     id?: string;
      userId: string;
      enable: boolean;
      userName: string;
@@ -12,8 +13,7 @@ export interface IProfile {
      docType: string;  
      document: string;
      telephone: string;
-     language: string;
      addresses: IAddress[];
      updatedAt?: Date;
      createdAt?: Date;
-}
+};
