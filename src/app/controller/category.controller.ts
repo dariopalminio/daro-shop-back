@@ -58,7 +58,7 @@ export class CategoryController {
       const list: Category[] = await this.categoryService.getAll();
       return res.status(HttpStatus.OK).json(list);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     };
   };
 
@@ -69,7 +69,7 @@ export class CategoryController {
     try {
       category = await this.categoryService.getById(categoryID);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!category) throw new NotFoundException('Category does not exist!');
     return res.status(HttpStatus.OK).json(category);
@@ -84,7 +84,7 @@ export class CategoryController {
     try {
       newCat = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!newCat) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -103,7 +103,7 @@ export class CategoryController {
     try {
       categoryDeleted = await this.categoryService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -130,7 +130,7 @@ export class CategoryController {
     try {
       updatedCategory = await this.categoryService.updateById(id, categoryDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     };
     if (!updatedCategory) throw new NotFoundException('Problem in creation. Category does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -153,7 +153,7 @@ export class CategoryController {
       const data: PaginatedResult = await this.categoryService.search({}, page, limit, orderByField, isAscending);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 

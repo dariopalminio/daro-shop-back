@@ -54,7 +54,9 @@ a) From the domain it is not allowed to use infrastructure or application elemen
 
 ## Errors Management Strategy
 
-Error response example:
+The error strategy used is to have the individual services in the domain throw a new subclass of DomainError(), and have the controller catch them and then, via an error handler or an interceptor, throw the appropriate type of HttpException (BadRequestException, ForbiddenException, etc. ). Having Http related stuff in domain layer (services) just seems wrong. For this reason, the domain layer does not handle http exceptions and will only attach an error code included in Domain Error to help the app layer determine which http exception corresponds.
+
+The app layer (controllers, middleware, etc.) will throw exceptions in the response with the following JSON format:
 ```bash
 {
     "statusCode": 400,
@@ -72,6 +74,8 @@ Error response example:
     "message": "The headers Authorization in HTTP Request has a format error."
 }
 ```
+
+The name indicates the specific type of custom exception.
 
 ## Installation from zero
 

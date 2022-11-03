@@ -40,7 +40,7 @@ export class ShippingPriceController {
     try {
       pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (pricingObj === null) throw new NotFoundException('Location not found');
     return res.status(200).json(pricingObj);
@@ -61,7 +61,7 @@ export class ShippingPriceController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -73,7 +73,7 @@ export class ShippingPriceController {
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!objCreatedId) throw new NotFoundException('Problems saving!');
     return res.status(HttpStatus.OK).json({
@@ -92,7 +92,7 @@ export class ShippingPriceController {
     try {
       objDeleted = await this.shippingPriceService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!objDeleted) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
@@ -115,7 +115,7 @@ export class ShippingPriceController {
     try {
       updatedObj = await this.shippingPriceService.update(query, shippingPrice);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

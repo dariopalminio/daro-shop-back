@@ -63,7 +63,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.login(loginForm);
         } catch (error) {
-            throw AppErrorHandler.createError(error);
+            throw AppErrorHandler.createHttpException(error);
         }
 
         if (!authResponse.access_token) return res.status(HttpStatus.UNAUTHORIZED).json(authResponse);
@@ -82,7 +82,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getAppToken(authClientDTO);
         } catch (error) {
-            throw AppErrorHandler.createError(error);
+            throw AppErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };
@@ -96,7 +96,7 @@ export class AuthTokensController {
         try {
             data = await this.authTokensService.getAdminToken(body);
         } catch (error) {
-            throw AppErrorHandler.createError(error);
+            throw AppErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(data);
     };
@@ -115,7 +115,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getRefreshToken(body);
         } catch (error) {
-            throw AppErrorHandler.createError(error);
+            throw AppErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };

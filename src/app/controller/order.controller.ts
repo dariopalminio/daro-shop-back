@@ -40,7 +40,7 @@ export class OrderController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -52,7 +52,7 @@ export class OrderController {
     try {
       objCreated = await this.orderService.create(orderToCreateDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!objCreated) throw new NotFoundException('Could not be created!');
     return res.status(HttpStatus.OK).json({
@@ -70,7 +70,7 @@ export class OrderController {
     try {
       objDeleted = await this.orderService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!objDeleted) throw new NotFoundException('Does not exist or canot be deleted!');
     return res.status(HttpStatus.OK).json({
@@ -94,7 +94,7 @@ export class OrderController {
         order: orderCreated
       })
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -108,7 +108,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -122,7 +122,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -136,7 +136,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 

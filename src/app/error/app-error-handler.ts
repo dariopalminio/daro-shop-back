@@ -10,7 +10,7 @@ export class AppErrorHandler {
     /**
      * Create an http exception according to the exception received from the domain.
      */
-    public static createError(e: Error | DomainError): HttpException {
+    public static createHttpException(e: Error | DomainError): HttpException {
 
         if (e instanceof DomainError) {
 

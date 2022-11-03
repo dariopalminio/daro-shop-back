@@ -66,7 +66,7 @@ export class ProfileController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -78,7 +78,7 @@ export class ProfileController {
     try {
       user = await this.profileService.getById(userID);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!user) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -93,7 +93,7 @@ export class ProfileController {
       if (!profile) throw new NotFoundException('Profile does not exist!');
       return res.status(HttpStatus.OK).json(profile);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -106,7 +106,7 @@ export class ProfileController {
     try {
       newProfile = await this.profileService.create(profileDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!newProfile) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -125,7 +125,7 @@ export class ProfileController {
     try {
       categoryDeleted = await this.profileService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Profile does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -147,7 +147,7 @@ export class ProfileController {
     try {
       updatedUser = await this.profileService.updateProfile(profile);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!updatedUser) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({

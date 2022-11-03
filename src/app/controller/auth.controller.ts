@@ -60,7 +60,7 @@ export class AuthController {
       result = await this.authService.register(registerForm);
       console.log("register controller:", result);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     };
     return res.status(HttpStatus.OK).json(result);
   };
@@ -71,7 +71,7 @@ export class AuthController {
       const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
       return res.status(result.status).json(result);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -82,7 +82,7 @@ export class AuthController {
       confirmed = await this.authService.confirmAccount(verificationCodeDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(confirmed);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -94,7 +94,7 @@ export class AuthController {
       if (authResponse === true)
         return res.status(HttpStatus.OK).json({});
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     };
     throw new InternalServerErrorException();
   };
@@ -108,7 +108,7 @@ export class AuthController {
       authResponse = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
       return res.status(authResponse.status).json(authResponse);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -118,7 +118,7 @@ export class AuthController {
       const data: any = await this.authService.recoveryUpdatePassword(recoveryUpdateDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 

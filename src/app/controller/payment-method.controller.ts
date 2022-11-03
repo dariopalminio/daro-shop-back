@@ -46,7 +46,7 @@ export class PaymentMethodController {
     try {
       element = await this.paymentMethodService.getByQuery({ key: key });
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!element) throw new NotFoundException('Payment Method does not exist!');
     return res.status(HttpStatus.OK).json(element);
@@ -60,7 +60,7 @@ export class PaymentMethodController {
     try {
       objCreated = await this.paymentMethodService.create(paymentMethodDTO);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!objCreated) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
@@ -82,7 +82,7 @@ export class PaymentMethodController {
         deleted: objDeleted
       })
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
   };
 
@@ -99,7 +99,7 @@ export class PaymentMethodController {
     try {
       updatedObj = await this.paymentMethodService.update(query, paymentMethod);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
     if (!updatedObj) throw new NotFoundException('Payment Method does not exist!');
     return res.status(HttpStatus.OK).json({

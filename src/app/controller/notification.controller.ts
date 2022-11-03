@@ -49,7 +49,7 @@ export class NotificationController {
     try {
       sentInfo = await this.supportService.sendContactEmail(contactMessage, lang);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
 
     return res.status(HttpStatus.OK).json(sentInfo);
@@ -62,7 +62,7 @@ export class NotificationController {
       if (sentInfo.isSuccess) return res.status(HttpStatus.OK).json(sentInfo);
       return res.status(sentInfo.status).json(sentInfo);
     } catch (error) {
-      throw AppErrorHandler.createError(error);
+      throw AppErrorHandler.createHttpException(error);
     }
 
   };
