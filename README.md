@@ -87,7 +87,7 @@ Install Node.js version LTS
 
 ```bash
 node -v
-v16.16.0
+v16.17.1
 npm -v
 npm WARN config global `--global`, `--local` are deprecated. Use `--location=global` instead.
 8.11.0
@@ -120,36 +120,6 @@ Start Data Base Server
 export PATH=/Users/dariopalminio/Applications/mongodb-macos-x86_64-4.4.6/bin:$PATH
 mongod --dbpath /Users/dariopalminio/data/db
 
-Install Keycloak 13.0.1 from https://www.keycloak.org/archive/downloads-13.0.1.html
-
-Because Keycloak uses Java, then install JDK from https://jdk.java.net/
-
-Configure environment var JAVA_HOME and PATH
-```bash
-javac -version
-javac 17
-```
-
-Configure Keycloak PATH and execute 
-```bash
-standalone.bat
-```
-
-Start Keycloak Server in http://127.0.0.1:8080/auth/ 
-
-Server running and go to http://localhost:8080/auth/ 
-
-Create admin user with admin pass in Keykloak
-
-Login as admin
-
-Create Realm  with name: my-realm-test
-
-Create Client with name:	rest-client-test
-
-Copy client ID (example: d1dd32a1-1e54-4f8f-96d3-18c7a8466408)
-
-Configure .env with Keycloak variables
 
 Install NestJS as global
 
@@ -174,15 +144,6 @@ Start Mongo Data Base Server
 
 export PATH=/Users/dariopalminio/Applications/mongodb-macos-x86_64-4.4.6/bin:$PATH
 mongod --dbpath /Users/dariopalminio/data/db
-
-Start Keycloak Server 
-
-cd Applications/keycloak-13.0.1/bin
-sh standalone.sh
-http://127.0.0.1:8080/auth/
-admin admin
-
-Start cliente http://localhost:3000/
 
 
 
