@@ -187,6 +187,9 @@ Start cliente http://localhost:3000/
 
 
 ```bash
+
+$ npm start
+
 # development
 $ npm run start
 
