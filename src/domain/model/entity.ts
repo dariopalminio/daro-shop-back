@@ -4,9 +4,9 @@
  * An object primarily defined by its identity is called an Entity.
  * An Entity object is mutable.
  */
-export class Entity {
+export abstract class Entity {
 
-    protected readonly id?: string; //_id: holds an ObjectId
+    protected readonly id?: string;
 
     constructor(id?: string) {
         if (id !== undefined) this.id = id;
@@ -16,24 +16,24 @@ export class Entity {
         return this.id;
     }
 
-    public equals(object?: Entity): boolean {
-        if (object == null || object == undefined) {
+    public equals(objectToCheck?: Entity): boolean {
+        if (objectToCheck == null || objectToCheck == undefined) {
             return false;
         }
 
-        if (this === object) {
+        if (!this.isEntity(objectToCheck)) {
+            return false;
+        }
+
+        if (this === objectToCheck) {
             return true;
         }
 
-        if (!this.isEntity(object)) {
-            return false;
-        }
-
-        return this.id == object.getId();
+        return this.id == objectToCheck.getId();
     };
 
-    public isEntity(v: Entity): v is Entity {
-        return v instanceof Entity
+    public isEntity(objectToCheck: Entity | any): boolean {
+        return objectToCheck instanceof Entity
     };
 
 };
