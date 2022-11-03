@@ -5,11 +5,12 @@ export class HeadersAuthorizationError extends Error {
     data: any; //JSON object with more data
     //traslated?: string; //message traslated
 
-    constructor(detail?: string) {
+    constructor(detail?: string, data?: any) {
         super("The headers Authorization in HTTP Request has a format error.");
         // Ensure the name of this error is the same as the class name
         this.name = this.constructor.name;
         this.code = 400;
+        this.data = data ? data : {};
         this.detail = detail? detail : "Not authorized by the Auth Guard Middleware because no authorization data in Header.";
         // This clips the constructor invocation from the stack trace.
         // It's not absolutely essential, but it does make the stack trace a little nicer.
@@ -25,11 +26,12 @@ export class UnauthorizedJwtError extends Error {
     data: any; //JSON object with more data
     //traslated?: string; //message traslated
 
-    constructor(detail?: string) {
+    constructor(detail?: string, data?: any) {
         super("Unauthorized, invalid JWT signature in HTTP headers.");
         // Ensure the name of this error is the same as the class name
         this.name = this.constructor.name;
         this.code = 401;
+        this.data = data ? data : {};
         this.detail = detail? detail : "Not authorized by the Auth Guard Middleware because invalid token.";
         // This clips the constructor invocation from the stack trace.
         // It's not absolutely essential, but it does make the stack trace a little nicer.

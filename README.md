@@ -52,6 +52,27 @@ a) From the domain it is not allowed to use infrastructure or application elemen
 - Documentation: Swagger
 - HTTP Client: Axios
 
+## Errors Management Strategy
+
+Error response example:
+```bash
+{
+    "statusCode": 400,
+    "timestamp": "2022-11-03T20:38:09.613Z",
+    "path": "/api/webshop/v1/profiles/all",
+    "payload": {
+        "code": 400,
+        "detail": "Not authorized by the Auth Guard Middleware because no authorization data in Header.",
+        "data": {
+            "method": "GET",
+            "url": "/api/webshop/v1/profiles/all"
+        },
+        "name": "HeadersAuthorizationError"
+    },
+    "message": "The headers Authorization in HTTP Request has a format error."
+}
+```
+
 ## Installation from zero
 
 Install Visual Studio Code
