@@ -11,7 +11,7 @@ export abstract class Entity {
     constructor(id?: string) {
         if (id !== undefined) this.id = id;
     }
-
+    
     public getId(): string | undefined{
         return this.id;
     }

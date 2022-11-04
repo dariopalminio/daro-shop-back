@@ -21,7 +21,7 @@ import { ProductSchema } from 'src/infra/database/schema/product.schema';
 import { UserSchema } from 'src/infra/database/schema/user.schema';
 
 import { CategorySchema } from 'src/infra/database/schema/category.schema';
-import DB_CONNECTION from 'src/infra/database/db.connection.string';
+import DB_CONNECTION from 'src/infra/database/db-connection';
 import {
   UserRepository
 } from 'src/infra/database/repository/user.repository';
