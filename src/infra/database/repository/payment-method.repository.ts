@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IRepository } from '../../../domain/outgoing/repository.interface';
+import { IRepository } from "hexa-three-levels";
 import { PaymentMethodDocument } from '../schema/payment-method.schema';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
-import { GenericRepository } from './generic-repository';
+import { MongoGenericRepository } from "hexa-three-levels";
 import { PaymentMethodEntityFactory } from 'src/domain/model/payment/payment-method.factory';
 
 
@@ -12,7 +12,7 @@ import { PaymentMethodEntityFactory } from 'src/domain/model/payment/payment-met
  * PaymentMethod Mongo repository implementation
  */
  @Injectable()
- export class PaymentMethodRepository extends GenericRepository<PaymentMethodDocument, PaymentMethod> implements IRepository<PaymentMethod> {
+ export class PaymentMethodRepository extends MongoGenericRepository<PaymentMethodDocument, PaymentMethod> implements IRepository<PaymentMethod> {
  
      constructor(
          @InjectModel('PaymentMethod')

@@ -1,5 +1,4 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, UseGuards, InternalServerErrorException, BadRequestException, HttpException } from '@nestjs/common';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
@@ -8,7 +7,8 @@ import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ProfileDTO } from '../dto/profile.dto';
 import { Profile } from 'src/domain/model/profile/profile';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Profile controller
@@ -19,12 +19,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('profiles')
 export class ProfileController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('IProfileService')
     private readonly profileService: IProfileService<Profile>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
 
   @ApiOperation({
@@ -66,7 +70,7 @@ export class ProfileController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -78,7 +82,7 @@ export class ProfileController {
     try {
       user = await this.profileService.getById(userID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!user) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -93,7 +97,7 @@ export class ProfileController {
       if (!profile) throw new NotFoundException('Profile does not exist!');
       return res.status(HttpStatus.OK).json(profile);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -106,7 +110,7 @@ export class ProfileController {
     try {
       newProfile = await this.profileService.create(profileDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!newProfile) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -125,7 +129,7 @@ export class ProfileController {
     try {
       categoryDeleted = await this.profileService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Profile does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -147,7 +151,7 @@ export class ProfileController {
     try {
       updatedUser = await this.profileService.updateProfile(profile);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!updatedUser) throw new NotFoundException('Profile does not exist!');
     return res.status(HttpStatus.OK).json({

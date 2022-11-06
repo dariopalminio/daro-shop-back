@@ -1,4 +1,4 @@
-import { IEntityFactory } from "../entity-factory.interface";
+import { IEntityFactory } from "hexa-three-levels";
 import { ShippingPrice } from "./shipping-price";
 
 export class ShippingPriceEntityFactory implements IEntityFactory<ShippingPrice> {

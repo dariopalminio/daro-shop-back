@@ -1,5 +1,5 @@
 
-import { IEntityFactory } from "../entity-factory.interface";
+import { IEntityFactory } from "hexa-three-levels";
 import { Order } from "./order";
 
 

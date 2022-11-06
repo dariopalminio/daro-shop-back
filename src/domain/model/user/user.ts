@@ -1,7 +1,5 @@
-import { convertAnyToDate } from 'src/domain/helper/date.helper';
-import { Entity } from '../entity';
-import { IMarshable } from '../marshable.interface';
-import { IValidatable } from '../validatable.interface';
+import { Entity } from "hexa-three-levels";
+import { IValidatable, IMarshable, convertAnyToDate } from "hexa-three-levels";
 import { IUser } from './user.interface';
 
 export const INVALID_VERIFICATION_CODE = 'none$none.none-none*none&none/none';

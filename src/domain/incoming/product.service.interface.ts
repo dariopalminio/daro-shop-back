@@ -1,5 +1,5 @@
-import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
-import { PaginatedResult } from 'src/domain/model/paginated-result';
+import { IPersistentAggregateService } from "hexa-three-levels";
+import { PaginatedResult } from "hexa-three-levels";
 import { Product } from 'src/domain/model/product/product';
 
 /**
@@ -17,7 +17,7 @@ export interface IProductService<T> extends IPersistentAggregateService<T>{
     
     getAllActives(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]>;
     generateSKU(type: string, brand: string, model: string, color: string, size: string ): Promise<string>;
-    getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult>;
+    getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult<any>>;
     getDetailById(id: string): Promise<any>;
     addStockReservation(productId: string, orderId: string, quantity: number): Promise<boolean>;
     revertStockReservation(productId: string, orderId: string): Promise<boolean>;

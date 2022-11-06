@@ -3,9 +3,7 @@ import { ContactMessage } from 'src/domain/model/notification/contact.message';
 import { INotificationService } from 'src/domain/incoming/notification.service.interface';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
 import { validEmail } from 'src/domain/helper/validators.helper';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { DomainError } from 'src/domain/error/domain-error';
+import { DomainError, ErrorCode, IGlobalConfig } from "hexa-three-levels";
 
 /**
  * Notification Service

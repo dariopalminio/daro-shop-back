@@ -1,15 +1,14 @@
-import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus, NotFoundException, InternalServerErrorException, UseGuards, BadRequestException, HttpException } from '@nestjs/common';
 import { ICategoryService } from 'src/domain/incoming/category.service.interface';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
-import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { Category } from 'src/domain/model/category/category';
 import { CategoryDTO } from '../dto/category.dto';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, PaginatedResult, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Category controller
@@ -20,12 +19,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('products/categories')
 export class CategoryController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('ICategoryService')
     private readonly categoryService: ICategoryService<Category>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
   @ApiOperation({
     summary:
@@ -58,7 +61,7 @@ export class CategoryController {
       const list: Category[] = await this.categoryService.getAll();
       return res.status(HttpStatus.OK).json(list);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
   };
 
@@ -69,7 +72,7 @@ export class CategoryController {
     try {
       category = await this.categoryService.getById(categoryID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!category) throw new NotFoundException('Category does not exist!');
     return res.status(HttpStatus.OK).json(category);
@@ -84,7 +87,7 @@ export class CategoryController {
     try {
       newCat = await this.categoryService.create(createCategoryDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!newCat) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -103,7 +106,7 @@ export class CategoryController {
     try {
       categoryDeleted = await this.categoryService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!categoryDeleted) throw new NotFoundException('Category does not exist or canot delete category!');
     return res.status(HttpStatus.OK).json({
@@ -130,7 +133,7 @@ export class CategoryController {
     try {
       updatedCategory = await this.categoryService.updateById(id, categoryDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     if (!updatedCategory) throw new NotFoundException('Problem in creation. Category does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -150,10 +153,10 @@ export class CategoryController {
       const limit: number = parseInt(limitParam);
       const orderByField: string = orderBy.toString();
       const isAscending: boolean = (isAsc === 'true') ? true : false;
-      const data: PaginatedResult = await this.categoryService.search({}, page, limit, orderByField, isAscending);
+      const data: PaginatedResult<any> = await this.categoryService.search({}, page, limit, orderByField, isAscending);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 

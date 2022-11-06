@@ -22,8 +22,6 @@ export const validEmail = (email: string) => {
 
     if (mailServer.length > 63) return false;
 
-    //var topLevelDomain = domainPartsArray[1];
-
     const regularExpression = /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
     if (!regularExpression.test(email)) return false;

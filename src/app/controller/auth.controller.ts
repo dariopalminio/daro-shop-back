@@ -1,12 +1,11 @@
 import {
   Controller, Get, Res, Post, Headers, Body, Inject,
-  HttpStatus, InternalServerErrorException, UseGuards
+  HttpStatus, InternalServerErrorException, UseGuards, HttpException
 } from '@nestjs/common';
 import { IAuthService } from 'src/domain/incoming/auth.service.interface';
 import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-recovery-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
@@ -15,7 +14,8 @@ import { UserRegisterDTO } from '../dto/user-register.dto';
 import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 import { VerificationCodeDTO } from '../dto/verification-code.dto';
 import { StartConfirmEmailDTO } from '../dto/start-confirm-email.dto';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Auth controller
@@ -26,12 +26,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('auth')
 export class AuthController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+
   constructor(
     @Inject('IAuthService')
     private readonly authService: IAuthService,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
   @Get()
   getHello(@Res() res) {
@@ -60,7 +64,7 @@ export class AuthController {
       result = await this.authService.register(registerForm);
       console.log("register controller:", result);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     return res.status(HttpStatus.OK).json(result);
   };
@@ -71,7 +75,7 @@ export class AuthController {
       const result: any = await this.authService.sendStartEmailConfirm(startConfirmEmailData, this.getLang(headers));
       return res.status(result.status).json(result);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -82,7 +86,7 @@ export class AuthController {
       confirmed = await this.authService.confirmAccount(verificationCodeDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(confirmed);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -94,7 +98,7 @@ export class AuthController {
       if (authResponse === true)
         return res.status(HttpStatus.OK).json({});
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     throw new InternalServerErrorException();
   };
@@ -108,7 +112,7 @@ export class AuthController {
       authResponse = await this.authService.sendEmailToRecoveryPass(startRecoveryDataDTO, this.getLang(headers));
       return res.status(authResponse.status).json(authResponse);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -118,7 +122,7 @@ export class AuthController {
       const data: any = await this.authService.recoveryUpdatePassword(recoveryUpdateDataDTO, this.getLang(headers));
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 

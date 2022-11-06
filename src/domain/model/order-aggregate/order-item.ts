@@ -1,4 +1,4 @@
-import { IMarshable } from "../marshable.interface";
+import { IMarshable } from "hexa-three-levels";
 import { IOrderItem } from "./order-item.interface";
 
 /**

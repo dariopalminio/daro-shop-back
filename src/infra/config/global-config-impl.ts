@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import * as pack from "../../../package.json"
-import { GlobalConfigSuperclass } from './global-config-superclass';
+import { IGlobalConfig, GlobalConfigSuperclass } from "hexa-three-levels";
 
 require('dotenv').config();
 

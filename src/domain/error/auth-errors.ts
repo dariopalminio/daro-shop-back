@@ -1,5 +1,5 @@
-import { DomainError } from "./domain-error";
-import { ErrorCode } from "./error-code.enum";
+import { DomainError } from "hexa-three-levels";
+import { ErrorCode } from "hexa-three-levels";
 
 export class InvalidCredentialsError extends DomainError {
     constructor(detail?: string, data?: any, code?: number) {

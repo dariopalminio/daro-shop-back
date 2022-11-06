@@ -1,8 +1,7 @@
 import {
     Controller, Get, Res, Post, Headers, Delete, Put, Body, Param, Query, Inject,
-    HttpStatus, NotFoundException, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards
+    HttpStatus, NotFoundException, BadRequestException, InternalServerErrorException, UnauthorizedException, ForbiddenException, ConflictException, UseGuards, HttpException
 } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { AuthClientType } from 'src/domain/model/auth/token/auth.client.type';
@@ -11,7 +10,8 @@ import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.inte
 import { NewAdminTokenRequestType } from 'src/domain/model/auth/token/auth.admin.type';
 import { UserLoginDTO } from '../dto/user-login.dto';
 import { LoginForm } from 'src/domain/model/auth/login/login-form';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Auth Tokens controller
@@ -22,12 +22,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('auth/tokens')
 export class AuthTokensController {
 
+    appErrorHandler: IAppErrorHandler<HttpException>;
+    
     constructor(
         @Inject('IAuthTokensService')
         private readonly authTokensService: IAuthTokensService,
         @Inject('IGlobalConfig')
         private readonly globalConfig: IGlobalConfig,
-    ) { }
+    ) { 
+        this.appErrorHandler = new AppNestErrorHandler();
+    }
 
     @ApiOperation({
         summary:
@@ -63,7 +67,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.login(loginForm);
         } catch (error) {
-            throw AppErrorHandler.createHttpException(error);
+            throw this.appErrorHandler.createHttpException(error);
         }
 
         if (!authResponse.access_token) return res.status(HttpStatus.UNAUTHORIZED).json(authResponse);
@@ -82,7 +86,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getAppToken(authClientDTO);
         } catch (error) {
-            throw AppErrorHandler.createHttpException(error);
+            throw this.appErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };
@@ -96,7 +100,7 @@ export class AuthTokensController {
         try {
             data = await this.authTokensService.getAdminToken(body);
         } catch (error) {
-            throw AppErrorHandler.createHttpException(error);
+            throw this.appErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(data);
     };
@@ -115,7 +119,7 @@ export class AuthTokensController {
         try {
             authResponse = await this.authTokensService.getRefreshToken(body);
         } catch (error) {
-            throw AppErrorHandler.createHttpException(error);
+            throw this.appErrorHandler.createHttpException(error);
           }
         return res.status(HttpStatus.OK).json(authResponse);
     };

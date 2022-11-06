@@ -1,4 +1,4 @@
-import { DuplicateError, FormatError, NotFoundError } from "./domain-error";
+import { DuplicateError, FormatError, NotFoundError } from "hexa-three-levels";
 
 
 export class CategoryFormatError extends FormatError {

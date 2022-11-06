@@ -1,5 +1,4 @@
-import { PaginatedResult } from 'src/domain/model/paginated-result';
-import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
+import { IPersistentAggregateService } from "hexa-three-levels";
 
 /**
  * Category Service Interface
@@ -11,6 +10,6 @@ import { IPersistentAggregateService } from 'src/domain/service/interface/persis
  * Application layer controllers use services only through these interfaces (input port).
  */
 export interface ICategoryService<T> extends IPersistentAggregateService<T>{
- search(queryFilter: any, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult>
+
 };
 

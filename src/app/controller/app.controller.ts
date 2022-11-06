@@ -2,7 +2,7 @@ import { Controller, Get, Res, Inject, Headers, HttpStatus, BadRequestException 
 import { HealthCheck, HttpHealthIndicator, HealthCheckService, MongooseHealthIndicator } from "@nestjs/terminus";
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { IGlobalConfig } from "hexa-three-levels";
 
 /**
  * App controller

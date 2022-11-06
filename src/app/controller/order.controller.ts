@@ -1,5 +1,4 @@
-import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException, HttpException } from '@nestjs/common';
 import { Roles } from '../guard/roles.decorator';
 import { RolesGuard } from '../guard/roles.guard';
 import { IOrderService } from 'src/domain/incoming/order.service.interface';
@@ -7,7 +6,8 @@ import { Order } from 'src/domain/model/order-aggregate/order';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { OrderToInitializeDTO } from '../dto/order-to-initialize.dto';
 import { OrderToCreateDTO } from '../dto/order-to-create.dto';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Order controller
@@ -18,12 +18,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('orders')
 export class OrderController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('IOrderService')
     private readonly orderService: IOrderService<Order>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
   @Get('all')
   async getAll(@Res() res, @Query('page') pageParam, @Query('limit') limitParam, @Query('orderBy') orderBy, @Query('isAsc') isAsc) {
@@ -40,7 +44,7 @@ export class OrderController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -52,7 +56,7 @@ export class OrderController {
     try {
       objCreated = await this.orderService.create(orderToCreateDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!objCreated) throw new NotFoundException('Could not be created!');
     return res.status(HttpStatus.OK).json({
@@ -70,7 +74,7 @@ export class OrderController {
     try {
       objDeleted = await this.orderService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!objDeleted) throw new NotFoundException('Does not exist or canot be deleted!');
     return res.status(HttpStatus.OK).json({
@@ -94,7 +98,7 @@ export class OrderController {
         order: orderCreated
       })
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -108,7 +112,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -122,7 +126,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -136,7 +140,7 @@ export class OrderController {
         orderId: orderId
       })
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 

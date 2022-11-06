@@ -1,5 +1,5 @@
-import { DomainError, DuplicateError, FormatError, NotFoundError } from "./domain-error";
-import { ErrorCode } from "./error-code.enum";
+import { DomainError, DuplicateError, FormatError, NotFoundError } from "hexa-three-levels";
+import { ErrorCode } from "hexa-three-levels";
 
 export class OrderFormatError extends FormatError {
     constructor(detail?: string, data?: any) {

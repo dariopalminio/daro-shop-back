@@ -10,9 +10,6 @@ import { StartRecoveryDataType } from 'src/domain/model/auth/recovery/start-reco
 import { VerificationCodeDataType } from 'src/domain/model/auth/register/verification-code-data.type';
 import { RecoveryUpdateDataType } from 'src/domain/model/auth/recovery/recovery-update-data.type';
 import { LogoutForm } from 'src/domain/model/auth/login/logout-form';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';;
-import { DomainError } from 'src/domain/error/domain-error';
 import { User } from 'src/domain/model/user/user';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { PayloadType } from 'src/domain/model/auth/token/payload.type';
@@ -22,6 +19,7 @@ import { RegisterForm } from 'src/domain/model/auth/register/register-form';
 import { InvalidVerificationCodeError } from 'src/domain/error/auth-errors';
 import { UserDuplicateError, UserFormatError, UserNotFoundError } from 'src/domain/error/user-errors';
 const bcrypt = require('bcrypt');
+import { DomainError, ErrorCode, IGlobalConfig } from "hexa-three-levels";
 
 /**
  * Auth service

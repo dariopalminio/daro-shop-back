@@ -1,10 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { ICategoryService } from 'src/domain/incoming/category.service.interface';
 import { Category } from 'src/domain/model/category/category';
 import { ICategory } from '../model/category/category.interface';
 import { CategoryEntityFactory } from '../model/category/category-entity.factory';
-import { GenericService } from './generic.service';
+import { IRepository, GenericService } from "hexa-three-levels";
 
 /**
  * Category Service

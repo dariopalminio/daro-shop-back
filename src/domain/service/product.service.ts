@@ -1,13 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { ProductOfCatalog } from 'src/domain/model/product/product-of-catalog';
-import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { Reservation } from 'src/domain/model/product/reservation';
 import { Product } from 'src/domain/model/product/product';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
 import { ProductDuplicateError, DuplicateSkuError, ProductFormatError, ProductNotFoundError, SkuGenerationError } from '../error/product-errors';
-import { DomainError } from '../error/domain-error';
-import { ErrorCode } from '../error/error-code.enum';
+import { IRepository, PaginatedResult, DomainError, ErrorCode } from "hexa-three-levels";
 
 /**
  * Product Service
@@ -28,6 +25,18 @@ export class ProductService implements IProductService<Product> {
     private readonly productRepository: IRepository<Product>,
   ) { }
 
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<Product>> {
+    throw new Error('Method not implemented.');
+  };
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Product[]> {
     const list: Product[] = await this.productRepository.getAll(page, limit, orderByField, isAscending);
@@ -42,7 +51,7 @@ export class ProductService implements IProductService<Product> {
   /**
    * Get Catalog
    */
-  async getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult> {
+  async getCatalog(category: string, page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaginatedResult<any>> {
     const fieldsToExclude = {
       barcode: 0,
       type: 0,
@@ -72,7 +81,7 @@ export class ProductService implements IProductService<Product> {
     ));
 
     //compose result
-    let filtered: PaginatedResult = new PaginatedResult();
+    let filtered: PaginatedResult<any> = new PaginatedResult<any>();
     const count = await this.productRepository.count(queryQuilter);
     filtered.list = products;
     filtered.page = page ? page : 1;

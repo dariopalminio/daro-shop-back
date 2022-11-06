@@ -1,11 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Address } from 'src/domain/model/profile/address';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { ShippingPriceDuplicateError, ShippingPriceFormatError, ShippingPriceNotFoundError } from '../error/shipping-price-errors';
+import { IRepository, PaginatedResult, DomainError, ErrorCode } from "hexa-three-levels";
 
 /**
  * Shipping Price Service
@@ -24,6 +22,18 @@ export class ShippingPriceService implements IShippingPriceService<ShippingPrice
     @Inject('IShippingPriceRepository')
     private readonly shippingPriceRepository: IRepository<ShippingPrice>) {
   }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
+
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<ShippingPrice>> {
+    throw new Error('Method not implemented.');
+  };
 
   getPriceByAddress(address: Address): Promise<any> {
     console.log("getPriceByAddress");

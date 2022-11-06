@@ -1,8 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
 import { TokensType } from 'src/domain/model/auth/token/tokens.type';
 import jwt from "jsonwebtoken";
@@ -17,6 +14,7 @@ import { User } from 'src/domain/model/user/user';
 import { InvalidClientCredentialsError, InvalidCredentialsError, RefreshTokenMalformedError, TokensCreationError } from 'src/domain/error/auth-errors';
 import { UserNotFoundError } from '../error/user-errors';
 const bcrypt = require('bcrypt');
+import { DomainError, ErrorCode, IGlobalConfig } from "hexa-three-levels";
 
 /**
  * Authorization Tokens service

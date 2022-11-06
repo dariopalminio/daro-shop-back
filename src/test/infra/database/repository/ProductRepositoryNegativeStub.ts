@@ -1,5 +1,5 @@
 import { Product } from "src/domain/model/product/product";
-import { IRepository } from "src/domain/outgoing/repository.interface";
+import { IRepository } from "hexa-three-levels";
 
 // Mocking repository
 export class ProductRepositoryNegativeStub implements IRepository<Product> {

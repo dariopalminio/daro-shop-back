@@ -1,10 +1,10 @@
-import { Controller, Res, Get, Post, Body, Inject, Headers, HttpStatus, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Res, Get, Post, Body, Inject, Headers, HttpStatus, InternalServerErrorException, HttpException } from '@nestjs/common';
 import { INotificationService } from 'src/domain/incoming/notification.service.interface';
 import { ContactMessage } from 'src/domain/model/notification/contact.message';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { EmailDataDTO } from 'src/domain/model/notification/email-data-dto';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Notification controller
@@ -15,12 +15,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('notifications')
 export class NotificationController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('INotificationService')
     private readonly supportService: INotificationService,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
 
   @Get()
@@ -49,7 +53,7 @@ export class NotificationController {
     try {
       sentInfo = await this.supportService.sendContactEmail(contactMessage, lang);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
 
     return res.status(HttpStatus.OK).json(sentInfo);
@@ -62,7 +66,7 @@ export class NotificationController {
       if (sentInfo.isSuccess) return res.status(HttpStatus.OK).json(sentInfo);
       return res.status(sentInfo.status).json(sentInfo);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
 
   };

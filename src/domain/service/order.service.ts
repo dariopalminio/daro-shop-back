@@ -1,16 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { IOrderService } from 'src/domain/incoming/order.service.interface';
 import { Order } from 'src/domain/model/order-aggregate/order';
 import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { OrderItem } from 'src/domain/model/order-aggregate/order-item';
 import { OrderStatus } from 'src/domain/model/order-aggregate/order-status.enum';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { Product } from 'src/domain/model/product/product';
 import { OrderDuplicateError, OrderFormatError, OrderNotFoundError, OutOfStockError } from '../error/order-errors';
+import { IRepository, PaginatedResult, DomainError, ErrorCode } from "hexa-three-levels";
 
 /**
  * Order Service
@@ -33,6 +31,19 @@ export class OrderService implements IOrderService<Order> {
     @Inject('IProductService')
     private readonly productService: IProductService<Product>,
   ) { }
+
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<Order>> {
+    throw new Error('Method not implemented.');
+  };
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Order[]> {
     const list: Order[] = await this.orderRepository.getAll(page, limit, orderByField, isAscending);

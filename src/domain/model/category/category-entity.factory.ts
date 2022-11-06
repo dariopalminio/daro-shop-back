@@ -1,4 +1,4 @@
-import { IEntityFactory } from "../entity-factory.interface";
+import { IEntityFactory } from "hexa-three-levels";
 import { Category } from "./category";
 
 export class CategoryEntityFactory implements IEntityFactory<Category> {

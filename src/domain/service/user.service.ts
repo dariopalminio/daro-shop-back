@@ -1,12 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUserService } from 'src/domain/incoming/user.service.interface';
 import { User } from 'src/domain/model/user/user';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { generateToken } from 'src/domain/helper/token.helper';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { UserNotFoundError, UserDuplicateError, UserFormatError } from '../error/user-errors';
+import { IRepository, PaginatedResult, DomainError, ErrorCode } from "hexa-three-levels";
 
 /**
  * User Service
@@ -25,7 +23,18 @@ export class UserService implements IUserService<User> {
     @Inject('IUserRepository')
     private readonly userRepository: IRepository<User>) {
   }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
 
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<User>> {
+    throw new Error('Method not implemented.');
+  };
+  
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<User[]> {
     const list: User[] = await this.userRepository.getAll(page, limit, orderByField, isAscending);
     return list;

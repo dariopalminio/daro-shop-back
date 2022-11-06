@@ -1,5 +1,5 @@
-import { convertAnyToDate } from '../../helper/date.helper';
-import { IMarshable } from '../marshable.interface';
+import { convertAnyToDate } from "hexa-three-levels";
+import { IMarshable } from "hexa-three-levels";
 
 /**
 * Reservation Value Object

@@ -1,4 +1,4 @@
-import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
+import { IPersistentAggregateService } from "hexa-three-levels";
 
 /**
  * Payment Method Service Interface

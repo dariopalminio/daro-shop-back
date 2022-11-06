@@ -3,15 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Profile } from 'src/domain/model/profile/profile';
 import { ProfileEntityFactory } from 'src/domain/model/profile/profile.factory';
-import { IRepository } from '../../../domain/outgoing/repository.interface';
 import { ProfileDocument } from '../schema/profile.schema';
-import { GenericRepository } from './generic-repository';
+import { MongoGenericRepository } from "hexa-three-levels";
+import { IRepository } from "hexa-three-levels";
 
 /**
  * Profile Mongo repository implementation
  */
  @Injectable()
- export class ProfileRepository extends GenericRepository<ProfileDocument, Profile> implements IRepository<Profile> {
+ export class ProfileRepository extends MongoGenericRepository<ProfileDocument, Profile> implements IRepository<Profile> {
  
      constructor(
          @InjectModel('Profile')

@@ -1,10 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { IProfileService } from 'src/domain/incoming/profile.service.interface';
 import { Profile } from 'src/domain/model/profile/profile';
-import { ErrorCode } from 'src/domain/error/error-code.enum';
 import { ProfileDuplicateError, ProfileFormatError, ProfileNotFoundError } from '../error/profile-errors';
+import { IRepository, PaginatedResult, DomainError, ErrorCode } from "hexa-three-levels";
 
 /**
  * Profile Service
@@ -23,6 +21,18 @@ export class ProfileService implements IProfileService<Profile> {
     @Inject('IProfileRepository')
     private readonly profileRepository: IRepository<Profile>) {
   }
+  
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<Profile>> {
+    throw new Error('Method not implemented.');
+  };
 
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<Profile[]> {
     const list: Profile[] = await this.profileRepository.getAll(page, limit, orderByField, isAscending);

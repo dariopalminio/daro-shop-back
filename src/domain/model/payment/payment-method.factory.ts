@@ -1,5 +1,5 @@
 
-import { IEntityFactory } from "../entity-factory.interface";
+import { IEntityFactory } from "hexa-three-levels";
 import { PaymentMethod } from "./payment-metod";
 
 export class PaymentMethodEntityFactory implements IEntityFactory<PaymentMethod> {

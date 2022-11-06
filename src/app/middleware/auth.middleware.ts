@@ -2,9 +2,9 @@ import { Injectable, NestMiddleware, Inject, UnauthorizedException, BadRequestEx
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { IAuthTokensService } from 'src/domain/incoming/auth.tokens.service.interface';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HeadersAuthorizationError, UnauthorizedJwtError } from '../error/app-auth-errors';
 import extractTokenFromHeader from '../helper/token.helper';
+import { IGlobalConfig } from "hexa-three-levels";
 
 /**
  * Auth Middleware

@@ -1,11 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRepository } from 'src/domain/outgoing/repository.interface';
-import { DomainError } from 'src/domain/error/domain-error';
 import { IPaymentMethodService } from 'src/domain/incoming/payment-method.service.interface';
 import { PaymentMethod } from 'src/domain/model/payment/payment-metod';
-import { IPaymentMethod } from '../model/payment/payment-method.interface';
 import { PaymentMethodFormatError, PaymentMethodNotFoundError } from '../error/payment-method.errors';
-
+import { IRepository, PaginatedResult, DomainError } from "hexa-three-levels";
 
 /**
  * Payment Method Service
@@ -25,6 +22,19 @@ export class PaymentMethodService implements IPaymentMethodService<PaymentMethod
     private readonly paymentMethodRepo: IRepository<PaymentMethod>,
   ) { }
 
+  searchExcludingFields(queryFilter: any, fieldsToExclude: any, page: number, limit: number, orderByField: string, isAscending: boolean): Promise<PaginatedResult<any>> {
+    throw new Error('Method not implemented.');
+  }
+  
+  findExcludingFields(query: any, fieldsToExclude: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<any[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  
+  search(queryFilter?: any, page?: number | undefined, limit?: number | undefined, orderByField?: string | undefined, isAscending?: boolean | undefined): Promise<PaginatedResult<PaymentMethod>> {
+    throw new Error('Method not implemented.');
+  };
+  
   async getAll(page?: number, limit?: number, orderByField?: string, isAscending?: boolean): Promise<PaymentMethod[]> {
     const list: PaymentMethod[] = await this.paymentMethodRepo.getAll(page, limit, orderByField, isAscending);
     return list;

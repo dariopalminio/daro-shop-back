@@ -1,5 +1,4 @@
-import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
+import { Controller, Get, Res, Inject, Query, BadRequestException, HttpStatus, UseGuards, Post, Body, NotFoundException, Delete, Put, InternalServerErrorException, HttpException } from '@nestjs/common';
 import { Address } from 'src/domain/model/profile/address';
 import { IShippingPriceService } from 'src/domain/incoming/shipping-price.service.interface';
 import { Roles } from '../guard/roles.decorator';
@@ -7,7 +6,8 @@ import { RolesGuard } from '../guard/roles.guard';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ShippingPrice } from 'src/domain/model/shipping/shipping-price';
 import { ShippingPriceDTO } from '../dto/shipping-price.dto';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * ShippingPrice controller
@@ -18,12 +18,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('shipping/price')
 export class ShippingPriceController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('IShippingPriceService')
     private readonly shippingPriceService: IShippingPriceService<ShippingPrice>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
   @Get('address')
   async getPriceByAddress(@Res() res, @Query('country') countryParam, @Query('state') stateParam, @Query('neighborhood') neighborhoodParam, @Query('city') cityParam) {
@@ -40,7 +44,7 @@ export class ShippingPriceController {
     try {
       pricingObj = await this.shippingPriceService.getPriceByAddress(addrs);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (pricingObj === null) throw new NotFoundException('Location not found');
     return res.status(200).json(pricingObj);
@@ -61,7 +65,7 @@ export class ShippingPriceController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
   };
 
@@ -73,7 +77,7 @@ export class ShippingPriceController {
     try {
       objCreatedId = await this.shippingPriceService.create(shippingPriceDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!objCreatedId) throw new NotFoundException('Problems saving!');
     return res.status(HttpStatus.OK).json({
@@ -92,7 +96,7 @@ export class ShippingPriceController {
     try {
       objDeleted = await this.shippingPriceService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!objDeleted) throw new NotFoundException('Problem in creation!');
     return res.status(HttpStatus.OK).json({
@@ -115,7 +119,7 @@ export class ShippingPriceController {
     try {
       updatedObj = await this.shippingPriceService.update(query, shippingPrice);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!updatedObj) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

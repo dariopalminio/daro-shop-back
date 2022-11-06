@@ -1,5 +1,5 @@
 import { Profile } from 'src/domain/model/profile/profile';
-import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
+import { IPersistentAggregateService } from "hexa-three-levels";
 
 /**
  * Profile Service Interface

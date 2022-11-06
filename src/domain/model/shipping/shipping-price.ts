@@ -1,6 +1,4 @@
-import { Entity } from "../entity";
-import { IMarshable } from "../marshable.interface";
-import { IValidatable } from "../validatable.interface";
+import { Entity, IMarshable, IValidatable } from "hexa-three-levels";
 import { IShippingPrice } from "./shipping-price.interface";
 
 /**

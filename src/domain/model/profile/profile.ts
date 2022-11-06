@@ -1,7 +1,4 @@
-import { convertAnyToDate } from "src/domain/helper/date.helper";
-import { Entity } from "../entity";
-import { IMarshable } from "../marshable.interface";
-import { IValidatable } from "../validatable.interface";
+import { Entity, IMarshable, IValidatable, convertAnyToDate } from "hexa-three-levels";
 import { Address } from "./address";
 import { IProfile } from "./profile.interface";
 

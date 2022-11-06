@@ -1,21 +1,19 @@
 import {
   Controller, Inject, Post, Res, HttpStatus, Body, Get, Param,
-  NotFoundException, Delete, Query, Put, BadRequestException, InternalServerErrorException, UseGuards
+  NotFoundException, Delete, Query, Put, BadRequestException, InternalServerErrorException, UseGuards, HttpException
 } from '@nestjs/common';
 
 import { IProductService } from 'src/domain/incoming/product.service.interface';
 import { Product } from 'src/domain/model/product/product';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
-import { PaginatedResult } from 'src/domain/model/paginated-result';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { ProductDTO } from '../dto/product.dto';
-import { AppErrorHandler } from '../error/app-error-handler';
 import { IProduct } from 'src/domain/model/product/product.interface';
-
+import { IAppErrorHandler, PaginatedResult, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 /**
  * Product controller
  * 
@@ -25,12 +23,16 @@ import { IProduct } from 'src/domain/model/product/product.interface';
 @Controller('products')
 export class ProductController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('IProductService')
     private readonly productService: IProductService<Product>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
 
   @ApiOperation({
@@ -73,7 +75,7 @@ export class ProductController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
   };
 
@@ -93,7 +95,7 @@ export class ProductController {
         return res.status(HttpStatus.OK).json(list);
       }
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
   };
 
@@ -112,10 +114,10 @@ export class ProductController {
       throw new BadRequestException('Some parameter is wrong:' + error);
     }
     try {
-      const data: PaginatedResult = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
+      const data: PaginatedResult<any> = await this.productService.getCatalog(category, page, limit, orderByField, isAscending);
       return res.status(HttpStatus.OK).json(data);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
   };
 
@@ -128,7 +130,7 @@ export class ProductController {
     try {
       product = await this.productService.getById(productID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     if (!product) throw new NotFoundException('Product does not exist!');
     return res.status(HttpStatus.OK).json(product);
@@ -142,7 +144,7 @@ export class ProductController {
     try {
       product = await this.productService.getDetailById(productID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     if (!product) throw new NotFoundException('Product does not exist!');
     return res.status(HttpStatus.OK).json(product);
@@ -156,7 +158,7 @@ export class ProductController {
     try {
       productCreatedId = await this.productService.create(productToCreateDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!productCreatedId) throw new NotFoundException('Product does not exist or canot delete!');
     return res.status(HttpStatus.OK).json({
@@ -175,7 +177,7 @@ export class ProductController {
     try {
       productDeleted = await this.productService.delete(productID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     if (!productDeleted) throw new NotFoundException('Product does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -196,7 +198,7 @@ export class ProductController {
     try {
       updatedProduct = await this.productService.updateById(id, productDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
     if (!updatedProduct) throw new NotFoundException('Product does not exist!');
     return res.status(HttpStatus.OK).json({
@@ -221,7 +223,7 @@ export class ProductController {
       const skuNew = await this.productService.generateSKU(type, brand, model, color, size);
       return res.status(HttpStatus.OK).json({ "sku": skuNew });
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     };
   };
 

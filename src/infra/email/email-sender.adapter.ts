@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import IEmailSender from 'src/domain/outgoing/email-sender.interface';
 import * as path from 'path';
+import { IGlobalConfig } from "hexa-three-levels";
 
 const fs = require("fs")
 const nodemailer = require("nodemailer");

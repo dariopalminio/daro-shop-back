@@ -1,16 +1,16 @@
 import {
   Controller, Get, Res, Post, Delete, Put, Body, Param, Query, Inject, HttpStatus,
-  NotFoundException, UseGuards, InternalServerErrorException, BadRequestException
+  NotFoundException, UseGuards, InternalServerErrorException, BadRequestException, HttpException
 } from '@nestjs/common';
 import { IUserService } from 'src/domain/incoming/user.service.interface';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import { HelloWorldDTO } from '../dto/hello-world.dto';
 import { RolesGuard } from '../guard/roles.guard';
 import { Roles } from '../guard/roles.decorator';
 import { RolesEnum } from 'src/domain/model/auth/reles.enum';
 import { UserDTO } from '../dto/user.dto';
 import { User } from 'src/domain/model/user/user';
-import { AppErrorHandler } from '../error/app-error-handler';
+import { IAppErrorHandler, IGlobalConfig } from "hexa-three-levels";
+import { AppNestErrorHandler } from '../error/app-error-handler';
 
 /**
  * Users controller
@@ -21,12 +21,16 @@ import { AppErrorHandler } from '../error/app-error-handler';
 @Controller('users')
 export class UserController {
 
+  appErrorHandler: IAppErrorHandler<HttpException>;
+  
   constructor(
     @Inject('IUserService')
     private readonly userService: IUserService<User>,
     @Inject('IGlobalConfig')
     private readonly globalConfig: IGlobalConfig,
-  ) { }
+  ) { 
+    this.appErrorHandler = new AppNestErrorHandler();
+  }
 
   @Get()
   getHello(@Res() res) {
@@ -65,7 +69,7 @@ export class UserController {
     try {
        user = await this.userService.getById(userID);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -79,7 +83,7 @@ export class UserController {
     try {
        user = await this.userService.getByUserName(userName);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!user) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json(user);
@@ -94,7 +98,7 @@ export class UserController {
     try {
        created = await this.userService.create(userToCreateDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!created) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -113,7 +117,7 @@ export class UserController {
     try {
        categoryDeleted = await this.userService.delete(id);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!categoryDeleted) throw new NotFoundException('User does not exist or canot delete user!');
     return res.status(HttpStatus.OK).json({
@@ -130,7 +134,7 @@ export class UserController {
     try {
        updatedUser = await this.userService.updateById(id, userDTO);
     } catch (error) {
-      throw AppErrorHandler.createHttpException(error);
+      throw this.appErrorHandler.createHttpException(error);
     }
     if (!updatedUser) throw new NotFoundException('User does not exist!');
     return res.status(HttpStatus.OK).json({

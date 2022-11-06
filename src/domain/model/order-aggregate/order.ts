@@ -1,10 +1,7 @@
 import { Address } from '../profile/address';
 import { Client } from './client';
-import { Entity } from '../entity';
+import { Entity, IMarshable, IValidatable, convertAnyToDate } from "hexa-three-levels";
 import { OrderItem } from './order-item';
-import { convertAnyToDate } from 'src/domain/helper/date.helper';
-import { IValidatable } from '../validatable.interface';
-import { IMarshable } from '../marshable.interface';
 import { IOrder } from './order.interface';
 
 /**

@@ -1,6 +1,4 @@
-
-
-import { IEntityFactory } from "../entity-factory.interface";
+import { IEntityFactory } from "hexa-three-levels";
 import { Profile } from "./profile";
 
 

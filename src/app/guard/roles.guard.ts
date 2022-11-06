@@ -1,8 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { Reflector } from '@nestjs/core';
-import { IGlobalConfig } from 'src/domain/outgoing/global-config.interface';
 import extractTokenFromHeader from '../helper/token.helper';
+import { IGlobalConfig } from "hexa-three-levels";
 
 /**
  * Roles Guards 

@@ -1,5 +1,5 @@
 
-import { IPersistentAggregateService } from 'src/domain/service/interface/persistent.aggregate.interface';
+import { IPersistentAggregateService } from "hexa-three-levels";
 import { User } from 'src/domain/model/user/user';
 
 /**

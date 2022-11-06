@@ -3,14 +3,18 @@ import {
     HttpStatus, InternalServerErrorException, NotFoundException,
     UnauthorizedException
 } from "@nestjs/common";
-import { DomainError } from "src/domain/error/domain-error";
+import { IAppErrorHandler } from "hexa-three-levels";
+import { DomainError } from "hexa-three-levels";
 
-export class AppErrorHandler {
+/**
+ * App Nest Error Handler 
+ */
+export class AppNestErrorHandler implements IAppErrorHandler<HttpException> {
 
     /**
      * Create an http exception according to the exception received from the domain.
      */
-    public static createHttpException(e: Error | DomainError): HttpException {
+    public createHttpException(e: Error | DomainError): HttpException {
 
         if (e instanceof DomainError) {
 
@@ -40,6 +44,7 @@ export class AppErrorHandler {
     };
 
 };
+
 
 
 
