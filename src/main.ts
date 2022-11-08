@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { AppModule } from './application/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { setupDocModule } from './infra/document/setup-doc-module';
+import { setupDocModule } from './infrastructure/document/setup-doc-module';
 require('dotenv').config();
 import { join } from 'path';
 

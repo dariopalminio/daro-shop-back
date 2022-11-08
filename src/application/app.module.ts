@@ -3,37 +3,37 @@ import { Module, OnModuleInit, MiddlewareConsumer, RequestMethod } from '@nestjs
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { TerminusModule } from '@nestjs/terminus';
 import { APP_FILTER } from '@nestjs/core';
-import { ExceptionsAllFilter } from 'src/app/filter/exception.filter';
-import { AppController } from 'src/app/controller/app.controller';
-import { NotificationController } from 'src/app/controller/notification.controller';
-import { ProductController } from 'src/app/controller/product.controller';
-import { CategoryController } from 'src/app/controller/category.controller';
+import { ExceptionsAllFilter } from 'src/application/filter/exception.filter';
+import { AppController } from 'src/application/controller/app.controller';
+import { NotificationController } from 'src/application/controller/notification.controller';
+import { ProductController } from 'src/application/controller/product.controller';
+import { CategoryController } from 'src/application/controller/category.controller';
 import { NotificationService } from 'src/domain/service/notification.service';
 import { ProductService } from 'src/domain/service/product.service';
 import { CategoryService } from 'src/domain/service/category.service';
 import { AuthService } from 'src/domain/service/auth.service';
 import { UserService } from 'src/domain/service/user.service';
-import { UserController } from 'src/app/controller/user.controller';
-import { AuthController } from 'src/app/controller/auth.controller';
-import { EmailSmtpSenderAdapter } from 'src/infra/email/email-sender.adapter';
-import { AuthMiddleware } from 'src/app/middleware/auth.middleware';
-import { ProductSchema } from 'src/infra/database/schema/product.schema';
-import { UserSchema } from 'src/infra/database/schema/user.schema';
+import { UserController } from 'src/application/controller/user.controller';
+import { AuthController } from 'src/application/controller/auth.controller';
+import { EmailSmtpSenderAdapter } from 'src/infrastructure/email/email-sender.adapter';
+import { AuthMiddleware } from 'src/application/middleware/auth.middleware';
+import { ProductSchema } from 'src/infrastructure/database/schema/product.schema';
+import { UserSchema } from 'src/infrastructure/database/schema/user.schema';
 
-import { CategorySchema } from 'src/infra/database/schema/category.schema';
-import DB_CONNECTION from 'src/infra/database/db-connection';
+import { CategorySchema } from 'src/infrastructure/database/schema/category.schema';
+import DB_CONNECTION from 'src/infrastructure/database/db-connection';
 import {
   UserRepository
-} from 'src/infra/database/repository/user.repository';
+} from 'src/infrastructure/database/repository/user.repository';
 import {
   CategoryRepository
-} from 'src/infra/database/repository/category.repository';
+} from 'src/infrastructure/database/repository/category.repository';
 import {
   ProductRepository
-} from 'src/infra/database/repository/product.repository';
-import LoggerHelper from 'src/infra/logger/logger.helper';
+} from 'src/infrastructure/database/repository/product.repository';
+import LoggerHelper from 'src/infrastructure/logger/logger.helper';
 
-import { GlobalConfigImpl } from 'src/infra/config/global-config-impl';
+import { GlobalConfigImpl } from 'src/infrastructure/config/global-config-impl';
 
 //Mongo
 import { MongooseModule } from '@nestjs/mongoose';
@@ -44,22 +44,22 @@ import { AuthTokensController } from './controller/auth.token.controller';
 import { AuthTokensService } from 'src/domain/service/auth.tokens.service';
 
 import { join } from 'path';
-import { ProfileSchema } from 'src/infra/database/schema/profile.schema';
-import { ProfileRepository } from 'src/infra/database/repository/profile.repository';
-import { ProfileController } from 'src/app/controller/profile.controller';
+import { ProfileSchema } from 'src/infrastructure/database/schema/profile.schema';
+import { ProfileRepository } from 'src/infrastructure/database/repository/profile.repository';
+import { ProfileController } from 'src/application/controller/profile.controller';
 import { ProfileService } from 'src/domain/service/profile.service';
 import { ShippingPriceService } from 'src/domain/service/shipping-price.service';
-import { ShippingPriceController } from 'src/app/controller/shipping-price.controller';
-import { ShippingPriceSchema } from 'src/infra/database/schema/shipping-price.schema';
-import { ShippingPriceRepository } from 'src/infra/database/repository/shipping-price.repository';
-import { OrderRepository } from 'src/infra/database/repository/order.repository';
+import { ShippingPriceController } from 'src/application/controller/shipping-price.controller';
+import { ShippingPriceSchema } from 'src/infrastructure/database/schema/shipping-price.schema';
+import { ShippingPriceRepository } from 'src/infrastructure/database/repository/shipping-price.repository';
+import { OrderRepository } from 'src/infrastructure/database/repository/order.repository';
 import { OrderService } from 'src/domain/service/order.service';
-import { OrderController } from 'src/app/controller/order.controller';
-import { OrderSchema } from 'src/infra/database/schema/order.schema';
-import { PaymentMethodSchema } from 'src/infra/database/schema/payment-method.schema';
-import { PaymentMethodRepository } from 'src/infra/database/repository/payment-method.repository';
+import { OrderController } from 'src/application/controller/order.controller';
+import { OrderSchema } from 'src/infrastructure/database/schema/order.schema';
+import { PaymentMethodSchema } from 'src/infrastructure/database/schema/payment-method.schema';
+import { PaymentMethodRepository } from 'src/infrastructure/database/repository/payment-method.repository';
 import { PaymentMethodService } from 'src/domain/service/payment-method.service';
-import { PaymentMethodController } from 'src/app/controller/payment-method.controller';
+import { PaymentMethodController } from 'src/application/controller/payment-method.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
