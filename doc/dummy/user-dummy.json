@@ -1,0 +1,51 @@
+[
+    {
+        "id": "636bca1cd55d24ac2b48d6ba",
+        "enable": true,
+        "username": "dariopalminio@hotmail.com",
+        "firstName": "Admin",
+        "lastName": "Admin",
+        "email": "dariopalminio@hotmail.com",
+        "password": "$2b$10$NB.ZxxRVf.M26.Xak8lEBeqj7CVSw7/6kEcuthT11ZtAmppUBSF2u",
+        "roles": [
+            "admin",
+            "user"
+        ],
+        "verified": false,
+        "verificationCode": "be4025a7-f5d5-4e72-83dc-9128fc3c8597",
+        "updatedAt": "2022-10-31T02:18:33.384Z",
+        "createdAt": "2022-10-31T01:19:15.547Z"
+    },
+    {
+        "id": "636bcb30d55d24ac2b48d6be",
+        "enable": true,
+        "username": "dariopalminio@gmail.com",
+        "firstName": "Choy",
+        "lastName": "Dario Andres",
+        "email": "dariopalminio@gmail.com",
+        "password": "$2b$10$yYZQwPvpdDUDXlAc2NONu.GYOj3UJz8aE3lzBSSQarkSsmy.yRy8q",
+        "roles": [
+            "user"
+        ],
+        "verified": false,
+        "verificationCode": "8a27f5cc-5bbe-4c94-bf12-32b68076245e",
+        "updatedAt": "2022-11-09T15:37:51.622Z",
+        "createdAt": "2022-11-09T15:37:51.622Z"
+    },
+    {
+        "id": "636bcb30d55d24ac2b48d6ba",
+        "enable": true,
+        "username": "rest-client-test",
+        "firstName": "App",
+        "lastName": "App",
+        "email": "app_email_or_contact_info_@gmail.com",
+        "password": "$2b$10$yYZQwPvpdDUDXlAc2NONu.GYOj3UJz8aE3lzBSSQarkSsmy.yRy8q",
+        "roles": [
+            "app"
+        ],
+        "verified": true,
+        "verificationCode": "8a27f5cc-5bbe-4c94-bf12-32b68076245e",
+        "updatedAt": "2022-11-09T15:37:51.622Z",
+        "createdAt": "2022-11-09T15:37:51.622Z"
+    }
+]

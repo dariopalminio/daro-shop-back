@@ -1,4 +1,4 @@
-import { Product } from "src/domain/model/product/product";
+import { Product } from "src/product/domain/model/product.entity";
 import { IRepository } from "hexa-three-levels";
 
 // Mocking repository
