@@ -1,3 +1,7 @@
+
+export const emailRegularExpression = /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+
+
 export const isEmailValid = (email: string) => {
     if (!email) return false;
 
@@ -20,9 +24,7 @@ export const isEmailValid = (email: string) => {
 
     if (mailServer.length > 63) return false;
 
-    const regularExpression = /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
-
-    if (!regularExpression.test(email)) return false;
+    if (!emailRegularExpression.test(email)) return false;
 
     return true;
 };
