@@ -7,7 +7,7 @@ export interface IAddress{
     city: string;
     state: string; //province (in Argentina), region (in Chile) or state
     country: string;
-    //postal code?
+    //zipCode : postal code - not implemented
 };
 
 /**
