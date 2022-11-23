@@ -3,6 +3,7 @@ import { Entity, IMarshable, IValidatable, IEntityFactory } from "hexa-three-lev
 
 export interface IBusiness {
     id?: string;
+    country: string;
     taxIdNum: string;
     socialReason: string;
     fantasyName: string;
@@ -21,6 +22,7 @@ export class BusinessEntityFactory implements IEntityFactory<Business> {
 
 export class Business extends Entity implements IValidatable, IMarshable<Business> {
 
+    country: string;
     //Tax Identification Numbers: TIN (EEUU), RUT (Chile), CUIT (Argentina), NIT (Colombia)
     taxIdNum: string; 
 
@@ -36,9 +38,9 @@ export class Business extends Entity implements IValidatable, IMarshable<Busines
 
 
     public constructor(unmarshalled: any);
-    public constructor(id: string, taxIdNum: string, socialReason: string, fantasyName: string, activity: string, addressLine: string, email: string, phone: string, message: string);
+    public constructor(id: string, country: string, taxIdNum: string, socialReason: string, fantasyName: string, activity: string, addressLine: string, email: string, phone: string, message: string);
     public constructor(...argumentsArray: any[]) {
-        if (argumentsArray.length > 9) {
+        if (argumentsArray.length > 10) {
             throw new Error('Number of constructor arguments exceeded');
         }
         if (argumentsArray.length === 0) {
@@ -51,18 +53,20 @@ export class Business extends Entity implements IValidatable, IMarshable<Busines
         }
         if (argumentsArray.length > 1) {
             super(argumentsArray[0]); //id
-            this.taxIdNum = argumentsArray[1];
-            this.socialReason = argumentsArray[2];
-            this.fantasyName = argumentsArray[3];
-            this.activity = argumentsArray[4];
-            this.addressLine = argumentsArray[5];
-            this.email = argumentsArray[6];
-            this.phone = argumentsArray[7];
-            this.message = argumentsArray[8];
+            this.country = argumentsArray[1];
+            this.taxIdNum = argumentsArray[2];
+            this.socialReason = argumentsArray[3];
+            this.fantasyName = argumentsArray[4];
+            this.activity = argumentsArray[5];
+            this.addressLine = argumentsArray[6];
+            this.email = argumentsArray[7];
+            this.phone = argumentsArray[8];
+            this.message = argumentsArray[9];
         }
     };
 
     private setFromAny(unmarshalled: any) {
+        this.country = unmarshalled.country;
         this.taxIdNum = unmarshalled.taxIdNum;
         this.socialReason = unmarshalled.socialReason;
         this.fantasyName = unmarshalled.fantasyName;
@@ -79,6 +83,7 @@ export class Business extends Entity implements IValidatable, IMarshable<Busines
 
     public convertToAny(): any {
         const unmarshalled: IBusiness = {
+            country: this.country,
             id: this.id,
             taxIdNum: this.taxIdNum,
             socialReason: this.socialReason,
@@ -96,6 +101,10 @@ export class Business extends Entity implements IValidatable, IMarshable<Busines
         throw new Error('Method not implemented.');
     };
 
+
+    public getCountry(): string {
+        return this.country;
+    };
 
     public getTaxIdNum(): string {
         return this.taxIdNum;
@@ -127,6 +136,10 @@ export class Business extends Entity implements IValidatable, IMarshable<Busines
 
     public getMessage(): string {
         return this.message;
+    };
+
+    public setCountry(value: string) {
+        this.country = value;
     };
 
     public setTaxIdNum(value: string) {
