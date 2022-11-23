@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IAuthService } from 'src/auth/domain/auth.service.interface';
 import { IUserService } from 'src/auth/domain/user.service.interface';
 import IEmailSender from 'src/notification/domain/email-sender.interface';
-import { validEmail } from 'src/auth/domain/helper/validators.helper';
+import { validEmail, isURLValid } from 'src/auth/domain/helper/validators.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from './helper/token.helper';
 import { StartConfirmEmailData } from 'src/auth/domain/model/register/start-confirm-email-data';
 import { ParamsRegisterStart } from 'src/auth/domain/model/register/params-register-start';
@@ -131,12 +131,12 @@ export class AuthService implements IAuthService {
   async sendStartEmailConfirm(startConfirmEmailData: StartConfirmEmailData, locale: string): Promise<any> {
 
     // Data validation
-
     if (!validEmail(startConfirmEmailData.email)) {
       throw new UserFormatError("Invalid email to email confirmation!");
     }
 
-    if (!startConfirmEmailData.verificationPageLink) {
+    if (!startConfirmEmailData.verificationPageLink ||
+      !isURLValid(startConfirmEmailData.verificationPageLink)) {
       throw new UserFormatError("Invalid link to email confirmation!");
     }
 
@@ -269,11 +269,12 @@ export class AuthService implements IAuthService {
   async sendEmailToRecoveryPass(startRecoveryData: StartRecoveryDataType, lang: string): Promise<any> {
     console.log("sendEmailToRecoveryPass lang:", lang);
 
+    //validate input data
     if (!validEmail(startRecoveryData.email)) {
       throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid email!");
     }
 
-    if (!startRecoveryData.recoveryPageLink) {
+    if (!startRecoveryData.recoveryPageLink || !isURLValid(startRecoveryData.recoveryPageLink)) {
       throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid link!");
     }
 

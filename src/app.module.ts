@@ -60,6 +60,10 @@ import { PaymentMethodSchema } from 'src/payment/infrastructure/payment-method.s
 import { PaymentMethodRepository } from 'src/payment/infrastructure/payment-method.repository';
 import { PaymentMethodService } from 'src/payment/domain/payment-method.service';
 import { PaymentMethodController } from 'src/payment/application/payment-method.controller';
+import { BusinessSchema } from './business/infrastructure/Business.schema';
+import { BusinessService } from './business/domain/Business.service';
+import { BusinessRepository } from './business/infrastructure/Business.repository';
+import { BusinessController } from './business/application/Business.controller';
 
 console.log("DB_CONNECTION:", DB_CONNECTION);
 
@@ -77,6 +81,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       { name: 'ShippingPrice', schema: ShippingPriceSchema },
       { name: 'Order', schema: OrderSchema },
       { name: 'PaymentMethod', schema: PaymentMethodSchema },
+      { name: 'BusinessModel', schema: BusinessSchema },
     ]),
     /*ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../../public'),
@@ -89,7 +94,7 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
   ],
   controllers: [AppController, AuthController, AuthTokensController,
     UserController, ProfileController, NotificationController,
-    ProductController, CategoryController, ShippingPriceController, OrderController, PaymentMethodController],
+    ProductController, CategoryController, ShippingPriceController, OrderController, PaymentMethodController, BusinessController],
   providers: [
     {
       provide: APP_GUARD,
@@ -144,6 +149,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
       useClass: PaymentMethodService,
     },
     {
+      provide: 'IBusinessService',
+      useClass: BusinessService,
+    },
+    {
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
@@ -170,6 +179,10 @@ console.log("DB_CONNECTION:", DB_CONNECTION);
     {
       provide: 'IPaymentMethodRepository',
       useClass: PaymentMethodRepository,
+    },
+    {
+      provide: 'IBusinessRepository',
+      useClass: BusinessRepository,
     },
     {
       provide: APP_FILTER,

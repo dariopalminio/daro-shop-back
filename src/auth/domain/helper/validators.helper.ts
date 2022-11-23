@@ -30,3 +30,11 @@ export const validEmail = (email: string) => {
 };
 
 
+export const isURLValid = (url: string) => {
+    try {
+        new URL(url);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
