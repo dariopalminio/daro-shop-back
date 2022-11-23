@@ -1,10 +1,10 @@
 {
   "name": "daro-shop-back",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
-  "author": "",
+  "author": "Dario Palminio",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "GPL",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
