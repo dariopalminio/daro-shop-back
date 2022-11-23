@@ -1,6 +1,4 @@
-
-
-export const validEmail = (email: string) => {
+export const isEmailValid = (email: string) => {
     if (!email) return false;
 
     var partsArray = email.split('@');
@@ -27,14 +25,4 @@ export const validEmail = (email: string) => {
     if (!regularExpression.test(email)) return false;
 
     return true;
-};
-
-
-export const isURLValid = (url: string) => {
-    try {
-        new URL(url);
-        return true;
-    } catch (err) {
-        return false;
-    }
 };

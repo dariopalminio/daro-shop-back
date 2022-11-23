@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ContactMessage } from 'src/notification/domain/model/contact.message';
 import { INotificationService } from 'src/notification/domain/notification.service.interface';
 import IEmailSender from 'src/notification/domain/email-sender.interface';
-import { validEmail } from 'src/auth/domain/helper/validators.helper';
 import { DomainError, ErrorCode, IGlobalConfig } from "hexa-three-levels";
+import { isEmailValid } from 'src/common/domain/helper/email.validator';
 
 /**
  * Notification Service
@@ -31,7 +31,7 @@ export class NotificationService implements INotificationService {
    */
   async sendContactEmail(contactMessage: ContactMessage, locale: string): Promise<any> {
 
-    if (!validEmail(contactMessage.email)) throw new Error("Invalid email!");
+    if (!isEmailValid(contactMessage.email)) throw new Error("Invalid email!");
 
     try {
       const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Support`;
@@ -50,7 +50,7 @@ export class NotificationService implements INotificationService {
 
   async sendEmail(subject: string, email: string, contentHTML: string): Promise<any> {
 
-    if (!validEmail(email)) throw new Error("Invalid email!");
+    if (!isEmailValid(email)) throw new Error("Invalid email!");
 
     try {
       const subject: string = `[${this.globalConfig.get<string>('COMPANY_NAME')}] Please verify your email`;

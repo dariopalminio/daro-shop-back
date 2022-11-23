@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IAuthService } from 'src/auth/domain/auth.service.interface';
 import { IUserService } from 'src/auth/domain/user.service.interface';
 import IEmailSender from 'src/notification/domain/email-sender.interface';
-import { validEmail, isURLValid } from 'src/auth/domain/helper/validators.helper';
+import { isUrlValid } from 'src/auth/domain/helper/url.helper';
 import { generateToken, encodeToken, createTokenLink, decodeToken } from './helper/token.helper';
 import { StartConfirmEmailData } from 'src/auth/domain/model/register/start-confirm-email-data';
 import { ParamsRegisterStart } from 'src/auth/domain/model/register/params-register-start';
@@ -20,6 +20,7 @@ import { InvalidVerificationCodeError } from 'src/auth/domain/auth-errors';
 import { UserDuplicateError, UserFormatError, UserNotFoundError } from 'src/auth/domain/user-errors';
 const bcrypt = require('bcrypt');
 import { DomainError, ErrorCode, IGlobalConfig } from "hexa-three-levels";
+import { isEmailValid } from 'src/common/domain/helper/email.validator';
 
 /**
  * Auth service
@@ -131,12 +132,12 @@ export class AuthService implements IAuthService {
   async sendStartEmailConfirm(startConfirmEmailData: StartConfirmEmailData, locale: string): Promise<any> {
 
     // Data validation
-    if (!validEmail(startConfirmEmailData.email)) {
+    if (!isEmailValid(startConfirmEmailData.email)) {
       throw new UserFormatError("Invalid email to email confirmation!");
     }
 
     if (!startConfirmEmailData.verificationPageLink ||
-      !isURLValid(startConfirmEmailData.verificationPageLink)) {
+      !isUrlValid(startConfirmEmailData.verificationPageLink)) {
       throw new UserFormatError("Invalid link to email confirmation!");
     }
 
@@ -270,11 +271,11 @@ export class AuthService implements IAuthService {
     console.log("sendEmailToRecoveryPass lang:", lang);
 
     //validate input data
-    if (!validEmail(startRecoveryData.email)) {
+    if (!isEmailValid(startRecoveryData.email)) {
       throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid email!");
     }
 
-    if (!startRecoveryData.recoveryPageLink || !isURLValid(startRecoveryData.recoveryPageLink)) {
+    if (!startRecoveryData.recoveryPageLink || !isUrlValid(startRecoveryData.recoveryPageLink)) {
       throw new UserFormatError("Can not Send Email To Recovery Pass.: Invalid link!");
     }
 
@@ -401,7 +402,7 @@ export class AuthService implements IAuthService {
     const decodedCode = partsArray[1];
 
     //Validate email
-    if (!validEmail(decodedEmail)) {
+    if (!isEmailValid(decodedEmail)) {
       throw new InvalidVerificationCodeError("Invalid email!");
     }
 
